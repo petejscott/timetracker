@@ -7,6 +7,8 @@
 	<link rel="stylesheet" href="timetracker.css" />
 	<link rel="stylesheet" href="lib/drawer.css" />
 	<link rel="stylesheet" href="font/timetracker-icons/css/timetracker.css" />
+	
+	<script src="lib/logger.js"></script>
 	<script src="lib/swipeHandler.js"></script>
 </head>
 <body>
@@ -30,7 +32,8 @@
 		</header>
     <section class="week">
       <header>
-        <h2 class="icon-calendar">Week NN
+        <h2 class="icon-calendar">
+			<span class="week-name">Week NN</span>
 			<span class="week-total paren-data">NN:NN</span>
 		</h2>
       </header>
@@ -75,6 +78,11 @@
 	</article>
 	
 	<script src="lib/drawer.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/taskFactory.js"></script>
+	<script src="js/dayFactory.js"></script>
+	<script src="js/weekFactory.js"></script>
+	<script src="js/timeManager.js"></script>
 	
 </body>
 </html>
