@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>TimeTracker</title>
+	<link rel="stylesheet" href="timetracker.css" />
+	<link rel="stylesheet" href="lib/drawer.css" />
+	<link rel="stylesheet" href="font/timetracker-icons/css/timetracker.css" />
+	<script src="lib/swipeHandler.js"></script>
+</head>
+<body>
+
+	<div id="menu" class="drawer" data-swipe-target="#main" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
+		<header class="top-header">
+			<h1>Menu</h1>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="#item1" title="Load tasks for this week NN">Week NN <span class="paren-data">NN:NN</span></a></li>
+				<li><a href="#item2" title="Load tasks for this week NN">Week NN <span class="paren-data">NN:NN</span></a></li>
+			</ul>
+		</nav>
+	</div>
+	
+	<article id="main">
+		<header class="top-header">
+			<span class="menuToggle icon-menu" alt="menu"></span>
+			<h1>TimeTracker</h1>
+		</header>
+    <section class="week">
+      <header>
+        <h2 class="icon-calendar">Week NN
+			<span class="week-total paren-data">NN:NN</span>
+		</h2>
+      </header>
+      <ol class="dowlist">
+        <li><a href="#sun" title="Switch to Sunday's tasks">Sun</a></li>
+        <li class="active" title="Switch to Monday's tasks"><a href="#mon">Mon</a></li>
+        <li><a href="#tue" title="Switch to Tuesday's tasks">Tue</a></li>
+        <li><a href="#wed" title="Switch to Wednesday's tasks">Wed</a></li>
+        <li><a href="#thu" title="Switch to Thursday's tasks">Thu</a></li>
+        <li><a href="#fri" title="Switch to Friday's tasks">Fri</a></li>
+        <li><a href="#sat" title="Switch to Saturday's tasks">Sat</a></li>
+      </ol>
+    </section>
+    <section class="tasks">
+      <header>
+        <h2 class="icon-list-bullet">Tasks for Monday
+			<span class="task-total paren-data">NN:NN</span>
+		</h2>
+        <a href="#task-add" title="Add a task" class="icon-plus-circled"></a>
+      </header>
+      <ul class="tasklist">
+        <li>
+          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
+          <span class="title">task 1</span>
+          <span class="total">nn:nn:nn</span>
+		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
+        </li>
+        <li>
+          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
+          <span class="title">task 2</span>
+          <span class="total">nn:nn:nn</span>
+		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
+        </li>
+        <li>
+          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
+          <span class="title">this is a very long task title</span>
+          <span class="total">nn:nn:nn</span>
+		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
+        </li>
+      </ul>
+    </section>
+	</article>
+	
+	<script src="lib/drawer.js"></script>
+	
+</body>
+</html>
