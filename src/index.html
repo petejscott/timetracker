@@ -15,12 +15,16 @@
 
 	<div id="menu" class="drawer" data-swipe-target="#main" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
 		<header class="top-header">
-			<h1>Menu</h1>
+			<span class="menuToggle icon-cancel-circled" alt="close menu"></span>
+			<h1>Groups</h1>
 		</header>
-		<nav>
+		<nav id="groupContainer">
 			<ul>
-				<li><a href="#item1" title="Load tasks for this week NN">Week NN <span class="paren-data">NN:NN</span></a></li>
-				<li><a href="#item2" title="Load tasks for this week NN">Week NN <span class="paren-data">NN:NN</span></a></li>
+				
+			</ul>
+			<ul>
+				<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>
+				<li><a href="#group-delete" title="Delete all Groups" class="action-group-delete icon-cancel-circled">Delete all Groups</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -28,60 +32,34 @@
 	<article id="main">
 		<header class="top-header">
 			<span class="menuToggle icon-menu" alt="menu"></span>
-			<h1>TimeTracker</h1>
+			<h1>TimeTracker <span class="sync-status icon-upload"></span></h1>
 		</header>
-    <section class="week">
-      <header>
-        <h2 class="icon-calendar">
-			<span class="week-name">Week NN</span>
-			<span class="week-total paren-data">NN:NN</span>
-		</h2>
-      </header>
-      <ol class="dowlist">
-        <li><a href="#sun" title="Switch to Sunday's tasks">Sun</a></li>
-        <li class="active" title="Switch to Monday's tasks"><a href="#mon">Mon</a></li>
-        <li><a href="#tue" title="Switch to Tuesday's tasks">Tue</a></li>
-        <li><a href="#wed" title="Switch to Wednesday's tasks">Wed</a></li>
-        <li><a href="#thu" title="Switch to Thursday's tasks">Thu</a></li>
-        <li><a href="#fri" title="Switch to Friday's tasks">Fri</a></li>
-        <li><a href="#sat" title="Switch to Saturday's tasks">Sat</a></li>
-      </ol>
-    </section>
-    <section class="tasks">
-      <header>
-        <h2 class="icon-list-bullet">Tasks for Monday
-			<span class="task-total paren-data">NN:NN</span>
-		</h2>
-        <a href="#task-add" title="Add a task" class="icon-plus-circled"></a>
-      </header>
-      <ul class="tasklist">
-        <li>
-          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
-          <span class="title">task 1</span>
-          <span class="total">nn:nn:nn</span>
-		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
-        </li>
-        <li>
-          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
-          <span class="title">task 2</span>
-          <span class="total">nn:nn:nn</span>
-		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
-        </li>
-        <li>
-          <span class="play-pause"><a href="#play" title="Start timer"><i class="icon-play"></i></a></span>
-          <span class="title">this is a very long task title</span>
-          <span class="total">nn:nn:nn</span>
-		  <span class="complete"><a href="#play" title="Mark complete"><i class="icon-ok-circled2"></i></a></span>
-        </li>
-      </ul>
-    </section>
+		<section class="group">
+		  <header>
+			<h2 class="icon-calendar">
+				<span contenteditable="true" title="Click and type to change, then press enter to save." class="group-name"></span>
+				<span class="group-total paren-data"></span>
+			</h2>
+		  </header>
+		</section>
+		<section class="tasks">
+		  <header>
+			<h2 class="icon-list-bullet">Tasks</h2>
+			<a href="#task-add" title="Add a task" class="action-task-add icon-plus-circled"></a>
+		  </header>
+		  <ul id="taskContainer" class="tasklist">
+			
+		  </ul>
+		</section>
 	</article>
 	
 	<script src="lib/drawer.js"></script>
+	<script src="js/storage.js"></script>
 	<script src="js/ui.js"></script>
 	<script src="js/taskFactory.js"></script>
-	<script src="js/dayFactory.js"></script>
-	<script src="js/weekFactory.js"></script>
+	<script src="js/taskGroupFactory.js"></script>
+	<script src="js/taskService.js"></script>
+	<script src="js/groupService.js"></script>
 	<script src="js/timeManager.js"></script>
 	
 </body>

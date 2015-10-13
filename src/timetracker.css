@@ -5,7 +5,7 @@
 		display:inline-block;
 		opacity: 1;
 		position: static;
-		box-shadow:0 0 4px -2px rgba(0,0,0,0.5);
+		box-shadow:0 0 8px -2px rgba(122, 106, 83, 0.5);
 		flex-grow:1;
 	}
 	div.drawer[data-slide-in-dir="right"],
@@ -64,7 +64,7 @@ body {
 }
 body, input {
 	font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 300;
+	font-weight: 300;
 }
 
 /* Links */
@@ -86,7 +86,7 @@ a:hover {
 /* Header/Headings */
 
 .top-header {
-	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
+	box-shadow: 0 1px 1px -1px rgba(122, 106, 83, 0.25);
 }
 
 .top-header,
@@ -96,11 +96,16 @@ a:hover {
 
 #main {
 	height: 100%;
-	background: #fff;
+	background: #ECE5CE;
 }
 #main .top-header {
 	background:#7A6A53;
-	color:#fff;
+	color:#ECE5CE;
+}
+.sync-status { 
+	margin-left:1em;
+	color:#aa9a83;
+	font-size:0.9em;
 }
 header .menuToggle {
 	margin-right: 0.5em;
@@ -124,74 +129,66 @@ header h1, header h2 {
 /* Primary Nav */
 
 nav ul {
-	margin: 0.5em 0; 
+	margin: 0; 
 	padding: 0;
 	list-style: none;
 	display: flex;
 	flex-direction: column;
 }
+nav ul:first-child {
+	border-bottom:1px solid #ddd;
+}
+nav ul:first-child li {
+	border-bottom:1px dotted #ddd;
+}
+nav ul:first-child li:last-child {
+	border-bottom:none;
+}
 nav li {	
-	transition: background 0.5s;
-	padding: 0.2em 1em;
+	transition: background 0.3s;
+	padding: 0.2em 0.75em;
 }
 nav li:hover {
 	background-color:#f6f6f6;
 }
 nav li a {
-	display: block;
+	display: inline-block;
 	line-height: 2.6em;
 	text-decoration: none;
 	color: #222;
 }
+nav li a::before {
+	color:#777;
+	transition: color 0.3s;
+}
+nav#groupContainer a::before {
+	margin-right:0.5em;
+}
+nav li a:hover::before {
+	color:#597277;
+}
 
-/* DOW list */
+/* group summary */
 
-section.week { 
+section.group { 
   margin: 1em 0;
 }
-section.week header { 
+section.group header { 
 	display: inline-block;
 }
-section.week header h2 {
-	font-size: 1rem;
+section.group header h2 {
+	font-size: 1.3rem;
 	display: inline-block;
 	color: #7A6A53;
 }
-section.week header h2::before { 
+section.group header h2::before { 
   margin-right: 0.5em;
 }
-ol.dowlist {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
+.action-group-delete {
+	color:#E08E79;
 }
-ol.dowlist li { 
-  display: inline-block;
-  margin: 0.25em;
-  background: #f9f9f9;
-  color:#666;
-  border-radius: 50%;
-  padding: 0.5em;
-  transition: color 0.3s, background 0.3s;
-}
-ol.dowlist li:hover {
-  background: #799297;
-  color: #fff;
-}
-ol.dowlist li.active {
-  background: none;
-  font-weight: 400;
-  color: #799297;
-}
-ol.dowlist a {
-  display: inline-block;
-  text-decoration: none;
-  color: inherit;
-  width: 2em;
-  height: 2em;
-  text-align: center; 
-  line-height: 2em;
+.action-group-delete::before {
+	color:#E08E79;
 }
 
 /* Task List */
@@ -234,11 +231,12 @@ ul.tasklist {
   color: #7A6A53;
 }
 ul.tasklist li {
+	background: #f1Ead3;
   display: table-row;
   width: 100%;
 }
 ul.tasklist li:nth-child(even) { 
-	background: #fbfbfb;
+	background: #e9e2cb;
 }
 ul.tasklist li span { 
   display: table-cell;

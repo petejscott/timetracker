@@ -8,7 +8,7 @@ var logger = (function(win) {
 	var CONST_LOGLEVEL_ERROR = 1;
 	var CONST_LOGLEVEL_NONE = 0;
 	
-	var logLevel = CONST_LOGLEVEL_DEBUG;
+	var logLevel = CONST_LOGLEVEL_WARNING;
 	
 	function logDebug(data) {
 		if (logLevel < 4) return;

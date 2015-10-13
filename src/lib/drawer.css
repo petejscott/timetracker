@@ -20,8 +20,8 @@
 	right: 0;
 }
 .drawer header {
-	background:#D9CEB2;
-	color:#555;
+	background:#99B2B7;
+	color:#eee;
 }
 .drawer.visible {
 	opacity: 1;
