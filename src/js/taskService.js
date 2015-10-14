@@ -15,7 +15,9 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 		playAnchor.setAttribute("title", "Start Timer");
 		
 		var playIcon = win.document.createElement("i");
-		playIcon.setAttribute("class", "task-play-pause-icon icon-play");
+		var playIconClass = "icon-play";
+		if (task.isRunning) playIconClass = "icon-pause";
+		playIcon.setAttribute("class", "task-play-pause-icon " + playIconClass);
 		
 		playAnchor.appendChild(playIcon);
 		play.appendChild(playAnchor);
@@ -138,6 +140,8 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 			ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail' : activeGroup }));
 		});
 		taskContainer.appendChild(taskElement);
+		
+		if (task.isRunning) startTask(task);
 	}
 	
 	function makeTasksForGroup(group) {
