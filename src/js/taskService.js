@@ -3,9 +3,6 @@
 var tt = tt || {};
 tt.taskService = (function(logger, taskFactory, ui, win) {
 	
-	var RUNNING_SYNC_FREQUENCY = 5;
-	
-	var lastSync = new Date();
 	var activeGroup = null;
 	var taskContainer = win.document.querySelector("#taskContainer");
 	
@@ -139,21 +136,11 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 			stopTask(e.detail);
 		});
 		taskElement.addEventListener('task-time-changed', function(e) {
-			var diff = new Date().getTime() - lastSync.getTime();
-			var secs = Math.floor(diff/1000);
-			if (secs >= RUNNING_SYNC_FREQUENCY)
-			{				
-				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
-			}
-			else 
-			{
-				ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync... (' + (RUNNING_SYNC_FREQUENCY - secs) + ')' }));
-			}
+			getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
 		});
 		taskElement.addEventListener('task-changed', function(e) {			
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync...' }));
 			ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail' : activeGroup }));
-			lastSync = new Date();
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', { 'detail' : activeGroup }));
 		});
 		taskContainer.appendChild(taskElement);
 		

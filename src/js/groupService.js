@@ -3,6 +3,10 @@
 var tt = tt || {};
 tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, win) {
 	
+	var RUNNING_SYNC_FREQUENCY = 15;
+	var syncRequested = false;
+	var lastSync = new Date();
+	
 	var groups = [];
 	
 	var groupContainer = document.querySelector("#groupContainer");
@@ -69,6 +73,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	
 	function bind() {
 		bindSyncStatus();
+		bindSyncRequest();
 		bindGroupAddedEventListener();
 		bindGroupChangedEventListener();
 		bindNewGroupAction();
@@ -83,6 +88,41 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 		ui.mainContainer.addEventListener('sync-status', function(e) {
 			ui.mainContainer.querySelector('.sync-status').textContent = e.detail;
 		});
+	}
+	
+	function bindSyncRequest() {
+		ui.mainContainer.addEventListener('sync-requested', function(e) {
+			syncRequested = true;
+		});
+		
+		win.setInterval(syncRunner, 1000);
+	}
+	
+	function syncRunner() {
+		
+		if (!syncRequested) 
+		{
+			logger.logDebug('no changes to sync');
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+			return;
+		}
+		
+		var diff = new Date().getTime() - lastSync.getTime();
+		var secs = Math.floor(diff/1000);
+		
+		if (secs >= RUNNING_SYNC_FREQUENCY)
+		{
+			logger.logDebug('syncing...');
+			storage.set('tt-groups', JSON.stringify(groups));
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+			lastSync = new Date();
+			syncRequested = false;
+		}
+		else 
+		{
+			logger.logDebug('Waiting for batch to sync changes');
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync... (' + (RUNNING_SYNC_FREQUENCY - secs) + ')' }));
+		}	
 	}
 	
 	function bindGroupAddedEventListener() {
@@ -116,8 +156,6 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 			if (e.detail) {
 				renderCurrentGroupSummary(e.detail);
 			}
-			storage.set('tt-groups', JSON.stringify(groups));
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
 		});
 	}
 	
