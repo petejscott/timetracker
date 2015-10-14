@@ -3,6 +3,9 @@
 var tt = tt || {};
 tt.taskService = (function(logger, taskFactory, ui, win) {
 	
+	var RUNNING_SYNC_FREQUENCY = 5;
+	
+	var lastSync = new Date();
 	var activeGroup = null;
 	var taskContainer = win.document.querySelector("#taskContainer");
 	
@@ -40,7 +43,7 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 		task.runtime += 1;
 		var taskElement = getElementForTaskByTaskId(task.id);
 		taskElement.querySelector("span.total").textContent = task.total;
-		getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
+		getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-time-changed'));
 	}
 	
 	function playPauseTask(task, taskElement) {
@@ -135,9 +138,22 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 		taskElement.addEventListener('task-stopped', function(e) {
 			stopTask(e.detail);
 		});
-		taskElement.addEventListener('task-changed', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+		taskElement.addEventListener('task-time-changed', function(e) {
+			var diff = new Date().getTime() - lastSync.getTime();
+			var secs = Math.floor(diff/1000);
+			if (secs >= RUNNING_SYNC_FREQUENCY)
+			{				
+				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
+			}
+			else 
+			{
+				ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync... (' + (RUNNING_SYNC_FREQUENCY - secs) + ')' }));
+			}
+		});
+		taskElement.addEventListener('task-changed', function(e) {			
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync...' }));
 			ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail' : activeGroup }));
+			lastSync = new Date();
 		});
 		taskContainer.appendChild(taskElement);
 		
