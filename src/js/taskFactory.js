@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskFactory = (function(logger) {
+tt.taskFactory = (function(logger, timeService) {
 
 	function makeId() {
 		var min = 1000;
@@ -27,14 +27,7 @@ tt.taskFactory = (function(logger) {
 		{
 			Object.defineProperty(task, 'total', {
 				get : function() {
-					var h = parseInt( task.runtime / 3600 ) % 24;
-					var m = parseInt( task.runtime / 60 ) % 60;
-					var s = task.runtime % 60;
-					var result = 
-						(h < 10 ? "0" + h : h) + ":" + 
-						(m < 10 ? "0" + m : m) + ":" + 
-						(s < 10 ? "0" + s : s);
-					return result;
+					return timeService.formatSecondsAsHourMinuteSecond(task.runtime);
 				}
 			});
 		}
@@ -46,4 +39,4 @@ tt.taskFactory = (function(logger) {
 		createNewTask : createNewTask 
 	};
 
-})(logger);
+})(logger, tt.timeService);

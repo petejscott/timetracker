@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskGroupFactory = (function(logger) {
+tt.taskGroupFactory = (function(logger, timeService) {
 
 	function getStartOfWeek(date) {
 		var d = new Date(date);
@@ -56,15 +56,7 @@ tt.taskGroupFactory = (function(logger) {
 				for (var i = 0, len = taskGroup.tasks.length; i < len; i++) {
 					total += taskGroup.tasks[i].runtime;
 				}
-				//TODO: extract to dateHelper object (also in taskFactory)
-				var h = parseInt( total / 3600 ) % 24;
-				var m = parseInt( total / 60 ) % 60;
-				var s = total % 60;
-				var result = 
-					(h < 10 ? "0" + h : h) + ":" + 
-					(m < 10 ? "0" + m : m) + ":" + 
-					(s < 10 ? "0" + s : s);
-				return result;
+				return timeService.formatSecondsAsHourMinuteSecond(total);
 			}
 		});
 		return taskGroup;
@@ -75,4 +67,4 @@ tt.taskGroupFactory = (function(logger) {
 		createTaskGroup : createTaskGroup
 	};
 	
-})(logger);
+})(logger, tt.timeService);

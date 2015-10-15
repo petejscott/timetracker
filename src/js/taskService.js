@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, ui, win) {
+tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 	
 	var activeGroup = null;
 	var taskContainer = win.document.querySelector("#taskContainer");
@@ -98,7 +98,21 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 	function makeTotalElement(task) {
 		var total = win.document.createElement("span");
 		total.setAttribute("class", "total");
+		total.setAttribute("contentEditable", "true");
 		total.appendChild(win.document.createTextNode(task.total));
+		
+		total.addEventListener('keypress', function(e) {
+			if (e.keyCode === 13) {
+				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
+				e.preventDefault();
+			}
+		})
+		total.addEventListener('input', function(e) {
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			task.runtime = timeService.getSecondsFromHourMinuteSecond(total.textContent);
+			e.preventDefault();
+		}, false);
+		
 		return total;
 	}
 	
@@ -206,4 +220,4 @@ tt.taskService = (function(logger, taskFactory, ui, win) {
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.ui, this);
+})(logger, tt.taskFactory, tt.ui, tt.timeService, this);
