@@ -10,4 +10,3 @@ Feature TODO:
 - Separate UI updates from data storage updates
 - Add webhook options to allow for getting and posting data periodically
 - Raw edit of JSON
-- Allow manual time changes
