@@ -10,3 +10,5 @@
 .icon-pause:before { content: '\e808'; } /* '' */
 .icon-play:before { content: '\e809'; } /* '' */
 .icon-calendar:before { content: '\e80a'; } /* '' */
+.icon-ellipsis:before { content: '\e80b'; } /* '' */
+.icon-ellipsis-vert:before { content: '\e80c'; } /* '' */

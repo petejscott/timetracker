@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'timetracker';
-  src: url('../font/timetracker.eot?48014111');
-  src: url('../font/timetracker.eot?48014111#iefix') format('embedded-opentype'),
-       url('../font/timetracker.woff?48014111') format('woff'),
-       url('../font/timetracker.ttf?48014111') format('truetype'),
-       url('../font/timetracker.svg?48014111#timetracker') format('svg');
+  src: url('../font/timetracker.eot?54600404');
+  src: url('../font/timetracker.eot?54600404#iefix') format('embedded-opentype'),
+       url('../font/timetracker.woff?54600404') format('woff'),
+       url('../font/timetracker.ttf?54600404') format('truetype'),
+       url('../font/timetracker.svg?54600404#timetracker') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'timetracker';
-    src: url('../font/timetracker.svg?48014111#timetracker') format('svg');
+    src: url('../font/timetracker.svg?54600404#timetracker') format('svg');
   }
 }
 */
@@ -35,7 +35,7 @@
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
-     
+ 
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
  
@@ -45,6 +45,10 @@
  
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
  
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
@@ -61,3 +65,5 @@
 .icon-pause:before { content: '\e808'; } /* '' */
 .icon-play:before { content: '\e809'; } /* '' */
 .icon-calendar:before { content: '\e80a'; } /* '' */
+.icon-ellipsis:before { content: '\e80b'; } /* '' */
+.icon-ellipsis-vert:before { content: '\e80c'; } /* '' */
