@@ -82,7 +82,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	
 	function bindSyncStatus() {
 		ui.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('group-changed'));
+			sync();
 		});
 		
 		ui.mainContainer.addEventListener('sync-status', function(e) {
@@ -112,17 +112,21 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 		
 		if (secs >= RUNNING_SYNC_FREQUENCY)
 		{
-			logger.logDebug('syncing...');
-			storage.set('tt-groups', JSON.stringify(groups));
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
-			lastSync = new Date();
-			syncRequested = false;
+			sync();
 		}
 		else 
 		{
 			logger.logDebug('Waiting for batch to sync changes');
 			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync... (' + (RUNNING_SYNC_FREQUENCY - secs) + ')' }));
 		}	
+	}
+	
+	function sync() {
+		logger.logDebug('syncing...');
+		storage.set('tt-groups', JSON.stringify(groups));
+		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+		lastSync = new Date();
+		syncRequested = false;
 	}
 	
 	function bindGroupAddedEventListener() {
