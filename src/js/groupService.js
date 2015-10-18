@@ -53,19 +53,8 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	}
 	
 	function bind() {
-		bindSyncStatus();
 		bindSyncRequests();
 		bindGroupInterfaceRequests();
-	}
-	
-	function bindSyncStatus() {
-		ui.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
-			requestSync('high');
-		});
-		
-		ui.mainContainer.addEventListener('sync-status', function(e) {
-			ui.mainContainer.querySelector('.sync-status').textContent = e.detail;
-		});
 	}
 	
 	function bindSyncRequests() {
@@ -81,6 +70,10 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	}
 	
 	function bindGroupInterfaceRequests() {
+		
+		ui.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
+			requestSync('high');
+		});
 		
 		ui.mainContainer.addEventListener('group-detail-changed', function(e) {
 			renderGroupNavigation(groups);
@@ -148,8 +141,6 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 			var lastGroup = groups[groups.length - 1];
 			ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : lastGroup }));
 		}
-		
-		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
 	}
 	
 	init();

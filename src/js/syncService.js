@@ -72,6 +72,12 @@ tt.syncService = (function(logger, ui, storage, win) {
 	
 	function init() {
 		bindSyncRequest();
+		
+		ui.mainContainer.addEventListener('sync-status', function(e) {
+			ui.mainContainer.querySelector('.sync-status').textContent = e.detail;
+		});
+		
+		setUpToDateSyncUI();
 	}
 	
 	function syncGroups(groups) {
