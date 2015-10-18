@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, win) {
+tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncService, win) {
 	
 	var RUNNING_SYNC_FREQUENCY = 15;
 	var syncRequested = false;
@@ -126,9 +126,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	}
 	
 	function sync() {
-		logger.logDebug('syncing...');
-		storage.set('tt-groups', JSON.stringify(groups));
-		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+		syncService.syncGroups(groups);
 		lastSync = new Date();
 		syncRequested = false;
 	}
@@ -143,7 +141,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	function bindDeleteAllGroupsAction() {
 		var el = win.document.querySelector('.action-group-delete');
 		el.addEventListener('click', function(e) {
-			storage.remove('tt-groups');
+			syncService.removeGroups();
 			e.preventDefault();
 		})
 	}
@@ -171,7 +169,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 		
 		bind();
 		
-		var storedGroups = JSON.parse(storage.get('tt-groups'));
+		var storedGroups = syncService.getGroups();
 		if (storedGroups !== null) {
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
 				groups.push(taskGroupFactory.createTaskGroup(storedGroups[i]));
@@ -195,4 +193,4 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	
 	init();
 	
-})(logger, tt.taskGroupFactory, tt.taskService, tt.ui, tt.storage, this);
+})(logger, tt.taskGroupFactory, tt.taskService, tt.ui, tt.syncService, this);
