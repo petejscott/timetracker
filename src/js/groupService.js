@@ -9,7 +9,7 @@ tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskServ
 	var groupContainer = document.querySelector("#groupContainer");
 
 	function renderGroupNavigation(groups) {
-		var navList = win.document.querySelector('nav#groupContainer ul:first-child');
+		var navList = groupContainer.querySelector('ul:first-child');
 		ui.clearElement(navList);
 		for (var i = 0, len = groups.length; i < len; i++) {
 			var groupNavElement = groupHtmlFactory.makeGroupNavElement(groups[i]);
@@ -53,7 +53,7 @@ tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskServ
 	}
 	
 	function bind() {
-		bindSyncStatus(); // <-- TODO: move this out of groupService
+		bindSyncStatus();
 		bindSyncRequests();
 		bindGroupInterfaceRequests();
 	}
