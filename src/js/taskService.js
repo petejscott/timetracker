@@ -4,6 +4,7 @@ var tt = tt || {};
 tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 	
 	var activeGroup = null;
+	var editableTimeoutId = 0;
 	var taskContainer = win.document.querySelector("#taskContainer");
 	
 	function makePlayElement(task) {
@@ -77,19 +78,17 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		var title = win.document.createElement("span");
 		title.setAttribute("class", "title");
 		title.setAttribute("contentEditable", true);
-		title.setAttribute("title", "Click and type to change, then press enter to save.");
 		title.appendChild(win.document.createTextNode(task.name));
 		
-		title.addEventListener('keypress', function(e) {
-			if (e.keyCode === 13) {
-				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
-				e.preventDefault();
-			}
-		})
 		title.addEventListener('input', function(e) {
 			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
 			task.name = title.textContent;
 			e.preventDefault();
+			
+			win.clearTimeout(editableTimeoutId);
+			editableTimeoutId = win.setTimeout(function() {
+				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
+			}, 1500);			
 		}, false);
 		
 		return title;
@@ -101,16 +100,15 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		total.setAttribute("contentEditable", "true");
 		total.appendChild(win.document.createTextNode(task.total));
 		
-		total.addEventListener('keypress', function(e) {
-			if (e.keyCode === 13) {
-				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
-				e.preventDefault();
-			}
-		})
 		total.addEventListener('input', function(e) {
 			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
 			task.runtime = timeService.getSecondsFromHourMinuteSecond(total.textContent);
 			e.preventDefault();
+			
+			win.clearTimeout(editableTimeoutId);
+			editableTimeoutId = win.setTimeout(function() {
+				getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
+			}, 1500);	
 		}, false);
 		
 		return total;

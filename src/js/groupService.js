@@ -6,6 +6,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 	var RUNNING_SYNC_FREQUENCY = 15;
 	var syncRequested = false;
 	var lastSync = new Date();
+	var editableTimeoutId = 0;
 	
 	var groups = [];
 	
@@ -48,16 +49,17 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 		
 		var currentGroupNameElement = win.document.querySelector(".group-name");
 		currentGroupNameElement.textContent = group.name;
-		currentGroupNameElement.addEventListener('keypress', function(e) {
-			if (e.keyCode === 13) {
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail': group }));
-				e.preventDefault();
-			}
-		})
+
 		currentGroupNameElement.addEventListener('input', function(e) {
 			group.name = currentGroupNameElement.textContent;			
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', { 'detail' : group }));
 			e.preventDefault();
+			
+			win.clearTimeout(editableTimeoutId);
+			editableTimeoutId = win.setTimeout(function() {
+				ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail': group }));
+			}, 1500);
+			
 		}, false);
 		
 		var currentGroupTotalElement = win.document.querySelector(".group-total");
@@ -103,7 +105,9 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, storage, 
 		if (!syncRequested) 
 		{
 			logger.logDebug('no changes to sync');
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+			if (ui.mainContainer.querySelector('.sync-status').textContent !== 'up-to-date') {
+				ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+			}
 			return;
 		}
 		

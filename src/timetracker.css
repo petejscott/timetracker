@@ -112,6 +112,7 @@ a:hover {
 	margin-left:1em;
 	color:#aa9a83;
 	font-size:0.9em;
+	cursor:pointer;
 }
 header .menuToggle {
 	margin-right: 0.5em;
