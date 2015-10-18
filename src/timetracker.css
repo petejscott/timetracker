@@ -69,8 +69,16 @@ body, input {
 
 /* Editing */
 
+*[contentEditable] {
+	transition: all 0.25s;
+}
+*[contentEditable]:hover {
+	outline: 1px dotted rgba(0,0,0,0.15);
+	background: rgba(249,253,169,0.15);
+}
 *[contentEditable]:focus {
-	background: rgba(249,253,169,0.25);
+	outline: 1px dotted rgba(0,0,0,0.35);
+	background: rgba(249,253,169,0.5);
 }
 
 /* Links */
@@ -187,6 +195,9 @@ section.group header h2 {
 	font-size: 1.3rem;
 	display: inline-block;
 	color: #7A6A53;
+}
+section.group .group-name {
+	padding: 0.2em;
 }
 section.group header h2::before { 
   margin-right: 0.5em;
