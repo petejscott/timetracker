@@ -4,7 +4,7 @@ var tt = tt || {};
 tt.timeService = (function() {
 
 	function formatSecondsAsHourMinuteSecond(seconds) {
-		var h = parseInt( seconds / 3600 ) % 24;
+		var h = parseInt( seconds / 3600 );
 		var m = parseInt( seconds / 60 ) % 60;
 		var s = seconds % 60;
 		var result = 
