@@ -51,10 +51,9 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 		totalElement.textContent = group.total;
 	}
 	
-	function renderCurrentGroupSummary(group) {
+	function bindGroupNameEditToCurrentGroup(group) {
 		
 		var currentGroupNameElement = win.document.querySelector(".group-name");
-		currentGroupNameElement.textContent = group.name;
 
 		currentGroupNameElement.addEventListener('input', function(e) {
 			
@@ -68,9 +67,6 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 			}, 1500);
 			
 		}, false);
-		
-		var currentGroupTotalElement = win.document.querySelector(".group-total");
-		currentGroupTotalElement.textContent = group.total;
 	}
 	
 	function createGroupForCurrentWeek() {
@@ -120,6 +116,7 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 		});
 		
 		ui.mainContainer.addEventListener('group-selected', function(e) {
+			bindGroupNameEditToCurrentGroup(e.detail);
 			setGroupSummaryName(e.detail);
 			setGroupSummaryTime(e.detail);
 		});
@@ -170,7 +167,6 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 		}
 		
 		renderGroupNavigation(groups);
-		renderCurrentGroupSummary(groups[0]);
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
