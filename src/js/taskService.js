@@ -61,17 +61,29 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		return taskContainer.querySelector("#" + taskId);
 	}
 	
-	function makeCompleteElement(task) {
-		var complete = win.document.createElement("span");
-		complete.setAttribute("class", "complete");
-		var completeAnchor = win.document.createElement("a");
-		completeAnchor.setAttribute("href", "#complete");
-		completeAnchor.setAttribute("title", "Mark Complete");
-		var completeIcon = win.document.createElement("i");
-		completeIcon.setAttribute("class", "icon-ok-circled2");
-		completeAnchor.appendChild(completeIcon);
-		complete.appendChild(completeAnchor);
-		return complete;
+	function makeDeleteElement(task) {
+		var del = win.document.createElement("span");
+		del.setAttribute("class", "delete");
+		var delAnchor = win.document.createElement("a");
+		delAnchor.setAttribute("href", "#delete");
+		delAnchor.setAttribute("title", "Delete Task");
+		var delIcon = win.document.createElement("i");
+		delIcon.setAttribute("class", "icon-cancel-circled");
+		delAnchor.appendChild(delIcon);
+		del.appendChild(delAnchor);
+		
+		del.addEventListener('click', function(e) {
+			var taskIndex = activeGroup.tasks.indexOf(task);
+			if (taskIndex > -1) {
+				activeGroup.tasks.splice(taskIndex, 1);
+			}
+			var taskElement = getElementForTaskByTaskId(task.id);
+			taskElement.dispatchEvent(new Event('task-changed'));
+			taskElement.remove();
+			e.preventDefault();
+		});
+		
+		return del;
 	}
 	
 	function makeTitleElement(task) {
@@ -127,7 +139,7 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		
 		listItem.appendChild(makeTitleElement(task));
 		listItem.appendChild(makeTotalElement(task));
-		listItem.appendChild(makeCompleteElement(task));
+		listItem.appendChild(makeDeleteElement(task));
 		return listItem;
 	}
 	
@@ -150,7 +162,7 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		taskElement.addEventListener('task-time-changed', function(e) {
 			getElementForTaskByTaskId(task.id).dispatchEvent(new Event('task-changed'));
 		});
-		taskElement.addEventListener('task-changed', function(e) {			
+		taskElement.addEventListener('task-changed', function(e) {
 			ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail' : activeGroup }));
 			ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', { 'detail' : activeGroup }));
 		});
@@ -172,6 +184,7 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		activeGroup.tasks.push(task);
 		taskContainer.dispatchEvent(new CustomEvent('task-added', { 'detail' : task }));
 		ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail' : activeGroup }));
+		ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', { 'detail' : activeGroup }));
 	}
 	
 	function setGroupSummary(group) {

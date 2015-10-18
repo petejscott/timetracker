@@ -264,7 +264,7 @@ ul.tasklist li span {
 ul.tasklist li span.total {
 	text-align: right;
 }
-ul.tasklist li span.complete {
+ul.tasklist li span.delete {
 	text-align: right;
 }
 ul.tasklist li:last-child {
