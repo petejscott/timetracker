@@ -3,11 +3,7 @@
 var tt = tt || {};
 tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncService, win) {
 	
-	var RUNNING_SYNC_FREQUENCY = 15;
-	var syncRequested = false;
-	var lastSync = new Date();
 	var editableTimeoutId = 0;
-	
 	var groups = [];
 	
 	var groupContainer = document.querySelector("#groupContainer");
@@ -45,19 +41,30 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 		}
 	}
 	
+	function setGroupSummaryName(group) {
+		var nameElement = win.document.querySelector("h2 span.group-name");
+		nameElement.textContent = group.name;
+	}
+	
+	function setGroupSummaryTime(group) {		
+		var totalElement = win.document.querySelector("h2 span.group-total");
+		totalElement.textContent = group.total;
+	}
+	
 	function renderCurrentGroupSummary(group) {
 		
 		var currentGroupNameElement = win.document.querySelector(".group-name");
 		currentGroupNameElement.textContent = group.name;
 
 		currentGroupNameElement.addEventListener('input', function(e) {
-			group.name = currentGroupNameElement.textContent;			
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', { 'detail' : group }));
+			
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			group.name = currentGroupNameElement.textContent;
 			e.preventDefault();
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-changed', { 'detail': group }));
+				ui.mainContainer.dispatchEvent(new CustomEvent('group-detail-changed', { 'detail': group }));
 			}, 1500);
 			
 		}, false);
@@ -74,17 +81,14 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 	}
 	
 	function bind() {
-		bindSyncStatus();
-		bindSyncRequest();
-		bindGroupAddedEventListener();
-		bindGroupChangedEventListener();
-		bindNewGroupAction();
-		bindDeleteAllGroupsAction();
+		bindSyncStatus(); // <-- TODO: move this out of groupService
+		bindSyncRequests();
+		bindGroupInterfaceRequests();
 	}
 	
 	function bindSyncStatus() {
 		ui.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
-			sync();
+			requestSync('high');
 		});
 		
 		ui.mainContainer.addEventListener('sync-status', function(e) {
@@ -92,80 +96,65 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 		});
 	}
 	
-	function bindSyncRequest() {
-		ui.mainContainer.addEventListener('sync-requested', function(e) {
-			syncRequested = true;
+	function bindSyncRequests() {
+		ui.mainContainer.addEventListener('group-detail-changed', function(e) {
+			requestSync('high');
+		});
+		ui.mainContainer.addEventListener('group-collection-changed', function(e) {
+			requestSync('high');
+		});
+		ui.mainContainer.addEventListener('group-time-changed', function(e) {
+			requestSync('low');
+		});
+	}
+	
+	function bindGroupInterfaceRequests() {
+		
+		ui.mainContainer.addEventListener('group-detail-changed', function(e) {
+			renderGroupNavigation(groups);
 		});
 		
-		win.setInterval(syncRunner, 1000);
-	}
-	
-	function syncRunner() {
+		ui.mainContainer.addEventListener('group-time-changed', function(e) {
+			renderGroupNavigation(groups);
+			setGroupSummaryTime(e.detail);
+		});
 		
-		if (!syncRequested) 
-		{
-			logger.logDebug('no changes to sync');
-			if (ui.mainContainer.querySelector('.sync-status').textContent !== 'up-to-date') {
-				ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
-			}
-			return;
-		}
+		ui.mainContainer.addEventListener('group-selected', function(e) {
+			setGroupSummaryName(e.detail);
+			setGroupSummaryTime(e.detail);
+		});
 		
-		var diff = new Date().getTime() - lastSync.getTime();
-		var secs = Math.floor(diff/1000);
-		
-		if (secs >= RUNNING_SYNC_FREQUENCY)
-		{
-			sync();
-		}
-		else 
-		{
-			logger.logDebug('Waiting for batch to sync changes');
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'waiting to sync... (' + (RUNNING_SYNC_FREQUENCY - secs) + ')' }));
-		}	
-	}
-	
-	function sync() {
-		syncService.syncGroups(groups);
-		lastSync = new Date();
-		syncRequested = false;
-	}
-	
-	function bindGroupAddedEventListener() {
 		ui.mainContainer.addEventListener('group-added', function(e) {
 			renderGroupNavigation(groups);
 			e.preventDefault();
 		}, false);
-	}
-	
-	function bindDeleteAllGroupsAction() {
-		var el = win.document.querySelector('.action-group-delete');
-		el.addEventListener('click', function(e) {
+		
+		var elDelete = win.document.querySelector('.action-group-delete');
+		elDelete.addEventListener('click', function(e) {
 			syncService.removeGroups();
 			e.preventDefault();
-		})
-	}
-	
-	function bindNewGroupAction() {
-		var els = win.document.querySelectorAll(".action-group-add");
-		for (var i = 0, len = els.length; i < len; i++) {
-			els[i].addEventListener('click', function(e) {
-				createGroupForCurrentWeek();
-				e.preventDefault();
-			}, false);
-		}
-	}
-	
-	function bindGroupChangedEventListener() {
-		ui.mainContainer.addEventListener('group-changed', function(e) {
-			renderGroupNavigation(groups);
-			if (e.detail) {
-				renderCurrentGroupSummary(e.detail);
-			}
 		});
+		
+		var elAdd = win.document.querySelector('.action-group-add');
+		elAdd.addEventListener('click', function(e) {
+			createGroupForCurrentWeek();
+			e.preventDefault();
+		}, false);
 	}
 	
-	function init() {		
+	function requestSync(priority) {
+		ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', 
+		{ 
+			'detail' : 
+			{ 
+				'type' : 'groups',
+				'data' : groups,
+				'priority' : priority 
+			}
+		}));
+	}
+	
+	function init() {
 		
 		bind();
 		
