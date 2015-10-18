@@ -67,6 +67,12 @@ body, input {
 	font-weight: 300;
 }
 
+/* Editing */
+
+*[contentEditable]:focus {
+	background: rgba(249,253,169,0.25);
+}
+
 /* Links */
 
 a { 
