@@ -1,42 +1,18 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncService, win) {
+tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskService, ui, syncService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
 	
 	var groupContainer = document.querySelector("#groupContainer");
-	
-	function createGroupNavElement(group) {
-		var groupAnchor = win.document.createElement("a");
-		groupAnchor.setAttribute("href", "#" + group.id);
-		groupAnchor.setAttribute("title", "View group (" + group.name + ")");
-		groupAnchor.addEventListener('click', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : group }));
-			e.preventDefault();
-		}, false);
-		
-		var groupText = win.document.createTextNode(group.name + " ");
-		
-		var groupTotal = win.document.createElement("span");
-		groupTotal.classList.add("paren-data");
-		groupTotal.textContent = group.total;
-		
-		var groupListItem = win.document.createElement("li");
-		
-		groupAnchor.appendChild(groupText);
-		groupAnchor.appendChild(groupTotal);
-		groupListItem.appendChild(groupAnchor);
-		
-		return groupListItem;
-	}
-	
+
 	function renderGroupNavigation(groups) {
 		var navList = win.document.querySelector('nav#groupContainer ul:first-child');
 		ui.clearElement(navList);
 		for (var i = 0, len = groups.length; i < len; i++) {
-			var groupNavElement = createGroupNavElement(groups[i]);
+			var groupNavElement = groupHtmlFactory.makeGroupNavElement(groups[i]);
 			navList.appendChild(groupNavElement);
 		}
 	}
@@ -178,4 +154,4 @@ tt.groupService = (function(logger, taskGroupFactory, taskService, ui, syncServi
 	
 	init();
 	
-})(logger, tt.taskGroupFactory, tt.taskService, tt.ui, tt.syncService, this);
+})(logger, tt.taskGroupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.syncService, this);

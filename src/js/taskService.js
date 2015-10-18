@@ -1,30 +1,11 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
+tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService, win) {
 	
 	var activeGroup = null;
 	var editableTimeoutId = 0;
 	var taskContainer = win.document.querySelector("#taskContainer");
-	
-	function makePlayElement(task) {
-		var play = win.document.createElement("span");
-		play.setAttribute("class", "play-pause");
-		
-		var playAnchor = win.document.createElement("a");
-		playAnchor.setAttribute("href", "#play");
-		playAnchor.setAttribute("title", "Start Timer");
-		
-		var playIcon = win.document.createElement("i");
-		var playIconClass = "icon-play";
-		if (task.isRunning) playIconClass = "icon-pause";
-		playIcon.setAttribute("class", "task-play-pause-icon " + playIconClass);
-		
-		playAnchor.appendChild(playIcon);
-		play.appendChild(playAnchor);
-		
-		return play;
-	}
 	
 	function startTask(task) {
 		task.isRunning = true;
@@ -61,18 +42,43 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 		return taskContainer.querySelector("#" + taskId);
 	}
 	
-	function makeDeleteElement(task) {
-		var del = win.document.createElement("span");
-		del.setAttribute("class", "delete");
-		var delAnchor = win.document.createElement("a");
-		delAnchor.setAttribute("href", "#delete");
-		delAnchor.setAttribute("title", "Delete Task");
-		var delIcon = win.document.createElement("i");
-		delIcon.setAttribute("class", "icon-cancel-circled");
-		delAnchor.appendChild(delIcon);
-		del.appendChild(delAnchor);
+	function createTaskElement(task) {
 		
-		del.addEventListener('click', function(e) {
+		var listItem = taskHtmlFactory.makeTaskContainer(task);
+		var playElement = taskHtmlFactory.makePlayElement(task);
+		var titleElement = taskHtmlFactory.makeTitleElement(task);
+		var totalElement = taskHtmlFactory.makeTotalElement(task);
+		var deleteElement = taskHtmlFactory.makeDeleteElement(task);
+		
+		playElement.addEventListener('click', function(e) {
+			playPauseTask(task, listItem);
+			e.preventDefault();
+		});
+		
+		titleElement.addEventListener('input', function(e) {
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			task.name = titleElement.textContent;
+			e.preventDefault();
+			
+			win.clearTimeout(editableTimeoutId);
+			editableTimeoutId = win.setTimeout(function() {
+				ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+			}, 1500);			
+		}, false);
+		
+		totalElement.addEventListener('input', function(e) {
+			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			task.runtime = timeService.getSecondsFromHourMinuteSecond(totalElement.textContent);
+			e.preventDefault();
+			
+			win.clearTimeout(editableTimeoutId);
+			editableTimeoutId = win.setTimeout(function() {
+				ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+				ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
+			}, 1500);	
+		}, false);
+		
+		deleteElement.addEventListener('click', function(e) {
 			var taskIndex = activeGroup.tasks.indexOf(task);
 			if (taskIndex > -1) {
 				activeGroup.tasks.splice(taskIndex, 1);
@@ -84,64 +90,11 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 			e.preventDefault();
 		});
 		
-		return del;
-	}
-	
-	function makeTitleElement(task) {
-		var title = win.document.createElement("span");
-		title.setAttribute("class", "title");
-		title.setAttribute("contentEditable", true);
-		title.appendChild(win.document.createTextNode(task.name));
-		
-		title.addEventListener('input', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
-			task.name = title.textContent;
-			e.preventDefault();
-			
-			win.clearTimeout(editableTimeoutId);
-			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
-			}, 1500);			
-		}, false);
-		
-		return title;
-	}
-	
-	function makeTotalElement(task) {
-		var total = win.document.createElement("span");
-		total.setAttribute("class", "total");
-		total.setAttribute("contentEditable", "true");
-		total.appendChild(win.document.createTextNode(task.total));
-		
-		total.addEventListener('input', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
-			task.runtime = timeService.getSecondsFromHourMinuteSecond(total.textContent);
-			e.preventDefault();
-			
-			win.clearTimeout(editableTimeoutId);
-			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
-			}, 1500);	
-		}, false);
-		
-		return total;
-	}
-	
-	function createTaskElement(task) {
-		var listItem = win.document.createElement("li");
-		listItem.setAttribute("id", task.id);
-		
-		var playElement = makePlayElement(task);
-		playElement.addEventListener('click', function(e) {
-			playPauseTask(task, listItem);
-			e.preventDefault();
-		});
 		listItem.appendChild(playElement);
+		listItem.appendChild(titleElement);
+		listItem.appendChild(totalElement);
+		listItem.appendChild(deleteElement);
 		
-		listItem.appendChild(makeTitleElement(task));
-		listItem.appendChild(makeTotalElement(task));
-		listItem.appendChild(makeDeleteElement(task));
 		return listItem;
 	}
 	
@@ -217,4 +170,4 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.ui, tt.timeService, this);
+})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.ui, tt.timeService, this);
