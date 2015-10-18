@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskService, ui, syncService, win) {
+tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, syncService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
@@ -46,7 +46,7 @@ tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskServ
 	}
 	
 	function createGroupForCurrentWeek() {
-		var group = taskGroupFactory.createNewTaskGroup();
+		var group = groupFactory.createNewTaskGroup();
 		groups.push(group);
 		ui.mainContainer.dispatchEvent(new CustomEvent('group-added', { 'detail' : group }));
 		ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : group }));
@@ -134,7 +134,7 @@ tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskServ
 		var storedGroups = syncService.getGroups();
 		if (storedGroups !== null) {
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
-				groups.push(taskGroupFactory.createTaskGroup(storedGroups[i]));
+				groups.push(groupFactory.createTaskGroup(storedGroups[i]));
 			}
 		}
 		
@@ -154,4 +154,4 @@ tt.groupService = (function(logger, taskGroupFactory, groupHtmlFactory, taskServ
 	
 	init();
 	
-})(logger, tt.taskGroupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.syncService, this);
+})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.syncService, this);

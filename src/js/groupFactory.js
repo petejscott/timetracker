@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskGroupFactory = (function(logger, timeService) {
+tt.groupFactory = (function(logger, timeService) {
 
 	function getStartOfWeek(date) {
 		var d = new Date(date);
