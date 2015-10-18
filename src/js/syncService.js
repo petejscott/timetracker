@@ -4,10 +4,11 @@ var tt = tt || {};
 tt.syncService = (function(logger, ui, storage, win) {
 	
 	var GROUP_STORAGE_KEY = 'tt-groups';
-	var HIGH_PRIORITY_SYNC_SECONDS = 2;
+	var HIGH_PRIORITY_SYNC_SECONDS = 1;
 	var LOW_PRIORITY_SYNC_SECONDS = 15;
 	
 	var syncTimeout = null;
+	var syncUiInterval = null;
 	var secondsUntilSync = null;
 	var dataToSync = null;
 	
@@ -19,8 +20,8 @@ tt.syncService = (function(logger, ui, storage, win) {
 		if (syncTimeout !== null) win.clearTimeout(syncTimeout);
 		syncTimeout = win.setTimeout(function(e) {
 			syncGroups(getDataToSync());
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
 			secondsUntilSync = null;
+			setUpToDateSyncUI();
 		}, (secondsUntilSync*1000));
 	}
 	
@@ -29,13 +30,25 @@ tt.syncService = (function(logger, ui, storage, win) {
 		dataToSync = data;
 		
 		if (secondsUntilSync === null || secondsUntilSync > seconds) {
-			
 			logger.logDebug("changed secondsUntilSync from " + secondsUntilSync + " to " + seconds);
 			secondsUntilSync = seconds;
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'preparing to sync ('+ seconds +')' }));
+			
+			updatePendingSyncUI();
+			if (syncUiInterval !== null) win.clearInterval(syncUiInterval);
+			syncUiInterval = win.setInterval(updatePendingSyncUI, 1000);
+			
 			setSyncRequest();
 		}
-		
+	}
+	
+	function setUpToDateSyncUI() {
+		if (syncUiInterval !== null) win.clearInterval(syncUiInterval);
+		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+	}
+	
+	function updatePendingSyncUI() {
+		secondsUntilSync -= 1;
+		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'preparing to sync... ('+ secondsUntilSync +')' }));	
 	}
 	
 	function bindSyncRequest() {
