@@ -79,6 +79,7 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 			}
 			var taskElement = getElementForTaskByTaskId(task.id);
 			ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+			ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
 			taskElement.remove();
 			e.preventDefault();
 		});
@@ -120,6 +121,7 @@ tt.taskService = (function(logger, taskFactory, ui, timeService, win) {
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
 				ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+				ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
 			}, 1500);	
 		}, false);
 		
