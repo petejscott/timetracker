@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupHtmlFactory = (function(logger, win) {
+tt.groupHtmlFactory = (function(logger, ui, win) {
 	
 	
 	function makeGroupNavElement(group) {
@@ -32,4 +32,4 @@ tt.groupHtmlFactory = (function(logger, win) {
 		makeGroupNavElement: makeGroupNavElement
 	}
 	
-})(logger, this);
+})(logger, tt.ui, this);
