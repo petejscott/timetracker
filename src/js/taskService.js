@@ -122,13 +122,14 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	function makeTasksForGroup(group) {
 		taskContainer.textContent = "";
 		for(var i = 0, len = group.tasks.length; i < len; i++) {
-			var task = taskFactory.createTask(group.tasks[i]);
+			var tempTask = group.tasks[i];
+			var task = taskFactory.createTask(tempTask);
 			makeTask(task);
 		}
 	}
 	
 	function addNewTaskToActiveGroup() {
-		var task = taskFactory.createNewTask();
+		var task = taskFactory.createNewTask(activeGroup);
 		activeGroup.tasks.push(task);
 		eventService.dispatch(eventService.events.task.added, { 'detail' : task });
 		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });

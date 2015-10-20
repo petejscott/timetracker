@@ -10,9 +10,10 @@ tt.taskFactory = (function(logger, timeService) {
 			Math.floor(Math.random() * (max - min) + min);
 	}
 	
-	function createNewTask() {
+	function createNewTask(group) {
 		var data = {
 			id : makeId(),
+			groupId : group.id,
 			name : 'new task',
 			runtime : 0.00,
 			isComplete : false,
