@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, config, eventService, syncService, win) {
+tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, eventService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
@@ -97,7 +97,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 		
 		var elDelete = win.document.querySelector('.action-group-delete');
 		elDelete.addEventListener('click', function(e) {
-			syncService.removeGroups();
+			eventService.dispatch(eventService.events.sync.removeGroups);
 			e.preventDefault();
 		});
 		
@@ -119,11 +119,9 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 		});
 	}
 	
-	function init() {
+	function groupsRetrievedEventHandler(e) {
 		
-		bind();
-		
-		var storedGroups = syncService.getGroups();
+		var storedGroups = e.detail;
 		if (storedGroups !== null) {
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
 				groups.push(groupFactory.createTaskGroup(storedGroups[i]));
@@ -142,6 +140,12 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 		}
 	}
 	
+	function init() {
+		bind();		
+		eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
+		eventService.dispatch(eventService.events.sync.getGroups);
+	}
+	
 	init();
 	
-})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.config, tt.eventService, tt.syncService, this);
+})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.config, tt.eventService, this);

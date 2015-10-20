@@ -67,12 +67,11 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 		}
 	}
 	
-	function bindSyncRequest() {
-		eventService.subscribe(eventService.events.sync.requested, syncRequestHandler);
-	}
-	
 	function init() {
-		bindSyncRequest();
+		
+		eventService.subscribe(eventService.events.sync.requested, syncRequestHandler);
+		eventService.subscribe(eventService.events.sync.removeGroups, removeGroups);
+		eventService.subscribe(eventService.events.sync.getGroups, getGroups);
 		
 		eventService.subscribe(eventService.events.sync.statusUpdated, function(e) {
 			config.mainContainer.querySelector('.sync-status').textContent = e.detail;
@@ -87,7 +86,8 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 	}
 	
 	function getGroups() {
-		return JSON.parse(storage.get(GROUP_STORAGE_KEY));
+		var groups = JSON.parse(storage.get(GROUP_STORAGE_KEY));
+		eventService.dispatch(eventService.events.sync.groupsRetrieved, { 'detail' : groups });
 	}
 	
 	function removeGroups() {
@@ -95,11 +95,5 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 	}
 	
 	init();
-	
-	return {
-		syncGroups,
-		getGroups,
-		removeGroups 
-	}
 	
 })(logger, tt.config, tt.eventService, tt.storage, this);

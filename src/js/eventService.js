@@ -8,26 +8,34 @@ tt.eventService = (function(logger, config) {
 	var events = {
 		
 		sync : {		
-			statusUpdated : 	'status-updated',
-			requested : 		'sync-requested'
+			statusUpdated: 		'sync-status-updated',
+			requested: 			'sync-requested',
+			removeGroups: 		'sync-remove-groups',
+			getGroups: 			'sync-get-groups',
+			groupsRetrieved: 	'sync-groups-retrieved'
+			
 		},
 		task : {
-			timeChanged : 		'task-time-changed',
-			added : 			'task-added'
+			timeChanged: 		'task-time-changed',
+			added: 				'task-added'
 		},
 		group : {
-			timeChanged : 		'group-time-changed',
-			collectionChanged : 'group-collection-changed',
-			selected : 			'group-selected',
-			added : 			'group-added',
-			detailChanged : 	'group-detail-changed'
+			timeChanged: 		'group-time-changed',
+			collectionChanged: 	'group-collection-changed',
+			selected: 			'group-selected',
+			added: 				'group-added',
+			detailChanged: 		'group-detail-changed'
 		}
 		
 	};
 	
 	function dispatch(eventType, data) {
-		var e = new CustomEvent(eventType, data);
-		eventElement.dispatchEvent(e);
+		if (typeof(data) === 'undefined') {
+			eventElement.dispatchEvent(new Event(eventType));
+		}
+		else {
+			eventElement.dispatchEvent(new CustomEvent(eventType, data));
+		}
 	}
 	
 	function subscribe(eventType, callback) {
