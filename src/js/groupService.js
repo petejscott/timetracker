@@ -5,18 +5,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	
 	var editableTimeoutId = 0;
 	var groups = [];
-	
-	var groupContainer = document.querySelector("#groupContainer");
-
-	function renderGroupNavigation(groups) {
-		var navList = groupContainer.querySelector('ul:first-child');
-		navList.textContent = "";
-		for (var i = 0, len = groups.length; i < len; i++) {
-			var groupNavElement = groupHtmlFactory.makeGroupNavElement(groups[i]);
-			navList.appendChild(groupNavElement);
-		}
-	}
-	
+		
 	function setGroupSummaryName(group) {
 		var nameElement = win.document.querySelector("h2 span.group-name");
 		nameElement.textContent = group.name;
@@ -76,11 +65,11 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		});
 		
 		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
-			renderGroupNavigation(groups);
+			groupHtmlFactory.makeGroupNavigation(groups);
 		});
 		
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
-			renderGroupNavigation(groups);
+			groupHtmlFactory.makeGroupNavigation(groups);
 			setGroupSummaryTime(e.detail);
 		});
 		
@@ -91,7 +80,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		});
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {
-			renderGroupNavigation(groups);
+			groupHtmlFactory.makeGroupNavigation(groups);
 			e.preventDefault();
 		});
 		
@@ -132,7 +121,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			createGroupForCurrentWeek();			
 		}
 		
-		renderGroupNavigation(groups);
+		groupHtmlFactory.makeGroupNavigation(groups);
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];

@@ -3,12 +3,23 @@
 var tt = tt || {};
 tt.groupHtmlFactory = (function(logger, eventService, win) {
 	
+	var groupContainer = document.querySelector("#groupContainer");
+	
+	function makeGroupNavigation(groups) {
+		var navList = groupContainer.querySelector('ul:first-child');
+		navList.textContent = "";
+		for (var i = 0, len = groups.length; i < len; i++) {
+			var groupNavElement = makeGroupNavElement(groups[i]);
+			navList.appendChild(groupNavElement);
+		}
+	}
 	
 	function makeGroupNavElement(group) {
 		var groupAnchor = win.document.createElement("a");
 		groupAnchor.setAttribute("href", "#" + group.id);
 		groupAnchor.setAttribute("title", "View group (" + group.name + ")");
 		groupAnchor.addEventListener('click', function(e) {
+			var groupId = e.currentTarget.getAttribute("id");
 			eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
 			e.preventDefault();
 		}, false);
@@ -29,7 +40,7 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 	}
 	
 	return {
-		makeGroupNavElement
+		makeGroupNavigation
 	}
 	
 })(logger, tt.eventService, this);
