@@ -57,8 +57,9 @@
 	<script>
 		var tt = tt || {};
 		tt.config = (function(win) {
-			var eventElement = win.document.querySelector("#main");
-			return { eventElement };
+			var mainContainer = win.document.querySelector("#main");
+			var eventElement = mainContainer;
+			return { mainContainer, eventElement };
 		})(this);
 	</script>
 	

@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, eventService, syncService, win) {
+tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, config, eventService, syncService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
@@ -71,7 +71,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	
 	function bindGroupInterfaceRequests() {
 		
-		ui.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
+		config.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
 			requestSync('high');
 		});
 		
@@ -144,4 +144,4 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	
 	init();
 	
-})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.eventService, tt.syncService, this);
+})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.config, tt.eventService, tt.syncService, this);

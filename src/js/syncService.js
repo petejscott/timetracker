@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.syncService = (function(logger, ui, eventService, storage, win) {
+tt.syncService = (function(logger, config, eventService, storage, win) {
 	
 	var GROUP_STORAGE_KEY = 'tt-groups';
 	var HIGH_PRIORITY_SYNC_SECONDS = 1;
@@ -75,7 +75,7 @@ tt.syncService = (function(logger, ui, eventService, storage, win) {
 		bindSyncRequest();
 		
 		eventService.subscribe(eventService.events.sync.statusUpdated, function(e) {
-			ui.mainContainer.querySelector('.sync-status').textContent = e.detail;
+			config.mainContainer.querySelector('.sync-status').textContent = e.detail;
 		});
 		
 		setUpToDateSyncUI();
@@ -102,4 +102,4 @@ tt.syncService = (function(logger, ui, eventService, storage, win) {
 		removeGroups 
 	}
 	
-})(logger, tt.ui, tt.eventService, tt.storage, this);
+})(logger, tt.config, tt.eventService, tt.storage, this);

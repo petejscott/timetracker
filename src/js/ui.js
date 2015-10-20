@@ -8,14 +8,10 @@ tt.ui = (function(logger, win) {
 		while (el.firstChild) {
 			el.removeChild(el.firstChild);
 		}
-	}
-	
-	var mainContainer = win.document.querySelector("#main");
-	
+	}	
 	
 	return { 
-		clearElement,
-		mainContainer
+		clearElement
 	};
 
 })(logger, this);
