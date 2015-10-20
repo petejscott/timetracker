@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, eventService, timeService, win) {
+tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, timeService, win) {
 	
 	var activeGroup = null;
 	var editableTimeoutId = 0;
@@ -120,7 +120,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, eventServic
 	}
 	
 	function makeTasksForGroup(group) {
-		ui.clearElement(taskContainer);
+		taskContainer.textContent = "";
 		for(var i = 0, len = group.tasks.length; i < len; i++) {
 			var task = taskFactory.createTask(group.tasks[i]);
 			makeTask(task);
@@ -166,4 +166,4 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, eventServic
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.ui, tt.eventService, tt.timeService, this);
+})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.eventService, tt.timeService, this);

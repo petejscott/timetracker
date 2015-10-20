@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, config, eventService, syncService, win) {
+tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, config, eventService, syncService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
@@ -10,7 +10,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 
 	function renderGroupNavigation(groups) {
 		var navList = groupContainer.querySelector('ul:first-child');
-		ui.clearElement(navList);
+		navList.textContent = "";
 		for (var i = 0, len = groups.length; i < len; i++) {
 			var groupNavElement = groupHtmlFactory.makeGroupNavElement(groups[i]);
 			navList.appendChild(groupNavElement);
@@ -144,4 +144,4 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	
 	init();
 	
-})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.config, tt.eventService, tt.syncService, this);
+})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.config, tt.eventService, tt.syncService, this);
