@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupHtmlFactory = (function(logger, ui, win) {
+tt.groupHtmlFactory = (function(logger, ui, eventService, win) {
 	
 	
 	function makeGroupNavElement(group) {
@@ -9,7 +9,7 @@ tt.groupHtmlFactory = (function(logger, ui, win) {
 		groupAnchor.setAttribute("href", "#" + group.id);
 		groupAnchor.setAttribute("title", "View group (" + group.name + ")");
 		groupAnchor.addEventListener('click', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : group }));
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
 			e.preventDefault();
 		}, false);
 		
@@ -32,4 +32,4 @@ tt.groupHtmlFactory = (function(logger, ui, win) {
 		makeGroupNavElement: makeGroupNavElement
 	}
 	
-})(logger, tt.ui, this);
+})(logger, tt.ui, tt.eventService, this);

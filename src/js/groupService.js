@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, syncService, win) {
+tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService, ui, eventService, syncService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
@@ -33,13 +33,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 
 		currentGroupNameElement.addEventListener('input', function(e) {
 			
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 			group.name = currentGroupNameElement.textContent;
 			e.preventDefault();
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-detail-changed', { 'detail': group }));
+				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : group });
 			}, 1500);
 			
 		}, false);
@@ -48,8 +48,8 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewTaskGroup();
 		groups.push(group);
-		ui.mainContainer.dispatchEvent(new CustomEvent('group-added', { 'detail' : group }));
-		ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : group }));
+		eventService.dispatch(eventService.events.group.added, { 'detail' : group });
+		eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
 	}
 	
 	function bind() {
@@ -58,13 +58,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	}
 	
 	function bindSyncRequests() {
-		ui.mainContainer.addEventListener('group-detail-changed', function(e) {
+		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
 			requestSync('high');
 		});
-		ui.mainContainer.addEventListener('group-collection-changed', function(e) {
+		eventService.subscribe(eventService.events.group.collectionChanged, function(e) {
 			requestSync('high');
 		});
-		ui.mainContainer.addEventListener('group-time-changed', function(e) {
+		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
 			requestSync('low');
 		});
 	}
@@ -75,25 +75,25 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 			requestSync('high');
 		});
 		
-		ui.mainContainer.addEventListener('group-detail-changed', function(e) {
+		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
 			renderGroupNavigation(groups);
 		});
 		
-		ui.mainContainer.addEventListener('group-time-changed', function(e) {
+		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
 			renderGroupNavigation(groups);
 			setGroupSummaryTime(e.detail);
 		});
 		
-		ui.mainContainer.addEventListener('group-selected', function(e) {
+		eventService.subscribe(eventService.events.group.selected, function(e) {
 			bindGroupNameEditToCurrentGroup(e.detail);
 			setGroupSummaryName(e.detail);
 			setGroupSummaryTime(e.detail);
 		});
 		
-		ui.mainContainer.addEventListener('group-added', function(e) {
+		eventService.subscribe(eventService.events.group.added, function(e) {
 			renderGroupNavigation(groups);
 			e.preventDefault();
-		}, false);
+		});
 		
 		var elDelete = win.document.querySelector('.action-group-delete');
 		elDelete.addEventListener('click', function(e) {
@@ -109,15 +109,14 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 	}
 	
 	function requestSync(priority) {
-		ui.mainContainer.dispatchEvent(new CustomEvent('sync-requested', 
-		{ 
+		eventService.dispatch(eventService.events.sync.requested,  { 
 			'detail' : 
 			{ 
 				'type' : 'groups',
 				'data' : groups,
 				'priority' : priority 
 			}
-		}));
+		});
 	}
 	
 	function init() {
@@ -139,10 +138,10 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, taskService,
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
-			ui.mainContainer.dispatchEvent(new CustomEvent('group-selected', { 'detail' : lastGroup }));
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : lastGroup });
 		}
 	}
 	
 	init();
 	
-})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.syncService, this);
+})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.taskService, tt.ui, tt.eventService, tt.syncService, this);

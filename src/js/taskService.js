@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService, win) {
+tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, eventService, timeService, win) {
 	
 	var activeGroup = null;
 	var editableTimeoutId = 0;
@@ -22,7 +22,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 		task.runtime += 1;
 		var taskElement = getElementForTaskByTaskId(task.id);
 		taskElement.querySelector("span.total").textContent = task.total;
-		ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
+		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
 	}
 	
 	function playPauseTask(task, taskElement) {
@@ -35,7 +35,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 		if (task.isRunning) taskEventName = 'task-stopped';
 		
 		taskElement.dispatchEvent(new CustomEvent(taskEventName, { 'detail' : task }));
-		ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
 	}
 	
 	function getElementForTaskByTaskId(taskId) {
@@ -56,25 +56,25 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 		});
 		
 		titleElement.addEventListener('input', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 			task.name = titleElement.textContent;
 			e.preventDefault();
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-collection-changed', { 'detail' : activeGroup }));
+			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
 			}, 1500);			
 		}, false);
 		
 		totalElement.addEventListener('input', function(e) {
-			ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'not synced' }));
+			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 			task.runtime = timeService.getSecondsFromHourMinuteSecond(totalElement.textContent);
 			e.preventDefault();
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-collection-changed', { 'detail' : activeGroup }));
-				ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
+			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+			eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
 			}, 1500);	
 		}, false);
 		
@@ -84,8 +84,8 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 				activeGroup.tasks.splice(taskIndex, 1);
 			}
 			var taskElement = getElementForTaskByTaskId(task.id);
-			ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
-			ui.mainContainer.dispatchEvent(new CustomEvent('group-time-changed', { 'detail' : activeGroup }));
+			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+			eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
 			taskElement.remove();
 			e.preventDefault();
 		});
@@ -94,7 +94,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 		listItem.appendChild(titleElement);
 		listItem.appendChild(totalElement);
 		listItem.appendChild(deleteElement);
-		
+			
 		return listItem;
 	}
 	
@@ -130,8 +130,8 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 	function addNewTaskToActiveGroup() {
 		var task = taskFactory.createNewTask();
 		activeGroup.tasks.push(task);
-		taskContainer.dispatchEvent(new CustomEvent('task-added', { 'detail' : task }));
-		ui.mainContainer.dispatchEvent(new Event('group-collection-changed'));
+		eventService.dispatch(eventService.events.task.added, { 'detail' : task });
+		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
 	}
 	
 	function bindNewTaskAction() {
@@ -144,23 +144,19 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 		}
 	}
 	
-	function bindGroupSelectedEventListener() {
-		ui.mainContainer.addEventListener('group-selected', function(e) {
-			setActiveGroup(e.detail);
-			e.preventDefault();
-		}, false);
+	function groupSelectedEventHandler(e) {
+		setActiveGroup(e.detail);
+		e.preventDefault();
 	}
 	
-	function bindTaskAddedEventListener() {
-		taskContainer.addEventListener('task-added', function(e) {
-			makeTask(e.detail);
-			e.preventDefault();
-		}, false);
+	function taskAddedEventHandler(e) {
+		makeTask(e.detail);
+		e.preventDefault();
 	}
 	
-	function bind() {
-		bindTaskAddedEventListener();
-		bindGroupSelectedEventListener();
+	function bind() {		
+		eventService.subscribe(eventService.events.task.added, taskAddedEventHandler);
+		eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
 		bindNewTaskAction();
 	}
 	
@@ -170,4 +166,4 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, ui, timeService
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.ui, tt.timeService, this);
+})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.ui, tt.eventService, tt.timeService, this);

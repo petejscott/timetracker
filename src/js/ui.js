@@ -12,11 +12,6 @@ tt.ui = (function(logger, win) {
 	
 	var mainContainer = win.document.querySelector("#main");
 	
-	//function createTaskLineItem(task)
-	//function renderTasksForWeekDay(day)
-	//function renderCurrentDaySummary(day)
-	//function setActiveWeekDay(activeDayIndex)
-	
 	
 	return { 
 		clearElement : clearElement,

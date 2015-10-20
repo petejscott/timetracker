@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.syncService = (function(logger, ui, storage, win) {
+tt.syncService = (function(logger, ui, eventService, storage, win) {
 	
 	var GROUP_STORAGE_KEY = 'tt-groups';
 	var HIGH_PRIORITY_SYNC_SECONDS = 1;
@@ -43,37 +43,38 @@ tt.syncService = (function(logger, ui, storage, win) {
 	
 	function setUpToDateSyncUI() {
 		if (syncUiInterval !== null) win.clearInterval(syncUiInterval);
-		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'up-to-date' }));
+		eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'up-to-date' });
 	}
 	
 	function updatePendingSyncUI() {
 		secondsUntilSync -= 1;
-		ui.mainContainer.dispatchEvent(new CustomEvent('sync-status', { 'detail' : 'preparing to sync... ('+ secondsUntilSync +')' }));	
+		eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'preparing to sync... ('+ secondsUntilSync +')' });
+	}
+	
+	function syncRequestHandler(e) {
+		var data = e.detail.data;
+		if (data === null || typeof(data) === 'undefined') {
+			throw 'No data (detail.data) provided to sync-requested event';
+		}
+		
+		if (e.detail.priority === 'high') {
+			requestSync(HIGH_PRIORITY_SYNC_SECONDS, data);
+		} else if (e.detail.priority === 'low') {
+			requestSync(LOW_PRIORITY_SYNC_SECONDS, data);
+		}
+		else {
+			throw 'Unknown or no priority (detail.priority) requested for sync-requested event';
+		}
 	}
 	
 	function bindSyncRequest() {
-		ui.mainContainer.addEventListener('sync-requested', function(e) {
-			
-			var data = e.detail.data;
-			if (data === null || typeof(data) === 'undefined') {
-				throw 'No data (detail.data) provided to sync-requested event';
-			}
-			
-			if (e.detail.priority === 'high') {
-				requestSync(HIGH_PRIORITY_SYNC_SECONDS, data);
-			} else if (e.detail.priority === 'low') {
-				requestSync(LOW_PRIORITY_SYNC_SECONDS, data);
-			}
-			else {
-				throw 'Unknown or no priority (detail.priority) requested for sync-requested event';
-			}
-		});
+		eventService.subscribe(eventService.events.sync.requested, syncRequestHandler);
 	}
 	
 	function init() {
 		bindSyncRequest();
 		
-		ui.mainContainer.addEventListener('sync-status', function(e) {
+		eventService.subscribe(eventService.events.sync.statusUpdated, function(e) {
 			ui.mainContainer.querySelector('.sync-status').textContent = e.detail;
 		});
 		
@@ -101,4 +102,4 @@ tt.syncService = (function(logger, ui, storage, win) {
 		removeGroups: removeGroups 
 	}
 	
-})(logger, tt.ui, tt.storage, this);
+})(logger, tt.ui, tt.eventService, tt.storage, this);

@@ -54,6 +54,15 @@
 		</section>
 	</article>
 	
+	<script>
+		var tt = tt || {};
+		tt.config = (function(win) {
+			var eventElement = win.document.querySelector("#main");
+			return { eventElement };
+		})(this);
+	</script>
+	
+	<script src="js/eventService.js"></script>
 	<script src="lib/drawer.js"></script>
 	<script src="js/storage.js"></script>
 	<script src="js/ui.js"></script>
