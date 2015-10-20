@@ -8,7 +8,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	
 	function getGroupById(groupId) {
 		for (var i = 0, len = groups.length; i < len; i++) {
-			if (groups[i] === groupId) return groups[i];
+			if (groups[i].id === groupId) return groups[i];
 		}
 	}
 	
@@ -24,7 +24,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	
 	function bindGroupNameEditToCurrentGroup(group) {
 		
-		var currentGroupNameElement = win.document.querySelector(".group-name");
+		var currentGroupNameElement = win.document.querySelector("header .group-name");
 
 		currentGroupNameElement.addEventListener('input', function(e) {
 			
@@ -34,7 +34,8 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				eventService.dispatch(eventService.events.group.detailChanged);
+				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+				console.log('dispatched detailChanged');
 			}, 1500);
 			
 		}, false);
@@ -43,8 +44,8 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewTaskGroup();
 		groups.push(group);
-		eventService.dispatch(eventService.events.group.added);
-		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group } });
+		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 	}
 	
 	function bind() {
@@ -71,22 +72,25 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		});
 		
 		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
-			groupHtmlFactory.makeGroupNavigation(groups);
+			groupHtmlFactory.updateGroupNameInGroupNavigation(e.detail.group);
 		});
 		
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
-			groupHtmlFactory.makeGroupNavigation(groups);
-			setGroupSummaryTime(e.detail.group);
+			var group = getGroupById(e.detail.groupId);
+			groupHtmlFactory.updateGroupTotalInGroupNavigation(group);
+			setGroupSummaryTime(group);
 		});
 		
 		eventService.subscribe(eventService.events.group.selected, function(e) {
-			bindGroupNameEditToCurrentGroup(e.detail.group);
-			setGroupSummaryName(e.detail.group);
-			setGroupSummaryTime(e.detail.group);
+			var group = getGroupById(e.detail.groupId);
+			bindGroupNameEditToCurrentGroup(group);
+			setGroupSummaryName(group);
+			setGroupSummaryTime(group);
 		});
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {
-			groupHtmlFactory.makeGroupNavigation(groups);
+			var group = getGroupById(e.detail.groupId);
+			groupHtmlFactory.appendGroupToGroupNavigation(group);
 			e.preventDefault();
 		});
 		
@@ -131,7 +135,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
-			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup } });
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup, 'groupId' : lastGroup.id }});
 		}
 	}
 	
