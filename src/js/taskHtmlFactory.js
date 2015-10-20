@@ -3,6 +3,8 @@
 var tt = tt || {};
 tt.taskHtmlFactory = (function(logger, win) {
 	
+	//Maybe taskHtmlFactory is really a combination of view/viewmodel?
+	
 	function makeTaskContainer(task) {
 		var listItem = win.document.createElement("li");
 		listItem.setAttribute("id", task.id);

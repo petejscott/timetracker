@@ -23,10 +23,14 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	
 	function taskCounter(task) {
 		task.runtime += 1;
+		
+		// move this to taskHtmlFactory as updateTaskTotal(task) ? not really a factory responsibility, though.
 		var taskElement = getElementForTaskByTaskId(task.id);
 		if (taskElement !== null) {
 			taskElement.querySelector("span.total").textContent = task.total;
 		}
+		// end
+		
 		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'groupId' : task.groupId }});
 	}
 	
@@ -43,9 +47,11 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup, 'groupId' : task.groupId }});
 	}
 	
+	// move this to taskHtmlFactory (as public)?
 	function getElementForTaskByTaskId(taskId) {
 		return taskContainer.querySelector("#" + taskId);
 	}
+	// end
 	
 	function createTaskElement(task) {
 		
@@ -115,7 +121,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	}
 	
 	function makeTasksForGroup(group) {
-		taskContainer.textContent = "";
+		taskContainer.textContent = ""; // move this "clear" responsiblity to taskHtmlFactory?? 
 		for(var i = 0, len = group.tasks.length; i < len; i++) {
 			var tempTask = group.tasks[i];
 			var task = taskFactory.createTask(tempTask);

@@ -3,6 +3,8 @@
 var tt = tt || {};
 tt.groupHtmlFactory = (function(logger, eventService, win) {
 	
+	// Maybe groupHtmlFactory is really a combination of view/viewmodel?
+	
 	var groupNavigationContainer = document.querySelector("#groupContainer ul");
 	
 	function makeGroupNavigation(groups) {
