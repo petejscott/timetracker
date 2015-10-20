@@ -18,7 +18,6 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 	}
 	
 	function updateGroupTotalInGroupNavigation(group) {
-		console.log(group);
 		var groupNavElement = groupNavigationContainer.querySelector("li[data-groupid='" + group.id + "']");
 		var groupTotalElement = groupNavElement.querySelector(".group-total");
 		groupTotalElement.textContent = group.total;

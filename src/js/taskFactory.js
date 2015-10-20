@@ -17,13 +17,13 @@ tt.taskFactory = (function(logger, timeService) {
 			name : 'new task',
 			runtime : 0.00,
 			isComplete : false,
-			isRunning : false
+			isRunning : false,
+			intervalId : null
 		};
 		return createTask(data);
 	}
 	
 	function createTask(task) {
-		task.timerObject = null;
 		if (typeof(task.total) === 'undefined')
 		{
 			Object.defineProperty(task, 'total', {

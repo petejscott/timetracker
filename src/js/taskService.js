@@ -9,21 +9,25 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	
 	function startTask(task) {
 		task.isRunning = true;
-		task.timerObject = win.setInterval(taskCounter, 1000, task);
+		if (task.intervalId == null)
+		{
+			task.intervalId = win.setInterval(taskCounter, 1000, task);
+		}
 	}
 	
 	function stopTask(task) {
 		task.isRunning = false;
-		win.clearInterval(task.timerObject);
-		task.timerObject = null;
+		win.clearInterval(task.intervalId);
+		task.intervalId = null;
 	}
 	
 	function taskCounter(task) {
 		task.runtime += 1;
 		var taskElement = getElementForTaskByTaskId(task.id);
-		if (taskElement === null) return;
-		taskElement.querySelector("span.total").textContent = task.total;
-		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'group' : activeGroup, 'groupId' : task.groupId }});
+		if (taskElement !== null) {
+			taskElement.querySelector("span.total").textContent = task.total;
+		}
+		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'groupId' : task.groupId }});
 	}
 	
 	function playPauseTask(task, taskElement) {
@@ -105,7 +109,9 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		});
 		taskContainer.appendChild(taskElement);
 		
-		if (task.isRunning) startTask(task);
+		if (task.isRunning) {
+			startTask(task);
+		}
 	}
 	
 	function makeTasksForGroup(group) {

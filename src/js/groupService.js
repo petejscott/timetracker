@@ -35,7 +35,6 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
 				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-				console.log('dispatched detailChanged');
 			}, 1500);
 			
 		}, false);
