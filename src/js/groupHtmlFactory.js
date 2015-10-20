@@ -29,7 +29,7 @@ tt.groupHtmlFactory = (function(logger, ui, eventService, win) {
 	}
 	
 	return {
-		makeGroupNavElement: makeGroupNavElement
+		makeGroupNavElement
 	}
 	
 })(logger, tt.ui, tt.eventService, this);

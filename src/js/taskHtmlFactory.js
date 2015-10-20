@@ -62,11 +62,11 @@ tt.taskHtmlFactory = (function(logger, win) {
 	}
 	
 	return {
-		makeTaskContainer: makeTaskContainer,
-		makePlayElement: makePlayElement,
-		makeTitleElement: makeTitleElement,
-		makeTotalElement: makeTotalElement,
-		makeDeleteElement: makeDeleteElement
+		makeTaskContainer,
+		makePlayElement,
+		makeTitleElement,
+		makeTotalElement,
+		makeDeleteElement
 	}
 	
 })(logger, this);

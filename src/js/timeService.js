@@ -28,8 +28,8 @@ tt.timeService = (function() {
 	}
 	
 	return {
-		formatSecondsAsHourMinuteSecond : formatSecondsAsHourMinuteSecond,
-		getSecondsFromHourMinuteSecond : getSecondsFromHourMinuteSecond
+		formatSecondsAsHourMinuteSecond,
+		getSecondsFromHourMinuteSecond
 	}
 
 })();

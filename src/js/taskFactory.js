@@ -35,8 +35,8 @@ tt.taskFactory = (function(logger, timeService) {
 	}
 	
 	return { 
-		createTask : createTask,
-		createNewTask : createNewTask 
+		createTask,
+		createNewTask 
 	};
 
 })(logger, tt.timeService);

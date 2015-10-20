@@ -20,9 +20,9 @@ tt.storage = (function(logger) {
 	}
 	
 	return {
-		set : set,
-		get : get,
-		remove : remove
+		set,
+		get,
+		remove
 	}
 
 })(logger);

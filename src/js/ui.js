@@ -14,8 +14,8 @@ tt.ui = (function(logger, win) {
 	
 	
 	return { 
-		clearElement : clearElement,
-		mainContainer : mainContainer
+		clearElement,
+		mainContainer
 	};
 
 })(logger, this);

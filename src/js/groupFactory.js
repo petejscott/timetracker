@@ -63,8 +63,8 @@ tt.groupFactory = (function(logger, timeService) {
 	}
 	
 	return { 
-		createNewTaskGroup : createNewTaskGroup,
-		createTaskGroup : createTaskGroup
+		createNewTaskGroup,
+		createTaskGroup
 	};
 	
 })(logger, tt.timeService);

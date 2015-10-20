@@ -97,9 +97,9 @@ tt.syncService = (function(logger, ui, eventService, storage, win) {
 	init();
 	
 	return {
-		syncGroups: syncGroups,
-		getGroups: getGroups,
-		removeGroups: removeGroups 
+		syncGroups,
+		getGroups,
+		removeGroups 
 	}
 	
 })(logger, tt.ui, tt.eventService, tt.storage, this);
