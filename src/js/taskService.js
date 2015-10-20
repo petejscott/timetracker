@@ -44,58 +44,46 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	
 	function createTaskElement(task) {
 		
-		var listItem = taskHtmlFactory.makeTaskContainer(task);
-		var playElement = taskHtmlFactory.makePlayElement(task);
-		var titleElement = taskHtmlFactory.makeTitleElement(task);
-		var totalElement = taskHtmlFactory.makeTotalElement(task);
-		var deleteElement = taskHtmlFactory.makeDeleteElement(task);
-		
-		playElement.addEventListener('click', function(e) {
-			playPauseTask(task, listItem);
-			e.preventDefault();
-		});
-		
-		titleElement.addEventListener('input', function(e) {
-			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			task.name = titleElement.textContent;
-			e.preventDefault();
-			
-			win.clearTimeout(editableTimeoutId);
-			editableTimeoutId = win.setTimeout(function() {
-			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
-			}, 1500);			
-		}, false);
-		
-		totalElement.addEventListener('input', function(e) {
-			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			task.runtime = timeService.getSecondsFromHourMinuteSecond(totalElement.textContent);
-			e.preventDefault();
-			
-			win.clearTimeout(editableTimeoutId);
-			editableTimeoutId = win.setTimeout(function() {
-			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
-			eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
-			}, 1500);	
-		}, false);
-		
-		deleteElement.addEventListener('click', function(e) {
-			var taskIndex = activeGroup.tasks.indexOf(task);
-			if (taskIndex > -1) {
-				activeGroup.tasks.splice(taskIndex, 1);
+		var callbackConfig = {
+			'playCallback' : function(e) {
+				playPauseTask(task, getElementForTaskByTaskId(task.id));
+				e.preventDefault();
+			},
+			'titleEditCallback' : function(e) {
+				eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				task.name = e.currentTarget.textContent;
+				e.preventDefault();
+				
+				win.clearTimeout(editableTimeoutId);
+				editableTimeoutId = win.setTimeout(function() {
+					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+				}, 1500);			
+			},
+			'totalEditCallback' : function(e) {
+				eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				task.runtime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
+				e.preventDefault();
+				
+				win.clearTimeout(editableTimeoutId);
+				editableTimeoutId = win.setTimeout(function() {
+					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+					eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
+				}, 1500);	
+			},
+			'deleteCallback' : function(e) {
+				var taskIndex = activeGroup.tasks.indexOf(task);
+				if (taskIndex > -1) {
+					activeGroup.tasks.splice(taskIndex, 1);
+				}
+				var taskElement = getElementForTaskByTaskId(task.id);
+				eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+				eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
+				taskElement.remove();
+				e.preventDefault();
 			}
-			var taskElement = getElementForTaskByTaskId(task.id);
-			eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
-			eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
-			taskElement.remove();
-			e.preventDefault();
-		});
+		};
 		
-		listItem.appendChild(playElement);
-		listItem.appendChild(titleElement);
-		listItem.appendChild(totalElement);
-		listItem.appendChild(deleteElement);
-			
-		return listItem;
+		return taskHtmlFactory.makeTaskElement(task, callbackConfig);
 	}
 	
 	function setActiveGroup(group) {

@@ -61,12 +61,28 @@ tt.taskHtmlFactory = (function(logger, win) {
 		return del;
 	}
 	
+	function makeTaskElement(task, callbackConfig) {
+		var listItem = makeTaskContainer(task);
+		var playElement = makePlayElement(task);
+		var titleElement = makeTitleElement(task);
+		var totalElement = makeTotalElement(task);
+		var deleteElement = makeDeleteElement(task);
+		
+		playElement.addEventListener('click', callbackConfig.playCallback, false);		
+		titleElement.addEventListener('input', callbackConfig.titleEditCallback, false);
+		totalElement.addEventListener('input', callbackConfig.totalEditCallback, false);
+		deleteElement.addEventListener('click', callbackConfig.deleteCallback, false);
+		
+		listItem.appendChild(playElement);
+		listItem.appendChild(titleElement);
+		listItem.appendChild(totalElement);
+		listItem.appendChild(deleteElement);
+			
+		return listItem;
+	}
+	
 	return {
-		makeTaskContainer,
-		makePlayElement,
-		makeTitleElement,
-		makeTotalElement,
-		makeDeleteElement
+		makeTaskElement
 	}
 	
 })(logger, this);
