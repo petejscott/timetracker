@@ -22,7 +22,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		task.runtime += 1;
 		var taskElement = getElementForTaskByTaskId(task.id);
 		taskElement.querySelector("span.total").textContent = task.total;
-		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
+		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'group' : activeGroup }});
 	}
 	
 	function playPauseTask(task, taskElement) {
@@ -35,7 +35,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		if (task.isRunning) taskEventName = 'task-stopped';
 		
 		taskElement.dispatchEvent(new CustomEvent(taskEventName, { 'detail' : task }));
-		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
 	}
 	
 	function getElementForTaskByTaskId(taskId) {
@@ -56,7 +56,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 				
 				win.clearTimeout(editableTimeoutId);
 				editableTimeoutId = win.setTimeout(function() {
-					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
 				}, 1500);			
 			},
 			'totalEditCallback' : function(e) {
@@ -66,8 +66,8 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 				
 				win.clearTimeout(editableTimeoutId);
 				editableTimeoutId = win.setTimeout(function() {
-					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
-					eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
+					eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
+					eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'group' : activeGroup } });
 				}, 1500);	
 			},
 			'deleteCallback' : function(e) {
@@ -76,8 +76,8 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 					activeGroup.tasks.splice(taskIndex, 1);
 				}
 				var taskElement = getElementForTaskByTaskId(task.id);
-				eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
-				eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : activeGroup });
+				eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
+				eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'group' : activeGroup } });
 				taskElement.remove();
 				e.preventDefault();
 			}
@@ -120,7 +120,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		var task = taskFactory.createNewTask(activeGroup);
 		activeGroup.tasks.push(task);
 		eventService.dispatch(eventService.events.task.added, { 'detail' : task });
-		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : activeGroup });
+		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
 	}
 	
 	function bindNewTaskAction() {
@@ -134,7 +134,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	}
 	
 	function groupSelectedEventHandler(e) {
-		setActiveGroup(e.detail);
+		setActiveGroup(e.detail.group);
 		e.preventDefault();
 	}
 	

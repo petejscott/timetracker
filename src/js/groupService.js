@@ -5,7 +5,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	
 	var editableTimeoutId = 0;
 	var groups = [];
-		
+	
+	function getGroupById(groupId) {
+		for (var i = 0, len = groups.length; i < len; i++) {
+			if (groups[i] === groupId) return groups[i];
+		}
+	}
+	
 	function setGroupSummaryName(group) {
 		var nameElement = win.document.querySelector("h2 span.group-name");
 		nameElement.textContent = group.name;
@@ -38,7 +44,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		var group = groupFactory.createNewTaskGroup();
 		groups.push(group);
 		eventService.dispatch(eventService.events.group.added, { 'detail' : group });
-		eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
+		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group } });
 	}
 	
 	function bind() {
@@ -70,13 +76,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
 			groupHtmlFactory.makeGroupNavigation(groups);
-			setGroupSummaryTime(e.detail);
+			setGroupSummaryTime(e.detail.group);
 		});
 		
 		eventService.subscribe(eventService.events.group.selected, function(e) {
-			bindGroupNameEditToCurrentGroup(e.detail);
-			setGroupSummaryName(e.detail);
-			setGroupSummaryTime(e.detail);
+			bindGroupNameEditToCurrentGroup(e.detail.group);
+			setGroupSummaryName(e.detail.group);
+			setGroupSummaryTime(e.detail.group);
 		});
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {
@@ -125,7 +131,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
-			eventService.dispatch(eventService.events.group.selected, { 'detail' : lastGroup });
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup } });
 		}
 	}
 	

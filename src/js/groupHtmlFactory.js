@@ -23,7 +23,7 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 		groupAnchor.setAttribute("href", "#" + group.id);
 		groupAnchor.setAttribute("title", "View group (" + group.name + ")");
 		groupAnchor.addEventListener('click', function(e) {
-			eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group }});
 			e.preventDefault();
 		}, false);
 		
