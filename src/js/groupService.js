@@ -34,7 +34,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
-				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : group });
+				eventService.dispatch(eventService.events.group.detailChanged);
 			}, 1500);
 			
 		}, false);
@@ -43,7 +43,7 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewTaskGroup();
 		groups.push(group);
-		eventService.dispatch(eventService.events.group.added, { 'detail' : group });
+		eventService.dispatch(eventService.events.group.added);
 		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group } });
 	}
 	

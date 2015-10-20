@@ -119,7 +119,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	function addNewTaskToActiveGroup() {
 		var task = taskFactory.createNewTask(activeGroup);
 		activeGroup.tasks.push(task);
-		eventService.dispatch(eventService.events.task.added, { 'detail' : task });
+		eventService.dispatch(eventService.events.task.added, { 'detail' : { 'task' : task }});
 		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup } });
 	}
 	
@@ -139,7 +139,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	}
 	
 	function taskAddedEventHandler(e) {
-		makeTask(e.detail);
+		makeTask(e.detail.task);
 		e.preventDefault();
 	}
 	
