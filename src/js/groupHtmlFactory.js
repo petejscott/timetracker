@@ -15,11 +15,14 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 	}
 	
 	function makeGroupNavElement(group) {
+		
+		var groupListItem = win.document.createElement("li");
+		groupListItem.setAttribute("data-groupid", group.id);
+		
 		var groupAnchor = win.document.createElement("a");
 		groupAnchor.setAttribute("href", "#" + group.id);
 		groupAnchor.setAttribute("title", "View group (" + group.name + ")");
 		groupAnchor.addEventListener('click', function(e) {
-			var groupId = e.currentTarget.getAttribute("id");
 			eventService.dispatch(eventService.events.group.selected, { 'detail' : group });
 			e.preventDefault();
 		}, false);
@@ -28,9 +31,7 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 		
 		var groupTotal = win.document.createElement("span");
 		groupTotal.classList.add("paren-data");
-		groupTotal.textContent = group.total;
-		
-		var groupListItem = win.document.createElement("li");
+		groupTotal.textContent = group.total;		
 		
 		groupAnchor.appendChild(groupText);
 		groupAnchor.appendChild(groupTotal);

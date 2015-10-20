@@ -6,6 +6,8 @@ tt.taskHtmlFactory = (function(logger, win) {
 	function makeTaskContainer(task) {
 		var listItem = win.document.createElement("li");
 		listItem.setAttribute("id", task.id);
+		listItem.setAttribute("data-taskid", task.id);
+		listItem.setAttribute("data-groupid", task.groupId);
 		
 		return listItem;
 	}
