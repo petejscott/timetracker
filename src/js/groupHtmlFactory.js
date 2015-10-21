@@ -14,6 +14,11 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 		}
 	}
 	
+	function removeGroupFromGroupNavigation(group) {
+		var groupNavElement = groupNavigationContainer.querySelector("li[data-groupid='" + group.id + "']");
+		groupNavElement.remove();
+	}
+	
 	function appendGroupToGroupNavigation(group) {
 		var groupNavElement = makeGroupNavElement(group);
 		groupNavigationContainer.appendChild(groupNavElement);
@@ -55,7 +60,21 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 		
 		groupAnchor.appendChild(groupText);
 		groupAnchor.appendChild(groupTotal);
+		
+		var groupDeleteAnchor = win.document.createElement("a");
+		groupDeleteAnchor.classList.add("group-delete");
+		groupDeleteAnchor.setAttribute("href", "#deletegroup");
+		var groupDelete = win.document.createElement("i");
+		groupDelete.classList.add("icon-cancel-circled");
+		groupDelete.setAttribute("title", "Delete Group");
+		groupDeleteAnchor.appendChild(groupDelete);
+		groupDeleteAnchor.addEventListener('click', function(e) {
+			eventService.dispatch(eventService.events.group.deleted, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+			e.preventDefault();
+		}, false);
+		
 		groupListItem.appendChild(groupAnchor);
+		groupListItem.appendChild(groupDeleteAnchor);
 		
 		return groupListItem;
 	}
@@ -64,7 +83,8 @@ tt.groupHtmlFactory = (function(logger, eventService, win) {
 		makeGroupNavigation,
 		appendGroupToGroupNavigation,
 		updateGroupTotalInGroupNavigation,
-		updateGroupNameInGroupNavigation
+		updateGroupNameInGroupNavigation,
+		removeGroupFromGroupNavigation
 	}
 	
 })(logger, tt.eventService, this);

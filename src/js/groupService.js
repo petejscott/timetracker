@@ -59,7 +59,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		eventService.subscribe(eventService.events.group.collectionChanged, function(e) {
 			requestSync('high');
 		});
+		eventService.subscribe(eventService.events.group.added, function(e) {
+			requestSync('high');
+		});
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
+			requestSync('low');
+		});
+		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			requestSync('low');
 		});
 	}
@@ -90,6 +96,16 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		eventService.subscribe(eventService.events.group.added, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			groupHtmlFactory.appendGroupToGroupNavigation(group);
+			e.preventDefault();
+		});
+		
+		eventService.subscribe(eventService.events.group.deleted, function(e) {
+			var group = getGroupById(e.detail.groupId);
+			groupHtmlFactory.removeGroupFromGroupNavigation(group);
+			var index = groups.indexOf(group);
+			if (index > -1) {
+				groups.splice(index, 1);
+			}
 			e.preventDefault();
 		});
 		

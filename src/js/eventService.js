@@ -24,6 +24,7 @@ tt.eventService = (function(logger, config) {
 			collectionChanged: 	'group-collection-changed',
 			selected: 			'group-selected',
 			added: 				'group-added',
+			deleted: 			'group-deleted',
 			detailChanged: 		'group-detail-changed'
 		}
 		
