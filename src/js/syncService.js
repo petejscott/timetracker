@@ -12,6 +12,9 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 	var secondsUntilSync = null;
 	var dataToSync = null;
 	
+	var useRemoteSyncWebhook = false;
+	var remoteSyncWebUrl = null;
+	
 	function getDataToSync() {
 		return dataToSync;
 	}
@@ -67,6 +70,29 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 		}
 	}
 	
+	function remoteGroupsPost(jsonData) {
+		var http = new XMLHttpRequest();
+		var url = remoteSyncWebUrl;
+		var params = "groupdata=" + jsonData;
+		http.open("POST", url, true);
+
+		http.setRequestHeader("Content-type", "application/json");
+		http.setRequestHeader("X-Auth-Token", config.remoteSyncApiKey);
+		http.setRequestHeader("Content-length", params.length);
+		http.setRequestHeader("Connection", "close");
+
+		http.onreadystatechange = function() {
+			if (http.readyState === 4) {
+				if (http.status >= 200 && http.status < 400) {                
+					logger.logDebug(http.status + " from remote: " + http.responseText);
+				} else {
+					logger.logError(http.status + " from remote: " + http.responseText);
+				}
+			}
+		}
+		http.send(params);
+	}
+	
 	function init() {
 		
 		eventService.subscribe(eventService.events.sync.requested, syncRequestHandler);
@@ -77,12 +103,22 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 			config.mainContainer.querySelector('.sync-status').textContent = e.detail;
 		});
 		
+		if (typeof(config.remoteSyncWebUrl) !== 'undefined' && config.remoteSyncWebUrl != null && config.remoteSyncWebUrl.length > 0) {
+			useRemoteSyncWebhook = true;
+			remoteSyncWebUrl = config.remoteSyncWebUrl;
+		}
+		
 		setUpToDateSyncUI();
 	}
 	
 	function syncGroups(groups) {
-		logger.logDebug('syncing... '+JSON.stringify(groups));
-		storage.set(GROUP_STORAGE_KEY, JSON.stringify(groups));
+		var jsonGroupData = JSON.stringify(groups);
+		logger.logDebug('syncing... ' + jsonGroupData);
+		storage.set(GROUP_STORAGE_KEY, jsonGroupData);
+		if (useRemoteSyncWebhook) {
+			remoteGroupsPost(jsonGroupData);
+			console.log('remote post');
+		}
 	}
 	
 	function getGroups() {

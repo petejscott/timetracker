@@ -59,7 +59,9 @@
 		tt.config = (function(win) {
 			var mainContainer = win.document.querySelector("#main");
 			var eventElement = mainContainer;
-			return { mainContainer, eventElement };
+			var remoteSyncWebUrl = "";
+			var remoteSyncApiKey = "";
+			return { mainContainer, eventElement, remoteSyncWebUrl, remoteSyncApiKey };
 		})(this);
 	</script>
 	
