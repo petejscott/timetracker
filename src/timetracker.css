@@ -128,7 +128,7 @@ header .menuToggle {
 	font-weight:normal;
 }
 header h2::before {
-  color: #D9CEB2;
+	color: #D9CEB2;
 }
 .top-header h1 { 
 	font-size:1rem;
@@ -138,7 +138,7 @@ header h2::before {
 	font-weight:normal;
 }
 header h1, header h2 {
-  font-weight: 300;
+	font-weight: 300;
 }
 
 /* Primary Nav */
@@ -189,7 +189,7 @@ nav li a:hover::before {
 /* group summary */
 
 section.group { 
-  margin: 1em 0;
+	margin: 1em 0;
 }
 section.group header { 
 	display: inline-block;
@@ -203,7 +203,7 @@ section.group .group-name {
 	padding: 0.2em;
 }
 section.group header h2::before { 
-  margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 .action-group-delete {
 	color:#E08E79;
@@ -215,54 +215,54 @@ section.group header h2::before {
 /* Task List */
 
 section.tasks {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 1em 0;
+	width: 100%;
+	box-sizing: border-box;
+	margin: 1em 0;
 }
 section.tasks header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 section.tasks header h2, section.tasks header a {
-  display: inline-block;
-  font-size: 1rem;
-  line-height: 2rem;
-  vertical-align: middle;
+	display: inline-block;
+	font-size: 1rem;
+	line-height: 2rem;
+	vertical-align: middle;
 }
 section.tasks header h2 { 
-  color: #7A6A53;
+	color: #7A6A53;
 }
 section.tasks header h2::before { 
-  margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 section.tasks header a { 
-  text-decoration: none; 
-  font-size: 2em;
+	text-decoration: none; 
+	font-size: 2em;
 }
 ul.tasklist {
-  display: table;
-  border-collapse: separate;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid #bbb;
-  border-width: 1px 0;
-  width: 100%;
-  color: #7A6A53;
+	display: table;
+	border-collapse: separate;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #bbb;
+	border-width: 1px 0;
+	width: 100%;
+	color: #7A6A53;
 }
 ul.tasklist li {
 	background: #f1Ead3;
-  display: table-row;
-  width: 100%;
+	display: table-row;
+	width: 100%;
 }
 ul.tasklist li:nth-child(even) { 
 	background: #e9e2cb;
 }
 ul.tasklist li span { 
-  display: table-cell;
-  padding: 0.25em 0.5em;
-  vertical-align: middle;
+	display: table-cell;
+	padding: 0.25em 0.5em;
+	vertical-align: middle;
 }
 ul.tasklist li span.total {
 	text-align: right;
@@ -271,5 +271,18 @@ ul.tasklist li span.delete {
 	text-align: right;
 }
 ul.tasklist li:last-child {
-  border-bottom: none;
+	border-bottom: none;
+}
+
+/* footer */
+
+footer { 
+	display: flex;
+	margin: 2em 1em; 
+	font-size: 0.8em;
+	justify-content: space-around;
+}
+footer a {
+	color: #7A6A53;
+	text-decoration: none;
 }

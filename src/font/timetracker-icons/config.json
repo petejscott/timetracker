@@ -43,6 +43,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "d35a1d35efeb784d1dc9ac18b9b6c2b6",
+      "css": "pencil",
+      "code": 59407,
+      "src": "fontawesome"
+    },
+    {
       "uid": "559647a6f430b3aeadbecd67194451dd",
       "css": "menu",
       "code": 59392,
@@ -52,6 +58,12 @@
       "uid": "531bc468eecbb8867d822f1c11f1e039",
       "css": "calendar",
       "code": 59402,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "a73c5deb486c8d66249811642e5d719a",
+      "css": "arrows-cw",
+      "code": 59405,
       "src": "fontawesome"
     },
     {
@@ -82,6 +94,12 @@
       "uid": "750058837a91edae64b03d60fc7e81a7",
       "css": "ellipsis-vert",
       "code": 59404,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e7cb72a17f3b21e3576f35c3f0a7639b",
+      "css": "git",
+      "code": 59406,
       "src": "fontawesome"
     }
   ]

@@ -12,3 +12,6 @@
 .icon-calendar:before { content: '\e80a'; } /* '' */
 .icon-ellipsis:before { content: '\e80b'; } /* '' */
 .icon-ellipsis-vert:before { content: '\e80c'; } /* '' */
+.icon-arrows-cw:before { content: '\e80d'; } /* '' */
+.icon-git:before { content: '\e80e'; } /* '' */
+.icon-pencil:before { content: '\e80f'; } /* '' */
