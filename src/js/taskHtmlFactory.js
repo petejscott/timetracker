@@ -37,6 +37,7 @@ tt.taskHtmlFactory = (function(logger, win) {
 		var title = win.document.createElement("span");
 		title.setAttribute("class", "title");
 		title.setAttribute("contentEditable", true);
+		title.setAttribute("spellcheck", false);
 		title.appendChild(win.document.createTextNode(task.name));
 		
 		return title;
