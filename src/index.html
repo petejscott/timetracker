@@ -26,7 +26,7 @@
 			<ul>
 				<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>
 				<li><a href="#group-delete" title="Delete all Groups" class="action-group-delete icon-cancel-circled">Delete all Groups</a></li>
-				<li style="display:none;"><a href="#groups-edit" class="action-groups-edit icon-pencil">Edit Raw Groups</a></li>
+				<li><a href="#groups-edit" class="action-groups-edit icon-pencil">Edit Raw Groups</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -59,14 +59,28 @@
 		</footer>
 	</article>
 	
+	<aside id="data-editor" class="hidden">
+		<div class="editor" contenteditable="true" spellcheck="false"></div>
+		<button class="action-cancel-editor">cancel</button> 
+		<!--<button class="action-commit-editor">save</button>-->
+	</aside>
+	
 	<script>
 		var tt = tt || {};
 		tt.config = (function(win) {
 			var mainContainer = win.document.querySelector("#main");
+			var menuContainer = win.document.querySelector("#menu");
+			var dataEditor = win.document.querySelector("#data-editor");
 			var eventElement = mainContainer;
 			var remoteSyncWebUrl = "";
 			var remoteSyncApiKey = "";
-			return { mainContainer, eventElement, remoteSyncWebUrl, remoteSyncApiKey };
+			return { 
+				mainContainer, 
+				menuContainer,
+				dataEditor,
+				eventElement, 
+				remoteSyncWebUrl, 
+				remoteSyncApiKey };
 		})(this);
 	</script>
 	

@@ -76,6 +76,17 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			requestSync('high');
 		});
 		
+		// This seems a better fix for an editorService? Assuming config will be editable as well.
+		config.menuContainer.querySelector('.action-groups-edit').addEventListener('click', function(e) {
+			config.dataEditor.querySelector('.editor').textContent = JSON.stringify(groups);
+			config.dataEditor.classList.remove('hidden');
+		});
+		config.dataEditor.querySelector('.action-cancel-editor').addEventListener('click', function(e) {
+			config.dataEditor.querySelector('.editor').textContent = "";
+			config.dataEditor.classList.add('hidden');
+		});
+		// End
+		
 		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
 			groupHtmlFactory.updateGroupNameInGroupNavigation(e.detail.group);
 		});
