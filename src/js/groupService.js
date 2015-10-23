@@ -1,10 +1,11 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, eventService, win) {
+tt.groupService = (function(logger, groupFactory, viewFactory, config, eventService, win) {
 	
 	var editableTimeoutId = 0;
 	var groups = [];
+	var groupsNavigationView = null;
 	
 	function getGroupById(groupId) {
 		for (var i = 0, len = groups.length; i < len; i++) {
@@ -88,12 +89,12 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		// End
 		
 		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
-			groupHtmlFactory.updateGroupNameInGroupNavigation(e.detail.group);
+			groupsNavigationView.updateGroupNameInGroupNavigation(e.detail.group);
 		});
 		
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			groupHtmlFactory.updateGroupTotalInGroupNavigation(group);
+			groupsNavigationView.updateGroupTotalInGroupNavigation(group);
 			setGroupSummaryTime(group);
 		});
 		
@@ -106,13 +107,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			groupHtmlFactory.appendGroupToGroupNavigation(group);
+			groupsNavigationView.appendGroupToGroupNavigation(group);
 			e.preventDefault();
 		});
 		
 		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			groupHtmlFactory.removeGroupFromGroupNavigation(group);
+			groupsNavigationView.removeGroupFromGroupNavigation(group);
 			var index = groups.indexOf(group);
 			if (index > -1) {
 				groups.splice(index, 1);
@@ -153,11 +154,13 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 			}
 		}
 		
+		groupsNavigationView = viewFactory.makeGroupsNavigationView(groups);
+		
 		if (groups.length == 0) {
 			createGroupForCurrentWeek();			
 		}
 		
-		groupHtmlFactory.makeGroupNavigation(groups);
+		groupsNavigationView.makeGroupNavigation(groups);
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
@@ -173,4 +176,4 @@ tt.groupService = (function(logger, groupFactory, groupHtmlFactory, config, even
 	
 	init();
 	
-})(logger, tt.groupFactory, tt.groupHtmlFactory, tt.config, tt.eventService, this);
+})(logger, tt.groupFactory, tt.viewFactory, tt.config, tt.eventService, this);

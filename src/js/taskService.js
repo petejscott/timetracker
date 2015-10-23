@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, timeService, win) {
+tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeService, win) {
 	
 	var activeGroup = null;
 	var editableTimeoutId = 0;
@@ -24,13 +24,10 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	function taskCounter(task) {
 		task.runtime += 1;
 		
-		// move this to taskHtmlFactory as updateTaskTotal(task) ? not really a factory responsibility, though.
 		var taskElement = getElementForTaskByTaskId(task.id);
 		if (taskElement !== null) {
 			taskElement.querySelector("span.total").textContent = task.total;
 		}
-		// end
-		
 		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'groupId' : task.groupId }});
 	}
 	
@@ -47,11 +44,9 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'group' : activeGroup, 'groupId' : task.groupId }});
 	}
 	
-	// move this to taskHtmlFactory (as public)?
 	function getElementForTaskByTaskId(taskId) {
 		return taskContainer.querySelector("#" + taskId);
 	}
-	// end
 	
 	function createTaskElement(task) {
 		
@@ -94,7 +89,8 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 			}
 		};
 		
-		return taskHtmlFactory.makeTaskElement(task, callbackConfig);
+		var view = viewFactory.makeTaskView(task);
+		return view.makeTaskElement(callbackConfig);
 	}
 	
 	function setActiveGroup(group) {
@@ -121,7 +117,7 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	}
 	
 	function makeTasksForGroup(group) {
-		taskContainer.textContent = ""; // move this "clear" responsiblity to taskHtmlFactory?? 
+		taskContainer.textContent = ""; 
 		for(var i = 0, len = group.tasks.length; i < len; i++) {
 			var tempTask = group.tasks[i];
 			var task = taskFactory.createTask(tempTask);
@@ -168,4 +164,4 @@ tt.taskService = (function(logger, taskFactory, taskHtmlFactory, eventService, t
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.taskHtmlFactory, tt.eventService, tt.timeService, this);
+})(logger, tt.taskFactory, tt.viewFactory, tt.eventService, tt.timeService, this);
