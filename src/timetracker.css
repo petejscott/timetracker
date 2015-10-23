@@ -123,6 +123,9 @@ a:hover {
 #data-editor .editor {
 	padding: 1em;
 }
+#data-editor .actions {
+	padding: 1em;
+}
 
 /* Some special classes */
 
