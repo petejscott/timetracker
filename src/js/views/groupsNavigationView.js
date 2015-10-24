@@ -4,15 +4,6 @@ function groupsNavigationView(groups, eventService) {
 	this.groups = groups;
 	this.eventService = eventService;
 	this.groupNavigationContainer = document.querySelector("#groupContainer ul");
-	
-	for(var i = 0, len = this.groups.length; i<len; i++)
-	{
-		var group = this.groups[i];
-		group.subscribe('group-detail-changed', function(e) {
-			console.log(e.detail);
-			//console.log(this.makeGroupNavElement(e.detail.group));
-		});
-	}
 }
 
 groupsNavigationView.prototype.makeGroupNavigation = function() {
@@ -36,7 +27,7 @@ groupsNavigationView.prototype.updateGroupTotalInGroupNavigation = function(grou
 }
 groupsNavigationView.prototype.updateGroupNameInGroupNavigation = function(group) {
 	var groupNavElement = this.groupNavigationContainer.querySelector("li[data-groupid='" + group.id + "']");
-	var groupNameElement = groupNavElement.querySelector(".group-name");
+	var groupNameElement = groupNavElement.querySelector(".group-title");
 	groupNameElement.textContent = group.title;
 	groupNameElement.setAttribute("title", "View group (" + group.title + ")");
 }
@@ -47,7 +38,7 @@ groupsNavigationView.prototype.makeGroupNavElement = function(group) {
 	groupListItem.setAttribute("data-groupid", group.id);
 	
 	var groupAnchor = document.createElement("a");
-	groupAnchor.classList.add("group-name");
+	groupAnchor.classList.add("group-title");
 	groupAnchor.setAttribute("href", "#" + group.id);
 	groupAnchor.setAttribute("title", "View group (" + group.title + ")");
 	groupAnchor.addEventListener('click', function(e) {

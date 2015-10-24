@@ -14,7 +14,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	}
 	
 	function setGroupSummaryName(group) {
-		var nameElement = win.document.querySelector("h2 span.group-name");
+		var nameElement = win.document.querySelector("h2 span.group-title");
 		nameElement.textContent = group.title;
 	}
 	
@@ -25,7 +25,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	
 	function bindGroupNameEditToCurrentGroup(group) {
 		
-		var currentGroupNameElement = win.document.querySelector("header .group-name");
+		var currentGroupNameElement = win.document.querySelector("header .group-title");
 
 		currentGroupNameElement.addEventListener('input', function(e) {
 			
@@ -101,9 +101,8 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		
 		eventService.subscribe(eventService.events.group.selected, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			bindGroupNameEditToCurrentGroup(group);
-			setGroupSummaryName(group);
-			setGroupSummaryTime(group);
+			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
+			
 		});
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {

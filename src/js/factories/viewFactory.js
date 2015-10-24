@@ -11,9 +11,14 @@ tt.viewFactory = (function(logger, eventService) {
 		return new taskView(task);
 	}
 	
+	function makeGroupSummaryView(group) {
+		return new groupSummaryView(group);
+	}
+	
 	return { 
 		makeGroupsNavigationView,
-		makeTaskView
+		makeTaskView,
+		makeGroupSummaryView
 	};
 	
 })(logger, tt.eventService);
