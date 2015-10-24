@@ -78,10 +78,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			requestSync('high');
 		});
 		
-		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
-			groupsNavigationView.updateGroupNameInGroupNavigation(e.detail.group);
-		});
-		
 		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			groupsNavigationView.updateGroupTotalInGroupNavigation(group);

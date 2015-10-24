@@ -4,6 +4,12 @@ function groupNavigationView(group, eventService) {
 	this.group = group;
 	this.eventService = eventService;
 	this.element = this.makeGroupNavElement();
+	
+	this.onGroupTitleChangedEvent(this);
+}
+
+groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
+	this.group.subscribe('group-title-changed', function(e) { view.updateGroupTitle(view.group.title); });
 }
 
 groupNavigationView.prototype.getElement = function() {
