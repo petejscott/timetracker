@@ -11,12 +11,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		}
 	}
 	
-	function createGroupForCurrentWeek() {
-		var group = groupFactory.createNewGroup();
-		groups.push(group);
-		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-	}
+	
 	
 	function bind() {
 		
@@ -45,12 +40,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			e.preventDefault();
 		});
 		
-		var elAdd = win.document.querySelector('.action-group-add');
-		elAdd.addEventListener('click', function(e) {
-			createGroupForCurrentWeek();
-			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			e.preventDefault();
-		}, false);
+		
 	}
 	
 	function groupsRetrievedEventHandler(e) {
@@ -62,7 +52,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			}
 		}
 		
-		var groupsNavigationView = viewFactory.makeGroupsNavigationView(groups);
+		var groupsNavigationView = viewFactory.makeNavigationView(groups, groupFactory);
 		
 		if (groups.length == 0) {
 			createGroupForCurrentWeek();			
