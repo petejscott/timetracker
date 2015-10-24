@@ -107,13 +107,12 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		
 		eventService.subscribe(eventService.events.group.added, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			groupsNavigationView.appendGroupToGroupNavigation(group);
+			groupsNavigationView.addGroupToNavigation(group);
 			e.preventDefault();
 		});
 		
 		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			var group = getGroupById(e.detail.groupId);
-			groupsNavigationView.removeGroupFromGroupNavigation(group);
 			var index = groups.indexOf(group);
 			if (index > -1) {
 				groups.splice(index, 1);

@@ -6,6 +6,11 @@ function groupsNavigationView(groups, viewFactory) {
 	this.groupNavigationContainer = document.querySelector("#groupContainer ul");
 }
 
+groupsNavigationView.prototype.addGroupToNavigation = function(group) {
+	var groupNavigationView = this.viewFactory.makeGroupNavigationView(group);
+	this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
+}
+
 groupsNavigationView.prototype.makeGroupNavigation = function() {
 	this.groupNavigationContainer.textContent = "";
 	for (var i = 0, len = this.groups.length; i < len; i++) {
