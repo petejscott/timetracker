@@ -15,14 +15,19 @@ tt.viewFactory = (function(logger, eventService, timeService) {
 		return new taskView(task, eventService, timeService);
 	}
 	
+	function makeSyncStatusView(clickEventHandler) {
+		return new syncStatusView(eventService, clickEventHandler);
+	}
+	
 	function makeGroupSummaryView(group) {
-		return new groupSummaryView(group);
+		return new groupSummaryView(group, eventService);
 	}
 	
 	return { 
 		makeGroupsNavigationView,
 		makeGroupNavigationView,
 		makeTaskView,
+		makeSyncStatusView,
 		makeGroupSummaryView
 	};
 	

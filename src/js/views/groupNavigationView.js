@@ -67,6 +67,7 @@ groupNavigationView.prototype.makeGroupNavElement = function(template) {
 	groupListItem.querySelector(".action-delete-group").addEventListener('click', function(e) {
 		thisView.eventService.dispatch(thisView.eventService.events.group.deleted, { 'detail' : { 'group' : thisView.group, 'groupId' : thisView.group.id }});
 		thisView.element.remove();
+		thisView.eventService.dispatch(thisView.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		e.preventDefault();
 	}, false);
 	

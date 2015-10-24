@@ -99,9 +99,6 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 		eventService.subscribe(eventService.events.sync.removeGroups, removeGroups);
 		eventService.subscribe(eventService.events.sync.getGroups, getGroups);
 		
-		eventService.subscribe(eventService.events.sync.statusUpdated, function(e) {
-			config.mainContainer.querySelector('.sync-status').textContent = e.detail;
-		});
 		
 		if (typeof(config.remoteSyncWebUrl) !== 'undefined' && config.remoteSyncWebUrl != null && config.remoteSyncWebUrl.length > 0) {
 			useRemoteSyncWebhook = true;

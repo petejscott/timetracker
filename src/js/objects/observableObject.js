@@ -13,6 +13,6 @@ observableObject.prototype.publish = function(type, detail) {
 	}
 }
 observableObject.prototype.subscribe = function(type, fn) {
-	logger.logDebug('got subscribe for ' + type + ' with callback of ' + fn.toString());
+	logger.logDebug('got subscribe for ' + type);
 	this.subscribers.push({ 'type' : type, 'fn' : fn});
 }

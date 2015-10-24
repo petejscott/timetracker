@@ -48,6 +48,7 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 		for (var i = 0, len = els.length; i < len; i++) {
 			els[i].addEventListener('click', function(e) {
 				addNewTaskToActiveGroup();
+				eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 				e.preventDefault();
 			}, false);
 		}

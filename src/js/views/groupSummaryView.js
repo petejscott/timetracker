@@ -1,8 +1,9 @@
 'use strict';
 
-function groupSummaryView(group) {
+function groupSummaryView(group, eventService) {
 	
 	this.group = group;
+	this.eventService = eventService;
 	this.groupSummaryContainer = document.querySelector(".group-summary");
 	this.groupSummaryContainer.innerHTML = getViewTemplate();
 	
@@ -45,6 +46,7 @@ groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 }
 
 groupSummaryView.prototype.onGroupTitleChanged = function(view) {
+	view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 	view.group.publish('group-title-changed', { 'groupId' : view.group.id });
 }
 

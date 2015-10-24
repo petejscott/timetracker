@@ -32,14 +32,11 @@
 	<article id="main">
 		<header class="top-header">
 			<span class="menuToggle icon-menu" alt="menu"></span>
-			<h1>TimeTracker <span class="sync-status icon-upload"></span></h1>
+			<h1>TimeTracker <span class="sync-status"></span></h1>
 		</header>
 		<section class="group">
 		  <header>
-			<h2 class="group-summary icon-calendar">
-				<span contenteditable="true" class="group-title"></span>
-				<span class="group-total paren-data"></span>
-			</h2>
+			<h2 class="group-summary icon-calendar"></h2>
 		  </header>
 		</section>
 		<section class="tasks">
@@ -74,6 +71,7 @@
 	<script src="js/syncService.js"></script>
 	<script src="js/timeService.js"></script>
 	
+	<script src="js/views/syncStatusView.js"></script>
 	<script src="js/views/groupNavigationView.js"></script>
 	<script src="js/views/groupsNavigationView.js"></script>
 	<script src="js/views/taskView.js"></script>

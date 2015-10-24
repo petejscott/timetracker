@@ -20,7 +20,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	
 	function bind() {
 		
-		config.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
+		var syncStatusView = viewFactory.makeSyncStatusView(function(e) {
 			eventService.dispatch(eventService.events.sync.requested,  { 
 				'detail' : 
 				{ 
@@ -28,7 +28,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 					'data' : groups,
 					'priority' : 'high' 
 				}
-			});
+			})
 		});
 		
 		eventService.subscribe(eventService.events.group.selected, function(e) {
@@ -48,6 +48,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		var elAdd = win.document.querySelector('.action-group-add');
 		elAdd.addEventListener('click', function(e) {
 			createGroupForCurrentWeek();
+			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 			e.preventDefault();
 		}, false);
 	}
