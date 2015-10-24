@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeService, win) {
+tt.taskService = (function(logger, taskFactory, viewFactory, eventService, win) {
 	
 	var activeGroup = null;
 	var taskContainer = win.document.querySelector("#taskContainer");
@@ -73,4 +73,4 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 	
 	init();
 	
-})(logger, tt.taskFactory, tt.viewFactory, tt.eventService, tt.timeService, this);
+})(logger, tt.taskFactory, tt.viewFactory, tt.eventService, this);
