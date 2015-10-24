@@ -8,31 +8,41 @@ function groupSummaryView(group) {
 	this.groupTotalContainer = this.groupSummaryContainer.querySelector(".group-total");
 	this.editableTimeoutId = null;
 	
+	this.setTitle(this.group.title);
+	this.setTotal(this.group.total);
 	
-	this.bind();
-	this.set();
+	this.onGroupTitleChanged(this);
+	this.onGroupTitleChanging(this);
+	this.onGroupTotalChangedEvent(this);
 }
 
-groupSummaryView.prototype.bind = function() {
-	var thisView = this;
+groupSummaryView.prototype.setTitle = function(title) {
+	this.groupTitleContainer.textContent = this.group.title;
+}
+
+groupSummaryView.prototype.setTotal = function(total) {	
+	this.groupTotalContainer.textContent = this.group.total;
+}
+
+groupSummaryView.prototype.onGroupTitleChanging = function(view) {
+	view.groupTitleContainer.addEventListener('input', function(e) {
 		
-	thisView.groupTitleContainer.addEventListener('input', function(e) {
-		
-		thisView.group.title = thisView.groupTitleContainer.textContent;
+		view.group.title = view.groupTitleContainer.textContent;
 		e.preventDefault();
 		
-		window.clearTimeout(thisView.editableTimeoutId);
-		thisView.editableTimeoutId = window.setTimeout(function() {
-			thisView.group.publish('group-title-changed', { 'groupId' : thisView.group.id });
+		window.clearTimeout(view.editableTimeoutId);
+		view.editableTimeoutId = window.setTimeout(function() {
+			view.onGroupTitleChanged(view);
 		}, 1500);
-		
 	}, false);
-	
-	this.group.subscribe('group-total-changed', function(e) {
-		thisView.groupTotalContainer.textContent = group.total;
-	});
 }
-groupSummaryView.prototype.set = function() {
-	this.groupTitleContainer.textContent = this.group.title;
-	this.groupTotalContainer.textContent = this.group.total;
+
+groupSummaryView.prototype.onGroupTitleChanged = function(view) {
+	view.group.publish('group-title-changed', { 'groupId' : view.group.id });
+}
+
+groupSummaryView.prototype.onGroupTotalChangedEvent = function(view) {
+	view.group.subscribe('group-total-changed', function(e) {
+		view.setTotal(group.total);
+	});
 }
