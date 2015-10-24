@@ -4,7 +4,7 @@ function groupSummaryView(group) {
 	
 	this.group = group;
 	this.groupSummaryContainer = document.querySelector(".group-summary");
-	this.groupSummaryContainer.innerHTML = createElement();
+	this.groupSummaryContainer.innerHTML = getViewTemplate();
 	
 	this.groupTitleContainer = this.groupSummaryContainer.querySelector(".group-title");
 	this.groupTotalContainer = this.groupSummaryContainer.querySelector(".group-total");
@@ -17,7 +17,7 @@ function groupSummaryView(group) {
 	this.onGroupTitleChanging(this);
 	this.onGroupTotalChangedEvent(this);
 	
-	function createElement() {
+	function getViewTemplate() {
 		return 	'<span class="group-title" contenteditable="true"></span>' + 
 				'<span class="group-total paren-data"></span>';
 	}

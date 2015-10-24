@@ -3,10 +3,15 @@
 function groupNavigationView(group, eventService) {
 	this.group = group;
 	this.eventService = eventService;
-	this.element = this.makeGroupNavElement();
+	this.element = this.makeGroupNavElement(getViewTemplate());
 	
 	this.onGroupTitleChangedEvent(this);
 	this.bindToTaskTimeChanged(this);
+	
+	function getViewTemplate() {
+		return 	'<a class="action-select-group" href="" title=""><span class="group-title"></span><span class="group-total paren-data"></span></a>' + 
+				'<a class="action-delete-group" href="" title=""><i class="icon-cancel-circled"></i></a>';
+	}
 }
 
 groupNavigationView.prototype.bindToTaskTimeChanged = function(view) {
@@ -37,16 +42,17 @@ groupNavigationView.prototype.updateGroupTitle = function() {
 	groupNameElement.setAttribute("title", "View group (" + this.group.title + ")");
 }
 
-groupNavigationView.prototype.makeGroupNavElement = function() {
+groupNavigationView.prototype.makeGroupNavElement = function(template) {
+	
 	var groupListItem = document.createElement("li");
+	groupListItem.innerHTML = template;
 	
-	var groupTitleSpan = '<span class="group-title">' + this.group.title + '</span>';
-	var groupTotalSpan = '<span class="group-total paren-data">' + this.group.total + '</span>'
-	
-	var groupSelectAnchor = '<a class="action-select-group" href="#' + this.group.id + '" title="View group (' + this.group.title + ')">' + groupTitleSpan + groupTotalSpan + '</a>';
-	var groupDeleteAnchor = '<a class="action-delete-group" href="#deletegroup-' + this.group.id + '" title="Delete group (' + this.group.title + ')"><i class="icon-cancel-circled"></i></a>';
-	
-	groupListItem.innerHTML = groupSelectAnchor + groupDeleteAnchor;
+	groupListItem.querySelector('.group-title').textContent = this.group.title;
+	groupListItem.querySelector('.group-total').textContent = this.group.total;
+	groupListItem.querySelector('.action-select-group').setAttribute('href', '#select-' + this.group.id);
+	groupListItem.querySelector('.action-select-group').setAttribute('title', 'View group (' + this.group.title + ')');
+	groupListItem.querySelector('.action-delete-group').setAttribute('href', '#delete-' + this.group.id);
+	groupListItem.querySelector('.action-delete-group').setAttribute('title', 'View group (' + this.group.title + ')');
 	
 	var thisView = this;
 	groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {

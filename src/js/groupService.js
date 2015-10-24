@@ -3,9 +3,7 @@
 var tt = tt || {};
 tt.groupService = (function(logger, groupFactory, viewFactory, config, eventService, win) {
 	
-	var editableTimeoutId = 0;
 	var groups = [];
-	var groupsNavigationView = null;
 	
 	function getGroupById(groupId) {
 		for (var i = 0, len = groups.length; i < len; i++) {
@@ -21,10 +19,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	}
 	
 	function bind() {
-		bindGroupInterfaceRequests();
-	}
-	
-	function bindGroupInterfaceRequests() {
 		
 		config.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
 			eventService.dispatch(eventService.events.sync.requested,  { 
@@ -32,7 +26,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 				{ 
 					'type' : 'groups',
 					'data' : groups,
-					'priority' : priority 
+					'priority' : 'high' 
 				}
 			});
 		});
@@ -67,7 +61,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			}
 		}
 		
-		groupsNavigationView = viewFactory.makeGroupsNavigationView(groups);
+		var groupsNavigationView = viewFactory.makeGroupsNavigationView(groups);
 		
 		if (groups.length == 0) {
 			createGroupForCurrentWeek();			
