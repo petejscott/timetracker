@@ -215,13 +215,21 @@ nav li a::before {
 	color:#777;
 	transition: color 0.3s;
 }
+nav li a .group-title {
+	padding-right:0.5em;
+}
 nav#groupContainer a::before {
 	margin-right:0.5em;
 }
 nav li a:hover::before {
 	color:#597277;
 }
-.group-delete { color:#E08E79; }
+.action-delete-group {
+	color:#E08E79;
+}
+.action-delete-group::before {
+	color:#E08E79;
+}
 
 /* group summary */
 
@@ -241,12 +249,6 @@ section.group .group-name {
 }
 section.group header h2::before { 
 	margin-right: 0.5em;
-}
-.action-group-delete {
-	color:#E08E79;
-}
-.action-group-delete::before {
-	color:#E08E79;
 }
 
 /* Task List */
