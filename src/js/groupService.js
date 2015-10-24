@@ -40,7 +40,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			}
 			e.preventDefault();
 		});
-				
 	}
 	
 	function groupsRetrievedEventHandler(e) {
@@ -50,10 +49,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
 				groups.push(groupFactory.createGroup(storedGroups[i]));
 			}
-		}		
-		
-		if (groups.length == 0) {
-			createGroupForCurrentWeek();			
 		}
 		
 		var navigationView = viewFactory.makeNavigationView(groups, groupFactory);

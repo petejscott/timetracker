@@ -48,6 +48,10 @@ navigationView.prototype.addGroupToNavigation = function(group) {
 
 navigationView.prototype.makeNavigation = function(view) {
 	this.groupNavigationContainer.textContent = "";
+	
+	if (this.groups.length == 0) {
+		createGroupForCurrentWeek();			
+	}
 	for (var i = 0, len = this.groups.length; i < len; i++) {
 		var groupNavigationView = this.viewFactory.makeGroupNavigationView(this.groups[i]);
 		this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
