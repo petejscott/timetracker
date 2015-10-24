@@ -17,7 +17,7 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 		view.eventService.dispatch(view.eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 	}
 	
-	this.onGroupAddedToNavigationEvent(this);
+	this.setGroupEventHandling(this);
 }
 
 navigationView.prototype.getElement = function() {
@@ -33,10 +33,24 @@ navigationView.prototype.getGroupById = function(groupId) {
 	}
 }
 
-navigationView.prototype.onGroupAddedToNavigationEvent = function(view) {
+navigationView.prototype.setGroupEventHandling = function(view) {
+	
 	view.eventService.subscribe(view.eventService.events.group.added, function(e) {
 		var group = view.getGroupById(e.detail.groupId);
 		view.addGroupToNavigation(group);
+		e.preventDefault();
+	});
+	view.eventService.subscribe(view.eventService.events.group.selected, function(e) {
+		var group = view.getGroupById(e.detail.groupId);
+		var groupSummaryView = view.viewFactory.makeGroupSummaryView(group);
+	});	
+	
+	view.eventService.subscribe(view.eventService.events.group.deleted, function(e) {
+		var group = view.getGroupById(e.detail.groupId);
+		var index = view.groups.indexOf(group);
+		if (index > -1) {
+			view.groups.splice(index, 1);
+		}
 		e.preventDefault();
 	});
 }

@@ -1,17 +1,9 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, viewFactory, config, eventService, win) {
+tt.groupService = (function(logger, groupFactory, viewFactory, eventService) {
 	
 	var groups = [];
-	
-	function getGroupById(groupId) {
-		for (var i = 0, len = groups.length; i < len; i++) {
-			if (groups[i].id === groupId) return groups[i];
-		}
-	}
-	
-	
 	
 	function bind() {
 		
@@ -24,21 +16,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 					'priority' : 'high' 
 				}
 			})
-		});
-		
-		//TODO handle this in the navigationView??
-		eventService.subscribe(eventService.events.group.selected, function(e) {
-			var group = getGroupById(e.detail.groupId);
-			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
-		});	
-		//TODO handle this in the navigationView??
-		eventService.subscribe(eventService.events.group.deleted, function(e) {
-			var group = getGroupById(e.detail.groupId);
-			var index = groups.indexOf(group);
-			if (index > -1) {
-				groups.splice(index, 1);
-			}
-			e.preventDefault();
 		});
 	}
 	
@@ -60,11 +37,11 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	}
 	
 	function init() {
-		bind();		
+		bind();
 		eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
 		eventService.dispatch(eventService.events.sync.getGroups);
 	}
 	
 	init();
 	
-})(logger, tt.groupFactory, tt.viewFactory, tt.config, tt.eventService, this);
+})(logger, tt.groupFactory, tt.viewFactory, tt.eventService);
