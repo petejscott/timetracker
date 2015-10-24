@@ -1,10 +1,10 @@
 'use strict';
 
 var tt = tt || {};
-tt.viewFactory = (function(logger) {
+tt.viewFactory = (function(logger, eventService) {
 
 	function makeGroupsNavigationView(groups) {
-		return new groupsNavigationView(groups);
+		return new groupsNavigationView(groups, eventService);
 	}
 	
 	function makeTaskView(task) {
@@ -16,4 +16,4 @@ tt.viewFactory = (function(logger) {
 		makeTaskView
 	};
 	
-})(logger);
+})(logger, tt.eventService);

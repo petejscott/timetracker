@@ -32,39 +32,63 @@ tt.groupFactory = (function(logger, timeService) {
 			Math.floor(Math.random() * (max - min) + min);
 	}
 	
-	function createNewTaskGroup(name) {
-		if (typeof(name) === 'undefined') {
-			name = getCurrentWeekName();
-		}
-		var group = {
+	function makeDefaultGroupData(title) {
+		var data = {
 			id: makeId(),
-			name: name,
+			title: getCurrentWeekName(),
 			tasks: []
 		};
-		return createTaskGroup(group);
+		return data;
 	}
 	
-	function createTaskGroup(data) {
-		var taskGroup = { 
-			id : data.id,
-			name : data.name,
-			tasks : data.tasks 
-		};
-		Object.defineProperty(taskGroup, 'total', {
-			get : function() {
-				var total = 0.00;
-				for (var i = 0, len = taskGroup.tasks.length; i < len; i++) {
-					total += taskGroup.tasks[i].runtime;
+	function setData(group, data) {
+		group.id = data.id;
+		if (typeof(data.title) === 'undefined') data.title = data.name;
+		group.title = data.title;
+		group.tasks = data.tasks;
+		return group;
+	}
+	
+	function makeObject() {
+		function group() {
+			observableObject.call(this);
+		}
+		group.prototype = Object.create(observableObject.prototype);
+		group.prototype.constructor = group;
+		
+		var groupObj = new group();
+		
+		if (typeof(groupObj.total) === 'undefined')
+		{
+			Object.defineProperty(groupObj, 'total', {
+				get : function() {
+					var total = 0.00;
+					for (var i = 0, len = groupObj.tasks.length; i < len; i++) {
+						total += groupObj.tasks[i].runtime;
+					}
+					return timeService.formatSecondsAsHourMinuteSecond(total);
 				}
-				return timeService.formatSecondsAsHourMinuteSecond(total);
-			}
-		});
-		return taskGroup;
+			});
+		}
+		return groupObj;
+	}
+	
+	function createNewGroup() {		
+		var group = makeObject();
+		var data = makeDefaultGroupData();
+		group = setData(group, data);
+		return group;
+	}
+	
+	function createGroup(data) {
+		var group = makeObject();
+		group = setData(group, data);
+		return group;
 	}
 	
 	return { 
-		createNewTaskGroup,
-		createTaskGroup
+		createNewGroup,
+		createGroup
 	};
 	
 })(logger, tt.timeService);

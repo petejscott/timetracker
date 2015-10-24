@@ -1,7 +1,7 @@
 'use strict';
 
 function taskView(task) {
-	this.task = task;	
+	this.task = task;
 }
 
 taskView.prototype.makeTaskContainer = function() {
@@ -37,7 +37,7 @@ taskView.prototype.makeTitleElement = function() {
 	title.setAttribute("class", "title");
 	title.setAttribute("contentEditable", true);
 	title.setAttribute("spellcheck", false);
-	title.appendChild(document.createTextNode(this.task.name));
+	title.appendChild(document.createTextNode(this.task.title));
 	
 	return title;
 }

@@ -15,7 +15,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	
 	function setGroupSummaryName(group) {
 		var nameElement = win.document.querySelector("h2 span.group-name");
-		nameElement.textContent = group.name;
+		nameElement.textContent = group.title;
 	}
 	
 	function setGroupSummaryTime(group) {		
@@ -30,11 +30,12 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		currentGroupNameElement.addEventListener('input', function(e) {
 			
 			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			group.name = currentGroupNameElement.textContent;
+			group.title = currentGroupNameElement.textContent;
 			e.preventDefault();
 			
 			win.clearTimeout(editableTimeoutId);
 			editableTimeoutId = win.setTimeout(function() {
+				group.publish('group-detail-changed', { 'group' : group, 'groupId' : group.id });
 				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 			}, 1500);
 			
@@ -42,7 +43,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	}
 	
 	function createGroupForCurrentWeek() {
-		var group = groupFactory.createNewTaskGroup();
+		var group = groupFactory.createNewGroup();
 		groups.push(group);
 		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
@@ -150,7 +151,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		var storedGroups = e.detail;
 		if (storedGroups !== null) {
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
-				groups.push(groupFactory.createTaskGroup(storedGroups[i]));
+				groups.push(groupFactory.createGroup(storedGroups[i]));
 			}
 		}
 		

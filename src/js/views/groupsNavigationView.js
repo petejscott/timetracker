@@ -1,8 +1,18 @@
 'use strict';
 
-function groupsNavigationView(groups) {
-	this.groups = groups;	
+function groupsNavigationView(groups, eventService) {
+	this.groups = groups;
+	this.eventService = eventService;
 	this.groupNavigationContainer = document.querySelector("#groupContainer ul");
+	
+	for(var i = 0, len = this.groups.length; i<len; i++)
+	{
+		var group = this.groups[i];
+		group.subscribe('group-detail-changed', function(e) {
+			console.log(e.detail);
+			//console.log(this.makeGroupNavElement(e.detail.group));
+		});
+	}
 }
 
 groupsNavigationView.prototype.makeGroupNavigation = function() {
@@ -27,10 +37,11 @@ groupsNavigationView.prototype.updateGroupTotalInGroupNavigation = function(grou
 groupsNavigationView.prototype.updateGroupNameInGroupNavigation = function(group) {
 	var groupNavElement = this.groupNavigationContainer.querySelector("li[data-groupid='" + group.id + "']");
 	var groupNameElement = groupNavElement.querySelector(".group-name");
-	groupNameElement.textContent = group.name;
-	groupNameElement.setAttribute("title", "View group (" + group.name + ")");
+	groupNameElement.textContent = group.title;
+	groupNameElement.setAttribute("title", "View group (" + group.title + ")");
 }
 groupsNavigationView.prototype.makeGroupNavElement = function(group) {
+	var thisView = this;
 	
 	var groupListItem = document.createElement("li");
 	groupListItem.setAttribute("data-groupid", group.id);
@@ -38,13 +49,13 @@ groupsNavigationView.prototype.makeGroupNavElement = function(group) {
 	var groupAnchor = document.createElement("a");
 	groupAnchor.classList.add("group-name");
 	groupAnchor.setAttribute("href", "#" + group.id);
-	groupAnchor.setAttribute("title", "View group (" + group.name + ")");
+	groupAnchor.setAttribute("title", "View group (" + group.title + ")");
 	groupAnchor.addEventListener('click', function(e) {
-		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+		thisView.eventService.dispatch(thisView.eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 		e.preventDefault();
 	}, false);
 	
-	var groupText = document.createTextNode(group.name + " ");
+	var groupText = document.createTextNode(group.title + " ");
 	
 	var groupTotal = document.createElement("span");
 	groupTotal.classList.add("group-total");
@@ -62,7 +73,7 @@ groupsNavigationView.prototype.makeGroupNavElement = function(group) {
 	groupDelete.setAttribute("title", "Delete Group");
 	groupDeleteAnchor.appendChild(groupDelete);
 	groupDeleteAnchor.addEventListener('click', function(e) {
-		eventService.dispatch(eventService.events.group.deleted, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+		thisView.eventService.dispatch(thisView.eventService.events.group.deleted, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 		e.preventDefault();
 	}, false);
 	

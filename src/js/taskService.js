@@ -57,7 +57,7 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 			},
 			'titleEditCallback' : function(e) {
 				eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				task.name = e.currentTarget.textContent;
+				task.title = e.currentTarget.textContent;
 				e.preventDefault();
 				
 				win.clearTimeout(editableTimeoutId);
@@ -77,7 +77,12 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 				}, 1500);	
 			},
 			'deleteCallback' : function(e) {
-				var taskIndex = activeGroup.tasks.indexOf(task);
+				var taskIndex = -1;
+				for (var i = 0, len = activeGroup.tasks.length; i < len; i++) {
+					if (task.id === activeGroup.tasks[i].id) {
+						taskIndex = i;
+					}
+				}
 				if (taskIndex > -1) {
 					activeGroup.tasks.splice(taskIndex, 1);
 				}
