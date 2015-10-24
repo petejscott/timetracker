@@ -28,7 +28,8 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 		if (taskElement !== null) {
 			taskElement.querySelector("span.total").textContent = task.total;
 		}
-		eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'groupId' : task.groupId }});
+		task.publish('task-time-changed', { 'task' : task });
+		//eventService.dispatch(eventService.events.group.timeChanged, { 'detail' : { 'groupId' : task.groupId }});
 	}
 	
 	function playPauseTask(task, taskElement) {
@@ -125,8 +126,8 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, timeS
 		taskContainer.textContent = ""; 
 		for(var i = 0, len = group.tasks.length; i < len; i++) {
 			var tempTask = group.tasks[i];
-			var task = taskFactory.createTask(tempTask);
-			makeTask(task);
+			//var task = taskFactory.createTask(tempTask);
+			makeTask(tempTask);
 		}
 	}
 	

@@ -6,6 +6,14 @@ function groupNavigationView(group, eventService) {
 	this.element = this.makeGroupNavElement();
 	
 	this.onGroupTitleChangedEvent(this);
+	this.bindToTaskTimeChanged(this);
+}
+
+groupNavigationView.prototype.bindToTaskTimeChanged = function(view) {
+	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
+		var t = view.group.tasks[i];
+		t.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
+	}
 }
 
 groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
@@ -19,9 +27,9 @@ groupNavigationView.prototype.getElement = function() {
 groupNavigationView.prototype.removeElement = function() {
 	this.element.remove();
 }
-groupNavigationView.prototype.updateGroupTotal = function() {
-	var groupTotalElement = this.element.querySelector(".group-total");
-	groupTotalElement.textContent = this.group.total;
+groupNavigationView.prototype.updateGroupTotal = function(view) {
+	var groupTotalElement = view.getElement().querySelector(".group-total");
+	groupTotalElement.textContent = view.group.total;
 }
 groupNavigationView.prototype.updateGroupTitle = function() {
 	var groupNameElement = this.element.querySelector(".group-title");

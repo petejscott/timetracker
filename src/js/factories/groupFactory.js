@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupFactory = (function(logger, timeService) {
+tt.groupFactory = (function(logger, taskFactory, timeService) {
 
 	function getStartOfWeek(date) {
 		var d = new Date(date);
@@ -73,16 +73,27 @@ tt.groupFactory = (function(logger, timeService) {
 		return groupObj;
 	}
 	
+	function createTasks(tasks) {
+		var taskCollection = [];
+		for (var i = 0, len = tasks.length; i < len; i++) {
+			var task = taskFactory.createTask(tasks[i]);
+			taskCollection.push(task);
+		}
+		return taskCollection;
+	}
+	
 	function createNewGroup() {		
 		var group = makeObject();
 		var data = makeDefaultGroupData();
 		group = setData(group, data);
+		group.tasks = createTasks(group.tasks);
 		return group;
 	}
 	
 	function createGroup(data) {
 		var group = makeObject();
 		group = setData(group, data);
+		group.tasks = createTasks(group.tasks);
 		return group;
 	}
 	
@@ -91,4 +102,4 @@ tt.groupFactory = (function(logger, timeService) {
 		createGroup
 	};
 	
-})(logger, tt.timeService);
+})(logger, tt.taskFactory, tt.timeService);

@@ -13,35 +13,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		}
 	}
 	
-	function setGroupSummaryName(group) {
-		var nameElement = win.document.querySelector("h2 span.group-title");
-		nameElement.textContent = group.title;
-	}
-	
-	function setGroupSummaryTime(group) {		
-		var totalElement = win.document.querySelector("h2 span.group-total");
-		totalElement.textContent = group.total;
-	}
-	
-	function bindGroupNameEditToCurrentGroup(group) {
-		
-		var currentGroupNameElement = win.document.querySelector("header .group-title");
-
-		currentGroupNameElement.addEventListener('input', function(e) {
-			
-			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			group.title = currentGroupNameElement.textContent;
-			e.preventDefault();
-			
-			win.clearTimeout(editableTimeoutId);
-			editableTimeoutId = win.setTimeout(function() {
-				group.publish('group-detail-changed', { 'group' : group, 'groupId' : group.id });
-				eventService.dispatch(eventService.events.group.detailChanged, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-			}, 1500);
-			
-		}, false);
-	}
-	
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewGroup();
 		groups.push(group);
@@ -50,44 +21,26 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 	}
 	
 	function bind() {
-		bindSyncRequests();
 		bindGroupInterfaceRequests();
-	}
-	
-	function bindSyncRequests() {
-		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
-			requestSync('high');
-		});
-		eventService.subscribe(eventService.events.group.collectionChanged, function(e) {
-			requestSync('high');
-		});
-		eventService.subscribe(eventService.events.group.added, function(e) {
-			requestSync('high');
-		});
-		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
-			requestSync('low');
-		});
-		eventService.subscribe(eventService.events.group.deleted, function(e) {
-			requestSync('low');
-		});
 	}
 	
 	function bindGroupInterfaceRequests() {
 		
 		config.mainContainer.querySelector('.sync-status').addEventListener('click', function(e) {
-			requestSync('high');
-		});
-		
-		eventService.subscribe(eventService.events.group.timeChanged, function(e) {
-			var group = getGroupById(e.detail.groupId);
-			groupsNavigationView.updateGroupTotalInGroupNavigation(group);
-			setGroupSummaryTime(group);
+			eventService.dispatch(eventService.events.sync.requested,  { 
+				'detail' : 
+				{ 
+					'type' : 'groups',
+					'data' : groups,
+					'priority' : priority 
+				}
+			});
 		});
 		
 		eventService.subscribe(eventService.events.group.selected, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
-		});		
+		});	
 		
 		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			var group = getGroupById(e.detail.groupId);
@@ -103,17 +56,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			createGroupForCurrentWeek();
 			e.preventDefault();
 		}, false);
-	}
-	
-	function requestSync(priority) {
-		eventService.dispatch(eventService.events.sync.requested,  { 
-			'detail' : 
-			{ 
-				'type' : 'groups',
-				'data' : groups,
-				'priority' : priority 
-			}
-		});
 	}
 	
 	function groupsRetrievedEventHandler(e) {
