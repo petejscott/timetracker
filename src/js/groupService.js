@@ -78,17 +78,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			requestSync('high');
 		});
 		
-		// This seems a better fix for an editorService? Assuming config will be editable as well.
-		config.menuContainer.querySelector('.action-groups-edit').addEventListener('click', function(e) {
-			config.dataEditor.querySelector('.editor').textContent = JSON.stringify(groups);
-			config.dataEditor.classList.remove('hidden');
-		});
-		config.dataEditor.querySelector('.action-cancel-editor').addEventListener('click', function(e) {
-			config.dataEditor.querySelector('.editor').textContent = "";
-			config.dataEditor.classList.add('hidden');
-		});
-		// End
-		
 		eventService.subscribe(eventService.events.group.detailChanged, function(e) {
 			groupsNavigationView.updateGroupNameInGroupNavigation(e.detail.group);
 		});
@@ -102,14 +91,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 		eventService.subscribe(eventService.events.group.selected, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
-			
-		});
-		
-		eventService.subscribe(eventService.events.group.added, function(e) {
-			var group = getGroupById(e.detail.groupId);
-			groupsNavigationView.addGroupToNavigation(group);
-			e.preventDefault();
-		});
+		});		
 		
 		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			var group = getGroupById(e.detail.groupId);
@@ -117,12 +99,6 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			if (index > -1) {
 				groups.splice(index, 1);
 			}
-			e.preventDefault();
-		});
-		
-		var elDelete = win.document.querySelector('.action-group-delete');
-		elDelete.addEventListener('click', function(e) {
-			eventService.dispatch(eventService.events.sync.removeGroups);
 			e.preventDefault();
 		});
 		
