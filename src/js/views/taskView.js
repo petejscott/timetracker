@@ -1,86 +1,126 @@
 'use strict';
 
-function taskView(task) {
+function taskView(task, eventService, timeService) {
+	
 	this.task = task;
-}
-
-taskView.prototype.makeTaskContainer = function() {
-	var listItem = document.createElement("li");
-	listItem.setAttribute("id", this.task.id);
-	listItem.setAttribute("data-taskid", this.task.id);
-	listItem.setAttribute("data-groupid", this.task.groupId);
+	this.eventService = eventService;
+	this.timeService = timeService;
+	this.element = makeTaskElement(getViewTemplate(), makeCallbackConfig(this));
+	this.editableTimeoutId = 0;
 	
-	return listItem;
-}
-
-taskView.prototype.makePlayElement = function() {
-	var play = document.createElement("span");
-	play.setAttribute("class", "play-pause");
+	function getViewTemplate() {
+		return 	'<span class="play-pause"><a title="Start Timer" href="#play"><i class="task-play-pause-icon icon-play"></i></a></span>' + 
+				'<span spellcheck="false" class="title" contenteditable="true"></span>' + 
+				'<span class="total" contenteditable="true"></span>' + 
+				'<span class="delete"><a title="Delete Task" href="#delete"><i class="icon-cancel-circled"></i></a></span>';
+	}
 	
-	var playAnchor = document.createElement("a");
-	playAnchor.setAttribute("href", "#play");
-	playAnchor.setAttribute("title", "Start Timer");
+	function makeCallbackConfig(view) {
+		var callbackConfig = {
+			'playCallback' : function(e) {
+				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				playPauseTask(view.task, view.element);
+				e.preventDefault();
+			},
+			'titleEditCallback' : function(e) {
+				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				view.task.title = e.currentTarget.textContent;
+				e.preventDefault();
+			},
+			'totalEditCallback' : function(e) {
+				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				view.task.runtime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
+				e.preventDefault();
+				
+				window.clearTimeout(view.editableTimeoutId);
+				view.editableTimeoutId = window.setTimeout(function() {
+					view.task.publish('task-time-changed', { 'task' : view.task });
+				}, 1500);	
+			},
+			'deleteCallback' : function(e) {
+				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+				stopTask(task);
+				task.runtime = 0;
+				view.task.publish('task-time-changed', { 'task' : view.task });
+				view.task.publish('task-deleted', { 'task' : view.task });
+				view.getElement().remove();
+				e.preventDefault();
+			}
+		};
+		return callbackConfig;
+	}
 	
-	var playIcon = document.createElement("i");
-	var playIconClass = "icon-play";
-	if (this.task.isRunning) playIconClass = "icon-pause";
-	playIcon.setAttribute("class", "task-play-pause-icon " + playIconClass);
-	
-	playAnchor.appendChild(playIcon);
-	play.appendChild(playAnchor);
-	
-	return play;
-}
-
-taskView.prototype.makeTitleElement = function() {
-	var title = document.createElement("span");
-	title.setAttribute("class", "title");
-	title.setAttribute("contentEditable", true);
-	title.setAttribute("spellcheck", false);
-	title.appendChild(document.createTextNode(this.task.title));
-	
-	return title;
-}
-
-taskView.prototype.makeTotalElement = function() {
-	var total = document.createElement("span");
-	total.setAttribute("class", "total");
-	total.setAttribute("contentEditable", "true");
-	total.appendChild(document.createTextNode(this.task.total));
-	
-	return total;
-}
-
-taskView.prototype.makeDeleteElement = function() {
-	var del = document.createElement("span");
-	del.setAttribute("class", "delete");
-	var delAnchor = document.createElement("a");
-	delAnchor.setAttribute("href", "#delete");
-	delAnchor.setAttribute("title", "Delete Task");
-	var delIcon = document.createElement("i");
-	delIcon.setAttribute("class", "icon-cancel-circled");
-	delAnchor.appendChild(delIcon);
-	del.appendChild(delAnchor);
-	
-	return del;
-}
-
-taskView.prototype.makeTaskElement = function(callbackConfig) {
-	var listItem = this.makeTaskContainer();
-	var playElement = this.makePlayElement();
-	var titleElement = this.makeTitleElement();
-	var totalElement = this.makeTotalElement();
-	var deleteElement = this.makeDeleteElement();
-	
-	playElement.addEventListener('click', callbackConfig.playCallback, false);		
-	titleElement.addEventListener('input', callbackConfig.titleEditCallback, false);
-	totalElement.addEventListener('input', callbackConfig.totalEditCallback, false);
-	deleteElement.addEventListener('click', callbackConfig.deleteCallback, false);
-	
-	listItem.appendChild(playElement);
-	listItem.appendChild(titleElement);
-	listItem.appendChild(totalElement);
-	listItem.appendChild(deleteElement);
+	function makeTaskElement(template, callbackConfig) {
+		var listItem = document.createElement("li");
+		listItem.setAttribute("id", task.id);
+		listItem.setAttribute("data-taskid", task.id);
+		listItem.setAttribute("data-groupid", task.groupId);
+		listItem.addEventListener('task-started', function(e) {
+			startTask(e.detail);
+		});
+		listItem.addEventListener('task-stopped', function(e) {
+			stopTask(e.detail);
+		});
 		
-	return listItem;
+		listItem.innerHTML = template;
+		
+		listItem.querySelector('.total').textContent = task.total;	
+		
+		listItem.querySelector('.play-pause').addEventListener('click', callbackConfig.playCallback, false);		
+		
+		listItem.querySelector('.title').textContent = task.title;	
+		listItem.querySelector('.title').addEventListener('input', callbackConfig.titleEditCallback, false);
+		
+		listItem.querySelector('.total').textContent = task.total;
+		
+		task.subscribe('task-time-changed', function(e) {
+			listItem.querySelector('.total').textContent = task.total;
+		});
+		
+		listItem.querySelector('.total').addEventListener('input', callbackConfig.totalEditCallback, false);
+		
+		listItem.querySelector('.delete').addEventListener('click', callbackConfig.deleteCallback, false);
+		
+		if (task.isRunning) {
+			startTask(task);
+		}
+		
+		return listItem;
+	}
+	
+	function startTask(task) {
+		task.isRunning = true;
+		if (task.intervalId == null)
+		{
+			task.intervalId = window.setInterval(taskCounter, 1000, task);
+		}
+	}
+	
+	function stopTask(task) {
+		task.isRunning = false;
+		window.clearInterval(task.intervalId);
+		task.intervalId = null;
+	}
+	
+	function taskCounter(task) {
+		task.runtime += 1;
+		task.publish('task-time-changed', { 'task' : task });
+	}
+	
+	function playPauseTask(task, taskElement) {
+		
+		var playIcon = taskElement.querySelector(".task-play-pause-icon");
+		playIcon.classList.toggle("icon-play");
+		playIcon.classList.toggle("icon-pause");
+		
+		var taskEventName = 'task-started';
+		if (task.isRunning) taskEventName = 'task-stopped';
+		
+		taskElement.dispatchEvent(new CustomEvent(taskEventName, { 'detail' : task }));
+		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'groupId' : task.groupId }});
+	}
+}
+
+taskView.prototype.getElement = function() {
+	return this.element;
 }

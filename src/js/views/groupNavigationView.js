@@ -6,7 +6,7 @@ function groupNavigationView(group, eventService) {
 	this.element = this.makeGroupNavElement(getViewTemplate());
 	
 	this.onGroupTitleChangedEvent(this);
-	this.bindToTaskTimeChanged(this);
+	this.subscribeToTaskTimeChanged(this);
 	
 	function getViewTemplate() {
 		return 	'<a class="action-select-group" href="" title=""><span class="group-title"></span><span class="group-total paren-data"></span></a>' + 
@@ -14,11 +14,15 @@ function groupNavigationView(group, eventService) {
 	}
 }
 
-groupNavigationView.prototype.bindToTaskTimeChanged = function(view) {
+groupNavigationView.prototype.subscribeToTaskTimeChanged = function(view) {
 	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
 		var t = view.group.tasks[i];
 		t.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
 	}
+	view.group.subscribe('group-task-added', function(e) { 
+		var newTask = e.detail.task;
+		newTask.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
+	});
 }
 
 groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
