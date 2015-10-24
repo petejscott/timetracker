@@ -26,11 +26,12 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			})
 		});
 		
+		//TODO handle this in the navigationView??
 		eventService.subscribe(eventService.events.group.selected, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
 		});	
-		
+		//TODO handle this in the navigationView??
 		eventService.subscribe(eventService.events.group.deleted, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			var index = groups.indexOf(group);
@@ -39,8 +40,7 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			}
 			e.preventDefault();
 		});
-		
-		
+				
 	}
 	
 	function groupsRetrievedEventHandler(e) {
@@ -50,15 +50,13 @@ tt.groupService = (function(logger, groupFactory, viewFactory, config, eventServ
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
 				groups.push(groupFactory.createGroup(storedGroups[i]));
 			}
-		}
-		
-		var groupsNavigationView = viewFactory.makeNavigationView(groups, groupFactory);
+		}		
 		
 		if (groups.length == 0) {
 			createGroupForCurrentWeek();			
 		}
 		
-		groupsNavigationView.makeGroupNavigation(groups);
+		var navigationView = viewFactory.makeNavigationView(groups, groupFactory);
 		
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];

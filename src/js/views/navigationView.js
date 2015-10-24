@@ -8,6 +8,8 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 	this.groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	this.optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
 	
+	this.element = this.makeNavigation(this);
+	
 	this.createGroupForCurrentWeek = function(view) {
 		var group = view.groupFactory.createNewGroup();
 		view.groups.push(group);
@@ -15,17 +17,11 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 		view.eventService.dispatch(view.eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 	}
 	
-	function addOptions(view) {
-		view.optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';
-		view.optionsNavigationContainer.querySelector('.action-group-add').addEventListener('click', function(e) {
-			view.createGroupForCurrentWeek(view);
-			view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-			e.preventDefault();
-		}, false);
-	}
-	
-	addOptions(this);
 	this.onGroupAddedToNavigationEvent(this);
+}
+
+navigationView.prototype.getElement = function() {
+	return this.element;
 }
 
 // TODO: this probably belongs in groupService, in which case groupService probably 
@@ -50,10 +46,17 @@ navigationView.prototype.addGroupToNavigation = function(group) {
 	this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
 }
 
-navigationView.prototype.makeGroupNavigation = function() {
+navigationView.prototype.makeNavigation = function(view) {
 	this.groupNavigationContainer.textContent = "";
 	for (var i = 0, len = this.groups.length; i < len; i++) {
 		var groupNavigationView = this.viewFactory.makeGroupNavigationView(this.groups[i]);
 		this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
 	}
+	
+	view.optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';
+	view.optionsNavigationContainer.querySelector('.action-group-add').addEventListener('click', function(e) {
+		view.createGroupForCurrentWeek(view);
+		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+		e.preventDefault();
+	}, false);
 }
