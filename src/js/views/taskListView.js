@@ -23,7 +23,6 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 	function addNewTaskToActiveGroup() {
 		var task = taskFactory.createNewTask(group);
 		group.addTask(task);
-		group.publish('add-task-to-group', { 'task' : task });
 		tasksContainer.appendChild(makeTask(task));
 	}
 	

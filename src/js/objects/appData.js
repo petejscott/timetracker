@@ -11,6 +11,7 @@ appData.prototype.constructor = appData;
 
 appData.prototype.addGroup = function(group) {
     this.groups.push(group);
+    this.publish('group-added', { 'group' : group });
 }
 appData.prototype.setConfig = function(config) {
     this.configuration = config;

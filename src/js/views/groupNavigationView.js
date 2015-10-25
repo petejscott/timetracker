@@ -20,7 +20,7 @@ groupNavigationView.prototype.subscribeToTaskTimeChanged = function(view) {
 		t.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });
 	}
 	//TODO: clean this up so it's more obvious (subscribe to task-time-tick on newly added tasks too)
-	view.group.subscribe('add-task-to-group', function(e) { 
+	view.group.subscribe('task-added', function(e) {
 		var newTask = e.detail.task;
 		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		newTask.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });

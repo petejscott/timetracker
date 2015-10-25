@@ -51,8 +51,12 @@ groupSummaryView.prototype.onGroupTitleChanged = function(view) {
 }
 
 groupSummaryView.prototype.onGroupTotalChangedEvent = function(view) {
-	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
-		var t = view.group.tasks[i];
-		t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
-	}
+    for (var i = 0, len = view.group.tasks.length; i < len; i++) {
+        var t = view.group.tasks[i];
+        t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
+    }
+    view.group.subscribe('task-added', function(e) {
+       var task = e.detail.task;
+        task.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
+    });
 }

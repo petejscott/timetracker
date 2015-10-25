@@ -12,4 +12,5 @@ group.prototype.constructor = group;
 
 group.prototype.addTask = function(task) {
     this.tasks.push(task);
+    this.publish('task-added', { 'task' : task });
 }
