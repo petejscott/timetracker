@@ -11,6 +11,6 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService) {
 		e.preventDefault();
 	}
 	
-	eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
+	//eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
 	
 })(logger, tt.taskFactory, tt.viewFactory, tt.eventService);

@@ -1,22 +1,16 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, viewFactory, eventService) {
+tt.groupService = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
 	
 	var groups = [];
 	
-	function bind() {
-		
-		var syncStatusView = viewFactory.makeSyncStatusView(function(e) {
-			eventService.dispatch(eventService.events.sync.requested,  { 
-				'detail' : 
-				{ 
-					'type' : 'groups',
-					'data' : groups,
-					'priority' : 'high' 
-				}
-			})
-		});
+	function groupSelectedEventHandler(e) {
+		var activeGroup = e.detail.group;
+		if (activeGroup !== null) {
+			var view = viewFactory.makeTaskListView(activeGroup, taskFactory);
+		}
+		e.preventDefault();
 	}
 	
 	function groupsRetrievedEventHandler(e) {
@@ -28,15 +22,28 @@ tt.groupService = (function(logger, groupFactory, viewFactory, eventService) {
 			}
 		}
 		
+		createViews();
+	}
+	
+	function createViews() {
+		
 		var navigationView = viewFactory.makeNavigationView(groups, groupFactory);
-		bind();
+		
+		var syncStatusView = viewFactory.makeSyncStatusView(function(e) {
+			eventService.dispatch(eventService.events.sync.requested,  { 
+				'detail' : 
+				{ 
+					'type' : 'groups',
+					'data' : groups,
+					'priority' : 'high' 
+				}
+			})
+		});
+		
 	}
 	
-	function init() {
-		eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
-		eventService.dispatch(eventService.events.sync.getGroups);
-	}
+	eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
+	eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
+	eventService.dispatch(eventService.events.sync.getGroups);
 	
-	init();
-	
-})(logger, tt.groupFactory, tt.viewFactory, tt.eventService);
+})(logger, tt.groupFactory, tt.taskFactory, tt.viewFactory, tt.eventService);
