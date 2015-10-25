@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupService = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
+tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
 	
 	var groups = [];
 	
