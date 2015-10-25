@@ -67,23 +67,6 @@ body, input {
 	font-weight: 300;
 }
 
-/* Buttons */
-
-button { 
-	background-color: #7A6A53;
-	transition: all 0.3s;
-	border: 1px solid #5A4A23;
-	color: #ECE5CE;
-	padding: 0.25em 0.5em;
-	border-radius: 4px;
-	font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-button:hover { 
-	background-color: #7A6A53;
-	border-color: #3A2A03;
-	color: #fff;
-}
-
 /* Links */
 
 a { 
@@ -106,25 +89,6 @@ a:hover {
 *[contentEditable]:focus {
 	outline: 1px dotted rgba(0,0,0,0.35);
 	background: rgba(249,253,169,0.5);
-}
-
-#data-editor {
-	background: rgba(102,86,63,0.75);
-	color: #fff;
-	padding:1em;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 110;
-	max-width: 100%;
-	max-height: 100%;
-	box-sizing: border-box;
-}
-#data-editor .editor {
-	padding: 1em;
-}
-#data-editor .actions {
-	padding: 1em;
 }
 
 /* Some special classes */
