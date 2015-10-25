@@ -57,6 +57,8 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 	function setGroupAsActiveGroup(e) {
 		var activeGroup = e.detail.group;
 		if (activeGroup !== null) {
+			// TODO: neither of these view instantiations really belong in here.
+			// consider moving group-select back to an event, communicating with app.js
 			var view = viewFactory.makeTaskListView(activeGroup, taskFactory);
 			var groupSummaryView = viewFactory.makeGroupSummaryView(activeGroup);
 		}

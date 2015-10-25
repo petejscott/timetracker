@@ -5,13 +5,6 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 	
 	var groups = [];
 	
-	function groupSelectedEventHandler(e) {
-		var activeGroup = e.detail.group;
-		if (activeGroup !== null) {
-			var view = viewFactory.makeTaskListView(activeGroup, taskFactory);
-		}
-		e.preventDefault();
-	}
 	
 	function groupsRetrievedEventHandler(e) {
 		
