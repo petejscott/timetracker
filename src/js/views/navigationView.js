@@ -1,8 +1,8 @@
 'use strict';
 
-function navigationView(logger, groups, eventService, groupFactory, taskFactory, viewFactory) {
-	
-	var groups = groups;
+function navigationView(logger, appDataInstance, eventService, groupFactory, taskFactory, viewFactory) {
+
+    var appDataInstance = appDataInstance;
 	var eventService = eventService;
 	var groupFactory = groupFactory;
 	var viewFactory = viewFactory;
@@ -14,26 +14,19 @@ function navigationView(logger, groups, eventService, groupFactory, taskFactory,
         logger.logWarning("Missing navigationView.groupNavigationContainer");
         return;
     }
-
-	this.groups = groups;
-	this.eventService = eventService;
-	this.groupFactory = groupFactory;
-	this.viewFactory = viewFactory;
-	this.groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
-	this.optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
 	
 	setGroupEventHandling();
 	this.element = makeNavigation();
 	
 	function getGroupById(groupId) {
-		for (var i = 0, len = groups.length; i < len; i++) {
-			if (groups[i].id === groupId) return groups[i];
+		for (var i = 0, len = appDataInstance.groups.length; i < len; i++) {
+			if (appDataInstance.groups[i].id === groupId) return appDataInstance.groups[i];
 		}
 	}
 	
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewGroup();
-		groups.push(group);
+        appDataInstance.addGroup(group);
 		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 	}
 	
@@ -54,9 +47,9 @@ function navigationView(logger, groups, eventService, groupFactory, taskFactory,
 	}
 	
 	function removeGroupFromNavigation(e) {
-		var index = groups.indexOf(e.target);
+		var index = appDataInstance.groups.indexOf(e.target);
 		if (index > -1) {
-			groups.splice(index, 1);
+            appDataInstance.groups.splice(index, 1);
 		}
 	}
 	
@@ -74,14 +67,14 @@ function navigationView(logger, groups, eventService, groupFactory, taskFactory,
 
 		groupNavigationContainer.textContent = "";
 		
-		if (groups.length == 0) {
+		if (appDataInstance.groups.length == 0) {
 			createGroupForCurrentWeek();		
 		}
-		for (var i = 0, len = groups.length; i < len; i++) {
-			addGroupToNavigation(groups[i]);
+		for (var i = 0, len = appDataInstance.groups.length; i < len; i++) {
+			addGroupToNavigation(appDataInstance.groups[i]);
 		}
-		if (groups.length > 0) {
-			var lastGroup = groups[groups.length - 1];
+		if (appDataInstance.groups.length > 0) {
+			var lastGroup = appDataInstance.groups[appDataInstance.groups.length - 1];
 			lastGroup.publish('select-group');
 		}
 		

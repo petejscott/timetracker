@@ -2,16 +2,16 @@
 
 var tt = tt || {};
 tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
-	
-	var groups = [];
-	
+
+	var appDataInstance = new appData();
+    appDataInstance.config = tt.config;
 	
 	function groupsRetrievedEventHandler(e) {
 		
 		var storedGroups = e.detail;
 		if (storedGroups !== null) {
 			for(var i = 0, len = storedGroups.length; i < len; i++) {
-				groups.push(groupFactory.createGroup(storedGroups[i]));
+                appDataInstance.addGroup(groupFactory.createGroup(storedGroups[i]));
 			}
 		}
 		
@@ -19,7 +19,7 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 	}
 	
 	function createViews() {
-		var navigationView = viewFactory.makeNavigationView(groups, groupFactory, taskFactory);
+		var navigationView = viewFactory.makeNavigationView(appDataInstance, groupFactory, taskFactory);
 		var syncStatusView = viewFactory.makeSyncStatusView(groupSync);
 	}
 	
@@ -28,7 +28,7 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 			'detail' : 
 			{ 
 				'type' : 'groups',
-				'data' : groups,
+				'data' : appDataInstance.groups,
 				'priority' : 'high' 
 			}
 		});
