@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskService = (function(logger, taskFactory, viewFactory, eventService, win) {
+tt.taskService = (function(logger, taskFactory, viewFactory, eventService) {
 		
 	function groupSelectedEventHandler(e) {
 		var activeGroup = e.detail.group;
@@ -13,4 +13,4 @@ tt.taskService = (function(logger, taskFactory, viewFactory, eventService, win) 
 	
 	eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
 	
-})(logger, tt.taskFactory, tt.viewFactory, tt.eventService, this);
+})(logger, tt.taskFactory, tt.viewFactory, tt.eventService);
