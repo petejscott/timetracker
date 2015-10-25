@@ -45,14 +45,14 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 		group.id = data.id;
 		if (typeof(data.title) === 'undefined') data.title = data.name;
 		group.title = data.title;
-		group.tasks = data.tasks;
 		return group;
 	}
 	
 	function makeObject() {
 		function group() {
-			observableObject.call(this);
-		}
+            this.tasks = [];
+            observableObject.call(this);
+        }
 		group.prototype = Object.create(observableObject.prototype);
 		group.prototype.constructor = group;
 		
@@ -77,9 +77,8 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 		return groupObj;
 	}
 	
-	function createTasks(group) {
-		var taskCollection = group.tasks;
-        group.tasks = [];
+	function createTasks(group, taskCollection) {
+
 		for (var i = 0, len = taskCollection.length; i < len; i++) {
 			var task = taskFactory.createTask(taskCollection[i]);
 			group.addTask(task);
@@ -91,14 +90,14 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 		var group = makeObject();
 		var data = makeDefaultGroupData();
 		group = setData(group, data);
-		group = createTasks(group);
+		group = createTasks(group, data.tasks);
 		return group;
 	}
 	
 	function createGroup(data) {
 		var group = makeObject();
 		group = setData(group, data);
-        group = createTasks(group);
+        group = createTasks(group, data.tasks);
 		return group;
 	}
 	
