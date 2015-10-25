@@ -16,16 +16,11 @@ tt.eventService = (function(logger, config) {
 			
 		},
 		task : {
-			timeChanged: 		'task-time-changed',
 			added: 				'task-added'
 		},
 		group : {
-			timeChanged: 		'group-time-changed',
-			collectionChanged: 	'group-collection-changed',
 			selected: 			'group-selected',
-			added: 				'group-added',
-			deleted: 			'group-deleted',
-			detailChanged: 		'group-detail-changed'
+			added: 				'group-added'
 		}
 		
 	};
