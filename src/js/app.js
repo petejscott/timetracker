@@ -26,20 +26,19 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 	}
 	
 	function createViews() {
-		
 		var navigationView = viewFactory.makeNavigationView(groups, groupFactory);
-		
-		var syncStatusView = viewFactory.makeSyncStatusView(function(e) {
-			eventService.dispatch(eventService.events.sync.requested,  { 
-				'detail' : 
-				{ 
-					'type' : 'groups',
-					'data' : groups,
-					'priority' : 'high' 
-				}
-			})
+		var syncStatusView = viewFactory.makeSyncStatusView(groupSync);
+	}
+	
+	function groupSync() {
+		eventService.dispatch(eventService.events.sync.requested,  { 
+			'detail' : 
+			{ 
+				'type' : 'groups',
+				'data' : groups,
+				'priority' : 'high' 
+			}
 		});
-		
 	}
 	
 	eventService.subscribe(eventService.events.group.selected, groupSelectedEventHandler);
