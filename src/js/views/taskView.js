@@ -34,15 +34,15 @@ function taskView(task, eventService, timeService) {
 				
 				window.clearTimeout(view.editableTimeoutId);
 				view.editableTimeoutId = window.setTimeout(function() {
-					view.task.publish('task-time-changed', { 'task' : view.task });
+					view.task.publish('task-time-tick', { 'task' : view.task });
 				}, 1500);	
 			},
 			'deleteCallback' : function(e) {
 				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 				stopTask(task);
 				task.runtime = 0;
-				view.task.publish('task-time-changed', { 'task' : view.task });
-				view.task.publish('task-deleted', { 'task' : view.task });
+				view.task.publish('task-time-tick', { 'task' : view.task });
+				view.task.publish('delete-task', { 'task' : view.task });
 				view.getElement().remove();
 				e.preventDefault();
 			}
@@ -55,10 +55,10 @@ function taskView(task, eventService, timeService) {
 		listItem.setAttribute("id", task.id);
 		listItem.setAttribute("data-taskid", task.id);
 		listItem.setAttribute("data-groupid", task.groupId);
-		listItem.addEventListener('task-started', function(e) {
+		listItem.addEventListener('start-task', function(e) {
 			startTask(e.detail);
 		});
-		listItem.addEventListener('task-stopped', function(e) {
+		listItem.addEventListener('stop-task', function(e) {
 			stopTask(e.detail);
 		});
 		
@@ -73,7 +73,7 @@ function taskView(task, eventService, timeService) {
 		
 		listItem.querySelector('.total').textContent = task.total;
 		
-		task.subscribe('task-time-changed', function(e) {
+		task.subscribe('task-time-tick', function(e) {
 			listItem.querySelector('.total').textContent = task.total;
 		});
 		
@@ -104,17 +104,18 @@ function taskView(task, eventService, timeService) {
 	
 	function taskCounter(task) {
 		task.runtime += 1;
-		task.publish('task-time-changed', { 'task' : task });
+		task.publish('task-time-tick', { 'task' : task });
 	}
 	
+	//TODO: event triggering seems quirky here.
 	function playPauseTask(task, taskElement) {
 		
 		var playIcon = taskElement.querySelector(".task-play-pause-icon");
 		playIcon.classList.toggle("icon-play");
 		playIcon.classList.toggle("icon-pause");
 		
-		var taskEventName = 'task-started';
-		if (task.isRunning) taskEventName = 'task-stopped';
+		var taskEventName = 'start-task';
+		if (task.isRunning) taskEventName = 'stop-task';
 		
 		taskElement.dispatchEvent(new CustomEvent(taskEventName, { 'detail' : task }));
 	}

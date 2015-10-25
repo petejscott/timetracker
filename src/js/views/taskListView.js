@@ -23,7 +23,7 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 	function addNewTaskToActiveGroup() {
 		var task = taskFactory.createNewTask(group);
 		group.tasks.push(task);
-		group.publish('group-task-added', { 'task' : task });
+		group.publish('add-task-to-group', { 'task' : task });
 		tasksContainer.appendChild(makeTask(task));
 	}
 	
@@ -32,7 +32,7 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 		var view = viewFactory.makeTaskView(task);
 		var taskElement = view.getElement();
 		
-		task.subscribe('task-deleted', function(e) {
+		task.subscribe('delete-task', function(e) {
 			var t = e.detail.task;
 			var taskIndex = -1;
 			for (var i = 0, len = group.tasks.length; i < len; i++) {

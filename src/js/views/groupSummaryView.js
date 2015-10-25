@@ -47,11 +47,12 @@ groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 }
 
 groupSummaryView.prototype.onGroupTitleChanged = function(view) {
-	view.group.publish('group-title-changed', { 'groupId' : view.group.id });
+	view.group.publish('change-group-title', { 'groupId' : view.group.id });
 }
 
 groupSummaryView.prototype.onGroupTotalChangedEvent = function(view) {
-	view.group.subscribe('group-total-changed', function(e) {
-		view.setTotal(group.total);
-	});
+	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
+		var t = view.group.tasks[i];
+		t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
+	}
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-function navigationView(groups, eventService, groupFactory, viewFactory) {
+function navigationView(groups, eventService, groupFactory, taskFactory, viewFactory) {
 	
 	var groups = groups;
 	var eventService = eventService;
@@ -29,22 +29,20 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 		var group = groupFactory.createNewGroup();
 		groups.push(group);
 		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
 	}
 	
 	function setGroupEventHandling() {
 		eventService.subscribe(eventService.events.group.added, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			addGroupToNavigation(group);
+			group.publish('select-group', { 'group' : group });
 			e.preventDefault();
 		});
-		eventService.subscribe(eventService.events.group.selected, function(e) {
-			var group = getGroupById(e.detail.groupId);
-			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
-		});	
 	}
 	
 	function addGroupToNavigation(group) {
+		group.subscribe('delete-group', removeGroupFromNavigation);
+		group.subscribe('select-group', setGroupAsActiveGroup);
 		var groupNavigationView = viewFactory.makeGroupNavigationView(group);
 		groupNavigationContainer.appendChild(groupNavigationView.getElement());
 	}
@@ -56,6 +54,14 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 		}
 	}
 	
+	function setGroupAsActiveGroup(e) {
+		var activeGroup = e.detail.group;
+		if (activeGroup !== null) {
+			var view = viewFactory.makeTaskListView(activeGroup, taskFactory);
+			var groupSummaryView = viewFactory.makeGroupSummaryView(activeGroup);
+		}
+	}
+	
 	function makeNavigation() {
 		groupNavigationContainer.textContent = "";
 		
@@ -63,13 +69,11 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 			createGroupForCurrentWeek();		
 		}
 		for (var i = 0, len = groups.length; i < len; i++) {
-			groups[i].subscribe('group-deleted', removeGroupFromNavigation);
-			var groupNavigationView = viewFactory.makeGroupNavigationView(groups[i]);
-			groupNavigationContainer.appendChild(groupNavigationView.getElement());
+			addGroupToNavigation(groups[i]);
 		}
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
-			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup, 'groupId' : lastGroup.id }});
+			lastGroup.publish('select-group', { 'group' : lastGroup });
 		}
 		
 		optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';

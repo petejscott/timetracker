@@ -19,7 +19,6 @@ tt.eventService = (function(logger, config) {
 			added: 				'task-added'
 		},
 		group : {
-			selected: 			'group-selected',
 			added: 				'group-added'
 		}
 		

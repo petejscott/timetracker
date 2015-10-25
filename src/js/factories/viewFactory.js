@@ -3,8 +3,8 @@
 var tt = tt || {};
 tt.viewFactory = (function(logger, eventService, timeService) {
 
-	function makeNavigationView(groups, groupFactory) {
-		return new navigationView(groups, eventService, groupFactory, this);
+	function makeNavigationView(groups, groupFactory, taskFactory) {
+		return new navigationView(groups, eventService, groupFactory, taskFactory, this);
 	}
 	
 	function makeGroupNavigationView(group) {

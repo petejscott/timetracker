@@ -17,17 +17,18 @@ function groupNavigationView(group, eventService) {
 groupNavigationView.prototype.subscribeToTaskTimeChanged = function(view) {
 	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
 		var t = view.group.tasks[i];
-		t.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
+		t.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });
 	}
-	view.group.subscribe('group-task-added', function(e) { 
+	//TODO: clean this up so it's more obvious (subscribe to task-time-tick on newly added tasks too)
+	view.group.subscribe('add-task-to-group', function(e) { 
 		var newTask = e.detail.task;
 		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-		newTask.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
+		newTask.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });
 	});
 }
 
 groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
-	this.group.subscribe('group-title-changed', function(e) { view.updateGroupTitle(view.group.title); });
+	this.group.subscribe('change-group-title', function(e) { view.updateGroupTitle(view.group.title); });
 }
 
 groupNavigationView.prototype.getElement = function() {
@@ -61,12 +62,12 @@ groupNavigationView.prototype.makeGroupNavElement = function(template) {
 	
 	var thisView = this;
 	groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {
-		thisView.eventService.dispatch(thisView.eventService.events.group.selected, { 'detail' : { 'group' : thisView.group, 'groupId' : thisView.group.id }});
+		thisView.group.publish('select-group', { 'group' : thisView.group });
 		e.preventDefault();
 	}, false);
 	
 	groupListItem.querySelector(".action-delete-group").addEventListener('click', function(e) {
-		thisView.group.publish('group-deleted', { 'group' : thisView.group });
+		thisView.group.publish('delete-group', { 'group' : thisView.group });
 		thisView.element.remove();
 		thisView.eventService.dispatch(thisView.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		e.preventDefault();
