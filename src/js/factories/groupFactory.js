@@ -77,27 +77,28 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 		return groupObj;
 	}
 	
-	function createTasks(tasks) {
-		var taskCollection = [];
-		for (var i = 0, len = tasks.length; i < len; i++) {
-			var task = taskFactory.createTask(tasks[i]);
-			taskCollection.push(task);
+	function createTasks(group) {
+		var taskCollection = group.tasks;
+        group.tasks = [];
+		for (var i = 0, len = taskCollection.length; i < len; i++) {
+			var task = taskFactory.createTask(taskCollection[i]);
+			group.addTask(task);
 		}
-		return taskCollection;
+		return group;
 	}
 	
 	function createNewGroup() {		
 		var group = makeObject();
 		var data = makeDefaultGroupData();
 		group = setData(group, data);
-		group.tasks = createTasks(group.tasks);
+		group = createTasks(group);
 		return group;
 	}
 	
 	function createGroup(data) {
 		var group = makeObject();
 		group = setData(group, data);
-		group.tasks = createTasks(group.tasks);
+        group = createTasks(group);
 		return group;
 	}
 	
