@@ -4,7 +4,7 @@ var tt = tt || {};
 tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
 
 	var appDataInstance = new appData();
-    appDataInstance.config = tt.config;
+    appDataInstance.setConfig(tt.config);
 	
 	function groupsRetrievedEventHandler(e) {
 		
@@ -14,7 +14,7 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
                 appDataInstance.addGroup(groupFactory.createGroup(storedGroups[i]));
 			}
 		}
-		
+		console.log(JSON.stringify(appDataInstance));
 		createViews();
 	}
 	

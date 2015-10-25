@@ -2,13 +2,24 @@
 
 var tt = tt || {};
 tt.config = (function(win) {
-	var mainContainer = win.document.querySelector("#main");
-	var eventElement = mainContainer;
+	var mainContainerQuery = "#main";
+	var eventElementQuery = mainContainerQuery;
 	var remoteSyncWebUrl = "";
 	var remoteSyncApiKey = "";
-	return { 
-		mainContainer, 
-		eventElement, 
+
+    function getMainContainer() {
+        return win.document.querySelector(mainContainerQuery);
+    }
+
+    function getEventElement() {
+        return win.document.querySelector(eventElementQuery);
+    }
+
+	return {
+        mainContainerQuery,
+        eventElementQuery,
+        getMainContainer,
+        getEventElement,
 		remoteSyncWebUrl, 
 		remoteSyncApiKey };
 })(this);

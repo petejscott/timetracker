@@ -6,4 +6,6 @@ BUGS
 FEATURES (may resolve #1)
 1. appData object: make addGroup(group) which publishes and subscribes appropriately
 2. group object: make addTask(task) which publishes and subscribes appropriately
-3. send appData around instead of groups array
+3. [DONE] send appData around instead of groups array
+4. send appData around instead of config
+5. save appData instead of just groups
