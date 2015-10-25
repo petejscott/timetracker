@@ -6,8 +6,10 @@ BUGS
 FEATURES (may resolve #1)
 1. [DONE] appData object: make addGroup(group)
 2. appData.addGroup should do pertinent publishes and subscribes
+	2a. group-added (publish done, but no subscribers yet)
 3. [DONE] group object: make addTask(task)
 4. group.addTask should publish and subscribe appropriately
+	4a. [DONE] task-added
 5. [DONE] send appData around instead of groups array
 6. send appData around instead of config
 7. save appData instead of just groups
