@@ -1,6 +1,6 @@
 'use strict';
 
-function navigationView(groups, eventService, groupFactory, taskFactory, viewFactory) {
+function navigationView(logger, groups, eventService, groupFactory, taskFactory, viewFactory) {
 	
 	var groups = groups;
 	var eventService = eventService;
@@ -8,7 +8,13 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 	var viewFactory = viewFactory;
 	var groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	var optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
-	
+
+
+    if (groupNavigationContainer == null) {
+        logger.logWarning("Missing navigationView.groupNavigationContainer");
+        return;
+    }
+
 	this.groups = groups;
 	this.eventService = eventService;
 	this.groupFactory = groupFactory;
@@ -65,6 +71,7 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 	}
 	
 	function makeNavigation() {
+
 		groupNavigationContainer.textContent = "";
 		
 		if (groups.length == 0) {

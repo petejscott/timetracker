@@ -4,7 +4,7 @@ var tt = tt || {};
 tt.viewFactory = (function(logger, eventService, timeService) {
 
 	function makeNavigationView(groups, groupFactory, taskFactory) {
-		return new navigationView(groups, eventService, groupFactory, taskFactory, this);
+		return new navigationView(logger, groups, eventService, groupFactory, taskFactory, this);
 	}
 	
 	function makeGroupNavigationView(group) {
@@ -20,7 +20,7 @@ tt.viewFactory = (function(logger, eventService, timeService) {
 	}
 	
 	function makeSyncStatusView(clickEventHandler) {
-		return new syncStatusView(eventService, clickEventHandler);
+		return new syncStatusView(logger, eventService, clickEventHandler);
 	}
 	
 	function makeGroupSummaryView(group) {

@@ -4,6 +4,10 @@ var tt = tt || {};
 tt.eventService = (function(logger, config) {
 	
 	var eventElement = config.eventElement;
+    if (eventElement == null) {
+        logger.logWarning("Missing config.eventElement in eventService; using new div");
+        eventElement = document.createElement("div");
+    }
 	
 	var events = {
 		
