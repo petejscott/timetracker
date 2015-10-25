@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>TimeTracker Tests</title>
-  <link rel="stylesheet" href="lib/qunit-1.19.0.css">
+	<meta charset="utf-8">
+	<title>timeService Tests</title>
+	<link rel="stylesheet" href="lib/qunit-1.19.0.css">
+	<script src="../src/lib/logger.js"></script>
 </head>
 <body>
-	<ul>
-		<li><a href="timeServiceTests.html" title="timeService tests">timeService tests</a></li>
-		<li><a href="groupTests.html" title="group tests">group tests</a></li>
-	</ul>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="lib/qunit-1.19.0.js"></script>
+
+    <script src="../src/config.js"></script>
+    <script src="../src/js/objects/observableObject.js"></script>
+
+    <script src="../src/js/eventService.js"></script>
+    <script src="../src/js/storage.js"></script>
+    <script src="../src/js/syncService.js"></script>
+    <script src="../src/js/timeService.js"></script>
+
+    <script src="../src/js/views/syncStatusView.js"></script>
+    <script src="../src/js/views/navigationView.js"></script>
+    <script src="../src/js/views/groupNavigationView.js"></script>
+    <script src="../src/js/views/taskListView.js"></script>
+    <script src="../src/js/views/taskView.js"></script>
+    <script src="../src/js/views/groupSummaryView.js"></script>
+    <script src="../src/js/factories/viewFactory.js"></script>
+
+    <script src="../src/js/factories/taskFactory.js"></script>
+    <script src="../src/js/factories/groupFactory.js"></script>
+
+    <script src="../src/js/app.js"></script>
+
+    <script src="groupTests.js"></script>
+    <script src="timeServiceTests.js"></script>
+
 </body>
 </html>
