@@ -1,0 +1,9 @@
+BUGS
+1. group summary total update not binding on new group creation until reload
+2. delete group does not select a different group or clear the tasklist view
+3. groupNavigationView uses a lot of prototyped functions that don't need to be public
+
+FEATURES (may resolve #1)
+1. appData object: make addGroup(group) which publishes and subscribes appropriately
+2. group object: make addTask(task) which publishes and subscribes appropriately
+3. send appData around instead of groups array
