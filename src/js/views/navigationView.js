@@ -35,7 +35,7 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 		eventService.subscribe(eventService.events.group.added, function(e) {
 			var group = getGroupById(e.detail.groupId);
 			addGroupToNavigation(group);
-			group.publish('select-group', { 'group' : group });
+			group.publish('select-group');
 			e.preventDefault();
 		});
 	}
@@ -48,14 +48,14 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 	}
 	
 	function removeGroupFromNavigation(e) {
-		var index = groups.indexOf(e.detail.group);
+		var index = groups.indexOf(e.target);
 		if (index > -1) {
 			groups.splice(index, 1);
 		}
 	}
 	
 	function setGroupAsActiveGroup(e) {
-		var activeGroup = e.detail.group;
+		var activeGroup = e.target;
 		if (activeGroup !== null) {
 			// TODO: neither of these view instantiations really belong in here.
 			// consider moving group-select back to an event, communicating with app.js
@@ -75,7 +75,7 @@ function navigationView(groups, eventService, groupFactory, taskFactory, viewFac
 		}
 		if (groups.length > 0) {
 			var lastGroup = groups[groups.length - 1];
-			lastGroup.publish('select-group', { 'group' : lastGroup });
+			lastGroup.publish('select-group');
 		}
 		
 		optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';

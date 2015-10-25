@@ -33,7 +33,7 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 		var taskElement = view.getElement();
 		
 		task.subscribe('delete-task', function(e) {
-			var t = e.detail.task;
+			var t = e.target;
 			var taskIndex = -1;
 			for (var i = 0, len = group.tasks.length; i < len; i++) {
 				if (t.id === group.tasks[i].id) {

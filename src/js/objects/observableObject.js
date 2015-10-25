@@ -8,7 +8,9 @@ observableObject.prototype.publish = function(type, detail) {
 	logger.logDebug('publishing ' + type + ' with ' + JSON.stringify(detail));
 	for( var i = 0, len = this.subscribers.length; i < len; i++) {
 		if (this.subscribers[i].type == type) {
-			this.subscribers[i].fn({'detail' : detail});
+			this.subscribers[i].fn({
+				'detail' : detail, 
+				'target' : this});
 		}
 	}
 }
