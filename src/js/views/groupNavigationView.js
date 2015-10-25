@@ -21,6 +21,7 @@ groupNavigationView.prototype.subscribeToTaskTimeChanged = function(view) {
 	}
 	view.group.subscribe('group-task-added', function(e) { 
 		var newTask = e.detail.task;
+		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		newTask.subscribe('task-time-changed', function(e) { view.updateGroupTotal(view); });
 	});
 }

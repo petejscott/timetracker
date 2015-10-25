@@ -11,6 +11,10 @@ tt.viewFactory = (function(logger, eventService, timeService) {
 		return new groupNavigationView(group, eventService);
 	}
 	
+	function makeTaskListView(group, taskFactory) {
+		return new taskListView(group, eventService, taskFactory, this);
+	}
+	
 	function makeTaskView(task) {
 		return new taskView(task, eventService, timeService);
 	}
@@ -26,6 +30,7 @@ tt.viewFactory = (function(logger, eventService, timeService) {
 	return { 
 		makeNavigationView,
 		makeGroupNavigationView,
+		makeTaskListView,
 		makeTaskView,
 		makeSyncStatusView,
 		makeGroupSummaryView

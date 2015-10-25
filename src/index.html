@@ -15,43 +15,38 @@
 <body>
 
 	<div id="menu" class="drawer" data-swipe-target="#main" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
+		
 		<header class="top-header">
 			<span class="menuToggle icon-cancel-circled" alt="close menu"></span>
 			<h1>Groups</h1>
 		</header>
+		
 		<nav id="mainNavigation">
-			<ul class="group-nav">
-				
-			</ul>
-			<ul class="options-nav">
-				
-			</ul>
+			<ul class="group-nav"></ul>
+			<ul class="options-nav"></ul>
 		</nav>
+		
 	</div>
 	
 	<article id="main">
+		
 		<header class="top-header">
 			<span class="menuToggle icon-menu" alt="menu"></span>
 			<h1>TimeTracker <span class="sync-status"></span></h1>
 		</header>
+		
 		<section class="group">
 		  <header>
 			<h2 class="group-summary icon-calendar"></h2>
 		  </header>
 		</section>
-		<section class="tasks">
-		  <header>
-			<h2 class="icon-list-bullet">Tasks</h2>
-			<a href="#task-add" title="Add a task" class="action-task-add icon-plus-circled"></a>
-		  </header>
-		  <ul id="taskContainer" class="tasklist">
-			
-		  </ul>
-		</section>
+		
+		<section class="tasks"></section>
 		
 		<footer>
 			<p><a href="https://github.com/petejscott/timetracker">TimeTracker is on <i class="icon-git" title="GitHub"></i></a></p>
 		</footer>
+		
 	</article>
 	
 	<aside id="data-editor" class="hidden">
@@ -74,6 +69,7 @@
 	<script src="js/views/syncStatusView.js"></script>
 	<script src="js/views/navigationView.js"></script>
 	<script src="js/views/groupNavigationView.js"></script>
+	<script src="js/views/taskListView.js"></script>
 	<script src="js/views/taskView.js"></script>
 	<script src="js/views/groupSummaryView.js"></script>
 	<script src="js/factories/viewFactory.js"></script>
