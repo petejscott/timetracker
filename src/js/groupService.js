@@ -29,15 +29,10 @@ tt.groupService = (function(logger, groupFactory, viewFactory, eventService) {
 		}
 		
 		var navigationView = viewFactory.makeNavigationView(groups, groupFactory);
-		
-		if (groups.length > 0) {
-			var lastGroup = groups[groups.length - 1];
-			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup, 'groupId' : lastGroup.id }});
-		}
+		bind();
 	}
 	
 	function init() {
-		bind();
 		eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
 		eventService.dispatch(eventService.events.sync.getGroups);
 	}

@@ -35,6 +35,7 @@ groupSummaryView.prototype.setTotal = function(total) {
 groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 	view.groupTitleContainer.addEventListener('input', function(e) {
 		
+		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		view.group.title = view.groupTitleContainer.textContent;
 		e.preventDefault();
 		
@@ -46,7 +47,6 @@ groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 }
 
 groupSummaryView.prototype.onGroupTitleChanged = function(view) {
-	view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 	view.group.publish('group-title-changed', { 'groupId' : view.group.id });
 }
 
