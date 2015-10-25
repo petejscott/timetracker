@@ -117,7 +117,6 @@ function taskView(task, eventService, timeService) {
 		if (task.isRunning) taskEventName = 'task-stopped';
 		
 		taskElement.dispatchEvent(new CustomEvent(taskEventName, { 'detail' : task }));
-		eventService.dispatch(eventService.events.group.collectionChanged, { 'detail' : { 'groupId' : task.groupId }});
 	}
 }
 

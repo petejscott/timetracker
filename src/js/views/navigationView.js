@@ -1,6 +1,14 @@
 'use strict';
 
 function navigationView(groups, eventService, groupFactory, viewFactory) {
+	
+	var groups = groups;
+	var eventService = eventService;
+	var groupFactory = groupFactory;
+	var viewFactory = viewFactory;
+	var groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
+	var optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
+	
 	this.groups = groups;
 	this.eventService = eventService;
 	this.groupFactory = groupFactory;
@@ -8,76 +16,71 @@ function navigationView(groups, eventService, groupFactory, viewFactory) {
 	this.groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	this.optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
 	
-	this.setGroupEventHandling(this);
-	this.element = this.makeNavigation(this);
+	setGroupEventHandling();
+	this.element = makeNavigation();
+	
+	function getGroupById(groupId) {
+		for (var i = 0, len = groups.length; i < len; i++) {
+			if (groups[i].id === groupId) return groups[i];
+		}
+	}
+	
+	function createGroupForCurrentWeek() {
+		var group = groupFactory.createNewGroup();
+		groups.push(group);
+		eventService.dispatch(eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+		eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
+	}
+	
+	function setGroupEventHandling() {
+		eventService.subscribe(eventService.events.group.added, function(e) {
+			var group = getGroupById(e.detail.groupId);
+			addGroupToNavigation(group);
+			e.preventDefault();
+		});
+		eventService.subscribe(eventService.events.group.selected, function(e) {
+			var group = getGroupById(e.detail.groupId);
+			var groupSummaryView = viewFactory.makeGroupSummaryView(group);
+		});	
+	}
+	
+	function addGroupToNavigation(group) {
+		var groupNavigationView = viewFactory.makeGroupNavigationView(group);
+		groupNavigationContainer.appendChild(groupNavigationView.getElement());
+	}
+	
+	function removeGroupFromNavigation(e) {
+		var index = groups.indexOf(e.detail.group);
+		if (index > -1) {
+			groups.splice(index, 1);
+		}
+	}
+	
+	function makeNavigation() {
+		groupNavigationContainer.textContent = "";
+		
+		if (groups.length == 0) {
+			createGroupForCurrentWeek();		
+		}
+		for (var i = 0, len = groups.length; i < len; i++) {
+			groups[i].subscribe('group-deleted', removeGroupFromNavigation);
+			var groupNavigationView = viewFactory.makeGroupNavigationView(groups[i]);
+			groupNavigationContainer.appendChild(groupNavigationView.getElement());
+		}
+		if (groups.length > 0) {
+			var lastGroup = groups[groups.length - 1];
+			eventService.dispatch(eventService.events.group.selected, { 'detail' : { 'group' : lastGroup, 'groupId' : lastGroup.id }});
+		}
+		
+		optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';
+		optionsNavigationContainer.querySelector('.action-group-add').addEventListener('click', function(e) {
+			createGroupForCurrentWeek();
+			eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+			e.preventDefault();
+		}, false);
+	}
 }
 
 navigationView.prototype.getElement = function() {
 	return this.element;
-}
-
-// TODO: this probably belongs in groupService, in which case groupService probably 
-// becomes a dependency of THIS object, and groups no longer needs to be passed in 
-// since we can just use groupService's groups collection.
-navigationView.prototype.getGroupById = function(groupId) {
-	for (var i = 0, len = this.groups.length; i < len; i++) {
-		if (this.groups[i].id === groupId) return this.groups[i];
-	}
-}
-
-navigationView.prototype.createGroupForCurrentWeek = function(view) {
-	var group = view.groupFactory.createNewGroup();
-	view.groups.push(group);
-	view.eventService.dispatch(view.eventService.events.group.added, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-	view.eventService.dispatch(view.eventService.events.group.selected, { 'detail' : { 'group' : group, 'groupId' : group.id }});
-}
-
-navigationView.prototype.setGroupEventHandling = function(view) {
-	
-	view.eventService.subscribe(view.eventService.events.group.added, function(e) {
-		var group = view.getGroupById(e.detail.groupId);
-		view.addGroupToNavigation(group);
-		e.preventDefault();
-	});
-	view.eventService.subscribe(view.eventService.events.group.selected, function(e) {
-		var group = view.getGroupById(e.detail.groupId);
-		var groupSummaryView = view.viewFactory.makeGroupSummaryView(group);
-	});	
-	
-	view.eventService.subscribe(view.eventService.events.group.deleted, function(e) {
-		var group = view.getGroupById(e.detail.groupId);
-		var index = view.groups.indexOf(group);
-		if (index > -1) {
-			view.groups.splice(index, 1);
-		}
-		e.preventDefault();
-	});
-}
-
-navigationView.prototype.addGroupToNavigation = function(group) {
-	var groupNavigationView = this.viewFactory.makeGroupNavigationView(group);
-	this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
-}
-
-navigationView.prototype.makeNavigation = function(view) {
-	this.groupNavigationContainer.textContent = "";
-	
-	if (this.groups.length == 0) {
-		view.createGroupForCurrentWeek(view);		
-	}
-	for (var i = 0, len = this.groups.length; i < len; i++) {
-		var groupNavigationView = this.viewFactory.makeGroupNavigationView(this.groups[i]);
-		this.groupNavigationContainer.appendChild(groupNavigationView.getElement());
-	}
-	if (view.groups.length > 0) {
-		var lastGroup = view.groups[view.groups.length - 1];
-		view.eventService.dispatch(view.eventService.events.group.selected, { 'detail' : { 'group' : lastGroup, 'groupId' : lastGroup.id }});
-	}
-	
-	view.optionsNavigationContainer.innerHTML = '<li><a href="#group-add" title="Add a Group" class="action-group-add icon-plus-circled">Add a Group</a></li>';
-	view.optionsNavigationContainer.querySelector('.action-group-add').addEventListener('click', function(e) {
-		view.createGroupForCurrentWeek(view);
-		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-		e.preventDefault();
-	}, false);
 }
