@@ -49,17 +49,6 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 	}
 	
 	function makeObject() {
-		function group() {
-            this.tasks = [];
-            observableObject.call(this);
-        }
-		group.prototype = Object.create(observableObject.prototype);
-		group.prototype.constructor = group;
-		
-		group.prototype.addTask = function(task) {
-			this.tasks.push(task);
-		}
-		
 		var groupObj = new group();
 		
 		if (typeof(groupObj.total) === 'undefined')

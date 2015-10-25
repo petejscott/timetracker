@@ -38,12 +38,6 @@ tt.taskFactory = (function(logger, timeService) {
 	}
 	
 	function makeObject() {
-		function task() {
-			observableObject.call(this);
-		}
-		task.prototype = Object.create(observableObject.prototype);
-		task.prototype.constructor = task;
-		
 		var taskObj = new task();
 		
 		if (typeof(taskObj.total) === 'undefined')

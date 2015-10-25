@@ -14,7 +14,6 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
                 appDataInstance.addGroup(groupFactory.createGroup(storedGroups[i]));
 			}
 		}
-		console.log(JSON.stringify(appDataInstance));
 		createViews();
 	}
 	
