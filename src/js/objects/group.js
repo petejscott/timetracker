@@ -1,6 +1,8 @@
 'use strict';
 
 function group() {
+    this.id = "";
+    this.title = "";
     this.tasks = [];
     observableObject.call(this);
 }

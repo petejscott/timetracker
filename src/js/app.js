@@ -4,6 +4,7 @@ var tt = tt || {};
 tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService) {
 
 	var appDataInstance = new appData();
+    Object.seal(appDataInstance);
     appDataInstance.setConfig(tt.config);
 	
 	function groupsRetrievedEventHandler(e) {

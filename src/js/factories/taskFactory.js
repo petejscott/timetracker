@@ -48,6 +48,8 @@ tt.taskFactory = (function(logger, timeService) {
 				}
 			});
 		}
+
+        Object.seal(taskObj);
 		return taskObj;
 	}
 	

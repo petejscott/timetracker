@@ -63,6 +63,8 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 				}
 			});
 		}
+
+        Object.seal(groupObj);
 		return groupObj;
 	}
 	
