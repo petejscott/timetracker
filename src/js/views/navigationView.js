@@ -55,7 +55,14 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
         if (g == null) return;
 
         var groupNavigationView = viewFactory.makeGroupNavigationView(g);
-        groupNavigationContainer.appendChild(groupNavigationView.getElement());
+        var el = groupNavigationView.getElement();
+        el.querySelector(".action-delete-group").addEventListener('click', function(e) {
+            appDataInstance.removeGroup(g);
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            e.preventDefault();
+        }, false);
+
+        groupNavigationContainer.appendChild(el);
     }
 
 	function createGroupForCurrentWeek() {

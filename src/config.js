@@ -23,5 +23,5 @@ tt.config = (function(win) {
 		"remoteSyncWebUrl" : remoteSyncWebUrl,
 		"remoteSyncApiKey" : remoteSyncApiKey
     };
-    
+
 })(this);

@@ -43,14 +43,14 @@ function taskView(task, eventService, timeService) {
 				//view.editableTimeoutId = window.setTimeout(function() {
 				//	view.task.publish('task-time-tick');
 				//}, 1500);
-			},
-			'deleteCallback' : function(e) {
-				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				stopTask(task);
-				task.setRuntime(0);
-				view.task.publish('delete-task');
-				//view.getElement().remove();
-				e.preventDefault();
+			//},
+			//'deleteCallback' : function(e) {
+			//	view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+			//	stopTask(task);
+			//	task.setRuntime(0);
+			//	view.task.publish('delete-task');
+			//	//view.getElement().remove();
+			//	e.preventDefault();
 			}
 		};
 		return callbackConfig;
@@ -85,7 +85,7 @@ function taskView(task, eventService, timeService) {
 		
 		listItem.querySelector('.total').addEventListener('input', callbackConfig.totalEditCallback, false);
 		
-		listItem.querySelector('.delete').addEventListener('click', callbackConfig.deleteCallback, false);
+		//listItem.querySelector('.delete').addEventListener('click', callbackConfig.deleteCallback, false);
 		
 		if (task.isRunning) {
 			startTask(task);
