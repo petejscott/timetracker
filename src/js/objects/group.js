@@ -23,6 +23,7 @@ group.prototype.removeTask = function(task) {
     if (index > -1) {
         this.tasks.splice(index, 1);
     }
+    this.publish('task-removed', { 'task' : task });
 }
 group.prototype.getTotal = function() {
     var total = 0.00;
