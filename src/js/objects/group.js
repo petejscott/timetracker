@@ -18,6 +18,12 @@ group.prototype.addTask = function(task) {
     this.tasks.push(task);
     this.publish('task-added', { 'task' : task });
 }
+group.prototype.removeTask = function(task) {
+    var index = this.tasks.indexOf(task);
+    if (index > -1) {
+        this.tasks.splice(index, 1);
+    }
+}
 group.prototype.getTotal = function() {
     var total = 0.00;
     for (var i = 0, len = this.tasks.length; i < len; i++) {

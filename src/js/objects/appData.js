@@ -13,6 +13,12 @@ appData.prototype.addGroup = function(group) {
     this.groups.push(group);
     this.publish('group-added', { 'group' : group });
 }
+appData.prototype.removeGroup = function(group) {
+    var index = this.groups.indexOf(group);
+    if (index > -1) {
+        this.groups.splice(index, 1);
+    }
+}
 appData.prototype.setConfig = function(config) {
     this.configuration = config;
 }
