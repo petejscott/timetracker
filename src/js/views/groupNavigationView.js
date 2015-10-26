@@ -62,12 +62,12 @@ groupNavigationView.prototype.makeGroupNavElement = function(template) {
 	
 	var thisView = this;
 	groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {
-		thisView.group.publish('select-group');
+		thisView.group.publish('group-selected');
 		e.preventDefault();
 	}, false);
 	
 	groupListItem.querySelector(".action-delete-group").addEventListener('click', function(e) {
-		thisView.group.publish('delete-group');
+		thisView.group.publish('group-deleted');
 		thisView.element.remove();
 		thisView.eventService.dispatch(thisView.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		e.preventDefault();
