@@ -8,7 +8,10 @@ function groupSummaryView(group, eventService) {
 	this.groupSummaryContainer.innerHTML = getViewTemplate();
 	
 	this.groupTitleContainer = this.groupSummaryContainer.querySelector(".group-title");
-	this.groupTotalContainer = this.groupSummaryContainer.querySelector(".group-total");
+
+    var groupTotalContainer = this.groupSummaryContainer.querySelector(".group-total");
+    this.groupTotalContainer = groupTotalContainer;
+
 	this.editableTimeoutId = null;
 	
 	this.setTitle(this.group.title);
@@ -16,8 +19,14 @@ function groupSummaryView(group, eventService) {
 	
 	this.onGroupTitleChanged(this);
 	this.onGroupTitleChanging(this);
-	this.onGroupTotalChangedEvent(this);
-	
+
+    group.subscribe('total-modified', updateTotal);
+
+    function updateTotal(e) {
+        var g = e.target;
+        groupTotalContainer.textContent = g.getTotal();
+    }
+
 	function getViewTemplate() {
 		return 	'<span class="group-title" contenteditable="true"></span>' + 
 				'<span class="group-total paren-data"></span>';
@@ -48,15 +57,4 @@ groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 
 groupSummaryView.prototype.onGroupTitleChanged = function(view) {
 	view.group.publish('change-group-title', { 'groupId' : view.group.id });
-}
-
-groupSummaryView.prototype.onGroupTotalChangedEvent = function(view) {
-    for (var i = 0, len = view.group.tasks.length; i < len; i++) {
-        var t = view.group.tasks[i];
-        t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.getTotal()); });
-    }
-    view.group.subscribe('task-added', function(e) {
-       var task = e.detail.task;
-        task.subscribe('task-time-tick', function(e) { view.setTotal(view.group.getTotal()); });
-    });
 }

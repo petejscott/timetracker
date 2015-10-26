@@ -5,7 +5,8 @@ function taskView(task, eventService, timeService) {
 	this.task = task;
 	this.eventService = eventService;
 	this.timeService = timeService;
-	this.element = makeTaskElement(getViewTemplate(), makeCallbackConfig(this));
+	var element = makeTaskElement(getViewTemplate(), makeCallbackConfig(this));
+    this.element = element;
 	this.editableTimeoutId = 0;
 	
 	function getViewTemplate() {
@@ -32,16 +33,15 @@ function taskView(task, eventService, timeService) {
 				view.task.setRuntime(timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent));
 				e.preventDefault();
 				
-				window.clearTimeout(view.editableTimeoutId);
-				view.editableTimeoutId = window.setTimeout(function() {
-					view.task.publish('task-time-tick');
-				}, 1500);	
+				//window.clearTimeout(view.editableTimeoutId);
+				//view.editableTimeoutId = window.setTimeout(function() {
+				//	view.task.publish('task-time-tick');
+				//}, 1500);
 			},
 			'deleteCallback' : function(e) {
 				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 				stopTask(task);
 				task.setRuntime(0);
-				view.task.publish('task-time-tick');
 				view.task.publish('delete-task');
 				view.getElement().remove();
 				e.preventDefault();
@@ -73,7 +73,7 @@ function taskView(task, eventService, timeService) {
 		
 		listItem.querySelector('.total').textContent = task.getTotal();
 		
-		task.subscribe('task-time-tick', function(e) {
+		task.subscribe('total-modified', function(e) {
 			listItem.querySelector('.total').textContent = task.getTotal();
 		});
 		
@@ -104,7 +104,6 @@ function taskView(task, eventService, timeService) {
 	
 	function taskCounter(task) {
 		task.setRuntime(task.getRuntime() + 1);
-		task.publish('task-time-tick');
 	}
 	
 	//TODO: event triggering seems quirky here.

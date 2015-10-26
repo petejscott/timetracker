@@ -3,28 +3,23 @@
 function groupNavigationView(group, eventService) {
 	this.group = group;
 	this.eventService = eventService;
-	this.element = this.makeGroupNavElement(getViewTemplate());
+    var element = this.makeGroupNavElement(getViewTemplate());
+    var groupTotalContainer = element.querySelector(".group-total");
+    this.element = element;
 	
 	this.onGroupTitleChangedEvent(this);
-	this.subscribeToTaskTimeChanged(this);
-	
+
+    group.subscribe('total-modified', updateTotal);
+
+    function updateTotal(e) {
+        var g = e.target;
+        groupTotalContainer.textContent = g.getTotal();
+    }
+
 	function getViewTemplate() {
 		return 	'<a class="action-select-group" href="" title=""><span class="group-title"></span><span class="group-total paren-data"></span></a>' + 
 				'<a class="action-delete-group" href="" title=""><i class="icon-cancel-circled"></i></a>';
 	}
-}
-
-groupNavigationView.prototype.subscribeToTaskTimeChanged = function(view) {
-	for (var i = 0, len = view.group.tasks.length; i < len; i++) {
-		var t = view.group.tasks[i];
-		t.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });
-	}
-	//TODO: clean this up so it's more obvious (subscribe to task-time-tick on newly added tasks too)
-	view.group.subscribe('task-added', function(e) {
-		var newTask = e.detail.task;
-		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-		newTask.subscribe('task-time-tick', function(e) { view.updateGroupTotal(view); });
-	});
 }
 
 groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
