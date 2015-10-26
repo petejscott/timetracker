@@ -18,6 +18,7 @@ appData.prototype.removeGroup = function(group) {
     if (index > -1) {
         this.groups.splice(index, 1);
     }
+    group.publish('group-removed');
     this.publish('group-removed', { 'group' : group });
 }
 appData.prototype.setConfig = function(config) {

@@ -8,6 +8,12 @@ function taskView(task, eventService, timeService) {
 	var element = makeTaskElement(getViewTemplate(), makeCallbackConfig(this));
     this.element = element;
 	this.editableTimeoutId = 0;
+
+    task.subscribe('task-removed', removeTask);
+
+    function removeTask(e) {
+        element.remove();
+    }
 	
 	function getViewTemplate() {
 		return 	'<span class="play-pause"><a title="Start Timer" href="#play"><i class="task-play-pause-icon icon-play"></i></a></span>' + 
@@ -43,7 +49,7 @@ function taskView(task, eventService, timeService) {
 				stopTask(task);
 				task.setRuntime(0);
 				view.task.publish('delete-task');
-				view.getElement().remove();
+				//view.getElement().remove();
 				e.preventDefault();
 			}
 		};

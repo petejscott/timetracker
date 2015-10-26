@@ -33,15 +33,13 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
 
         g.subscribe('group-selected', createTaskListView);
         g.subscribe('group-selected', createGroupSummaryView);
-        g.subscribe('group-deleted', removeGroupFromCollection);
+        g.subscribe('delete-group', removeGroupFromCollection);
     }
 
     function removeGroupFromCollection(e) {
-        var index = appDataInstance.groups.indexOf(e.target);
-        if (index > -1) {
-            appDataInstance.groups.splice(index, 1);
-        }
+        appDataInstance.removeGroup(e.target);
     }
+
     function createTaskListView(e) {
         var g = e.target;
         if (g == null) return;

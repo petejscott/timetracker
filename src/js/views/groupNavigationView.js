@@ -10,7 +10,12 @@ function groupNavigationView(group, eventService) {
 	this.onGroupTitleChangedEvent(this);
 
     group.subscribe('total-modified', updateTotal);
+    group.subscribe('group-removed', removeGroup);
 
+    function removeGroup(e) {
+        var g = e.target;
+        element.remove();
+    }
     function updateTotal(e) {
         var g = e.target;
         groupTotalContainer.textContent = g.getTotal();
@@ -62,8 +67,7 @@ groupNavigationView.prototype.makeGroupNavElement = function(template) {
 	}, false);
 	
 	groupListItem.querySelector(".action-delete-group").addEventListener('click', function(e) {
-		thisView.group.publish('group-deleted');
-		thisView.element.remove();
+		thisView.group.publish('delete-group');
 		thisView.eventService.dispatch(thisView.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 		e.preventDefault();
 	}, false);

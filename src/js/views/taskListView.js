@@ -11,6 +11,15 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 	this.element = makeTaskListElement(getViewTemplate());
 	var tasksContainer = taskListContainer.querySelector(".tasklist");	
 	makeTasks();
+
+    for (var i = 0, len = group.tasks.length; i < len; i++) {
+        var t = group.tasks[i];
+        t.subscribe('delete-task', removeTaskFromCollection);
+    }
+
+    function removeTaskFromCollection(e) {
+        group.removeTask(e.target);
+    }
 	
 	function getViewTemplate() {
 		return 	'<header>' +
@@ -30,20 +39,7 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 		
 		var view = viewFactory.makeTaskView(task);
 		var taskElement = view.getElement();
-		
-		task.subscribe('delete-task', function(e) {
-			var t = e.target;
-			var taskIndex = -1;
-			for (var i = 0, len = group.tasks.length; i < len; i++) {
-				if (t.id === group.tasks[i].id) {
-					taskIndex = i;
-				}
-			}
-			if (taskIndex > -1) {
-				group.tasks.splice(taskIndex, 1);
-			}
-		});
-		
+        
 		return taskElement;
 	}
 	
