@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.groupFactory = (function(logger, taskFactory, timeService) {
+tt.groupFactory = (function(logger, taskFactory) {
 
 	function getStartOfWeek(date) {
 		var d = new Date(date);
@@ -32,7 +32,7 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 			Math.floor(Math.random() * (max - min) + min);
 	}
 	
-	function makeDefaultGroupData(title) {
+	function makeDefaultGroupData() {
 		var data = {
 			id: makeId(),
 			title: getCurrentWeekName(),
@@ -83,4 +83,4 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 		createGroup
 	};
 	
-})(logger, tt.taskFactory, tt.timeService);
+})(logger, tt.taskFactory);

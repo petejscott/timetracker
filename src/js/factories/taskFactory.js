@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.taskFactory = (function(logger, timeService) {
+tt.taskFactory = (function(logger) {
 
 	function makeId() {
 		var min = 1000;
@@ -61,4 +61,4 @@ tt.taskFactory = (function(logger, timeService) {
 		createNewTask 
 	};
 
-})(logger, tt.timeService);
+})(logger);
