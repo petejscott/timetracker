@@ -29,7 +29,7 @@ function taskView(task, eventService, timeService) {
 			},
 			'totalEditCallback' : function(e) {
 				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				view.task.runtime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
+				view.task.setRuntime(timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent));
 				e.preventDefault();
 				
 				window.clearTimeout(view.editableTimeoutId);
@@ -40,7 +40,7 @@ function taskView(task, eventService, timeService) {
 			'deleteCallback' : function(e) {
 				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 				stopTask(task);
-				task.runtime = 0;
+				task.setRuntime(0);
 				view.task.publish('task-time-tick');
 				view.task.publish('delete-task');
 				view.getElement().remove();
@@ -64,17 +64,17 @@ function taskView(task, eventService, timeService) {
 		
 		listItem.innerHTML = template;
 		
-		listItem.querySelector('.total').textContent = task.total;	
+		listItem.querySelector('.total').textContent = task.getTotal();
 		
 		listItem.querySelector('.play-pause').addEventListener('click', callbackConfig.playCallback, false);		
 		
 		listItem.querySelector('.title').textContent = task.title;	
 		listItem.querySelector('.title').addEventListener('input', callbackConfig.titleEditCallback, false);
 		
-		listItem.querySelector('.total').textContent = task.total;
+		listItem.querySelector('.total').textContent = task.getTotal();
 		
 		task.subscribe('task-time-tick', function(e) {
-			listItem.querySelector('.total').textContent = task.total;
+			listItem.querySelector('.total').textContent = task.getTotal();
 		});
 		
 		listItem.querySelector('.total').addEventListener('input', callbackConfig.totalEditCallback, false);
@@ -103,7 +103,7 @@ function taskView(task, eventService, timeService) {
 	}
 	
 	function taskCounter(task) {
-		task.runtime += 1;
+		task.setRuntime(task.getRuntime() + 1);
 		task.publish('task-time-tick');
 	}
 	

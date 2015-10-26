@@ -11,6 +11,17 @@ group.prototype = Object.create(observableObject.prototype);
 group.prototype.constructor = group;
 
 group.prototype.addTask = function(task) {
+    var thisGroup = this;
+    task.subscribe('total-modified', function(e) {
+        thisGroup.publish('total-modified');
+    });
     this.tasks.push(task);
     this.publish('task-added', { 'task' : task });
+}
+group.prototype.getTotal = function() {
+    var total = 0.00;
+    for (var i = 0, len = this.tasks.length; i < len; i++) {
+        total += this.tasks[i].runtime;
+    }
+    return tt.timeService.formatSecondsAsHourMinuteSecond(total);
 }

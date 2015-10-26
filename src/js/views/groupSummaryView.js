@@ -12,7 +12,7 @@ function groupSummaryView(group, eventService) {
 	this.editableTimeoutId = null;
 	
 	this.setTitle(this.group.title);
-	this.setTotal(this.group.total);
+	this.setTotal(this.group.getTotal());
 	
 	this.onGroupTitleChanged(this);
 	this.onGroupTitleChanging(this);
@@ -29,7 +29,7 @@ groupSummaryView.prototype.setTitle = function(title) {
 }
 
 groupSummaryView.prototype.setTotal = function(total) {	
-	this.groupTotalContainer.textContent = this.group.total;
+	this.groupTotalContainer.textContent = this.group.getTotal();
 }
 
 groupSummaryView.prototype.onGroupTitleChanging = function(view) {
@@ -53,10 +53,10 @@ groupSummaryView.prototype.onGroupTitleChanged = function(view) {
 groupSummaryView.prototype.onGroupTotalChangedEvent = function(view) {
     for (var i = 0, len = view.group.tasks.length; i < len; i++) {
         var t = view.group.tasks[i];
-        t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
+        t.subscribe('task-time-tick', function(e) { view.setTotal(view.group.getTotal()); });
     }
     view.group.subscribe('task-added', function(e) {
        var task = e.detail.task;
-        task.subscribe('task-time-tick', function(e) { view.setTotal(view.group.total); });
+        task.subscribe('task-time-tick', function(e) { view.setTotal(view.group.getTotal()); });
     });
 }

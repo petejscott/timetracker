@@ -16,3 +16,14 @@ function task() {
 
 task.prototype = Object.create(observableObject.prototype);
 task.prototype.constructor = task;
+
+task.prototype.getRuntime = function() {
+    return this.runtime;
+}
+task.prototype.setRuntime = function(val) {
+    this.runtime = val;
+    this.publish('total-modified');
+}
+task.prototype.getTotal = function() {
+    return tt.timeService.formatSecondsAsHourMinuteSecond(this.runtime);
+}

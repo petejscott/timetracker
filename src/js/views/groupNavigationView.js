@@ -40,7 +40,7 @@ groupNavigationView.prototype.removeElement = function() {
 }
 groupNavigationView.prototype.updateGroupTotal = function(view) {
 	var groupTotalElement = view.getElement().querySelector(".group-total");
-	groupTotalElement.textContent = view.group.total;
+	groupTotalElement.textContent = view.group.getTotal();
 }
 groupNavigationView.prototype.updateGroupTitle = function() {
 	var groupNameElement = this.element.querySelector(".group-title");
@@ -54,7 +54,7 @@ groupNavigationView.prototype.makeGroupNavElement = function(template) {
 	groupListItem.innerHTML = template;
 	
 	groupListItem.querySelector('.group-title').textContent = this.group.title;
-	groupListItem.querySelector('.group-total').textContent = this.group.total;
+	groupListItem.querySelector('.group-total').textContent = this.group.getTotal();
 	groupListItem.querySelector('.action-select-group').setAttribute('href', '#select-' + this.group.id);
 	groupListItem.querySelector('.action-select-group').setAttribute('title', 'View group (' + this.group.title + ')');
 	groupListItem.querySelector('.action-delete-group').setAttribute('href', '#delete-' + this.group.id);

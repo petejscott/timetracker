@@ -50,21 +50,7 @@ tt.groupFactory = (function(logger, taskFactory, timeService) {
 	
 	function makeObject() {
 		var groupObj = new group();
-		
-		if (typeof(groupObj.total) === 'undefined')
-		{
-			Object.defineProperty(groupObj, 'total', {
-				get : function() {
-					var total = 0.00;
-					for (var i = 0, len = groupObj.tasks.length; i < len; i++) {
-						total += groupObj.tasks[i].runtime;
-					}
-					return timeService.formatSecondsAsHourMinuteSecond(total);
-				}
-			});
-		}
-
-        Object.seal(groupObj);
+		Object.seal(groupObj);
 		return groupObj;
 	}
 	

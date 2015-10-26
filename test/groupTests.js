@@ -4,7 +4,7 @@ QUnit.test( "group tasks is empty on new group", function( assert ) {
 });
 QUnit.test( "group.addTask adds task", function( assert ) {
 	var group = tt.groupFactory.createNewGroup();
-	var task = { 'title' : 'test task' };
+	var task = tt.taskFactory.createNewTask(group);
 	group.addTask(task);
 	
 	assert.ok( group.tasks.length == 1, "Expected 1 task, got "+group.tasks.length );
@@ -15,10 +15,10 @@ QUnit.test( "group.total returns task total", function( assert ) {
 	
 	var group = tt.groupFactory.createNewGroup();
 	var task = tt.taskFactory.createNewTask(group);
-	task.runtime = runtimeTotal;
+	task.setRuntime(runtimeTotal);
 	
 	group.addTask(task);
-	var groupTotal = group.total;
+	var groupTotal = group.getTotal();
 	
 	assert.ok( groupTotal == expectedTotal, "Expected "+expectedTotal+" for groupTotal, got "+groupTotal );
 });

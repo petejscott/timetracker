@@ -30,7 +30,7 @@ tt.taskFactory = (function(logger, timeService) {
 		if (typeof(data.title) === 'undefined') data.title = data.name;
 		task.title = data.title;
 		
-		task.runtime = data.runtime;
+		task.setRuntime(data.runtime);
 		task.isComplete = data.isComplete;
 		task.isRunning = data.isRunning;
 		task.intervalId = data.intervalId;
@@ -39,16 +39,6 @@ tt.taskFactory = (function(logger, timeService) {
 	
 	function makeObject() {
 		var taskObj = new task();
-		
-		if (typeof(taskObj.total) === 'undefined')
-		{
-			Object.defineProperty(taskObj, 'total', {
-				get : function() {
-					return timeService.formatSecondsAsHourMinuteSecond(taskObj.runtime);
-				}
-			});
-		}
-
         Object.seal(taskObj);
 		return taskObj;
 	}
