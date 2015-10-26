@@ -56,9 +56,9 @@ tt.taskFactory = (function(logger) {
 		return task;
 	}
 	
-	return { 
-		createTask,
-		createNewTask 
+	return {
+        "createTask": createTask,
+        "createNewTask": createNewTask
 	};
 
 })(logger);

@@ -79,8 +79,8 @@ tt.groupFactory = (function(logger, taskFactory) {
 	}
 	
 	return { 
-		createNewGroup,
-		createGroup
+		"createNewGroup" : createNewGroup,
+		"createGroup" : createGroup
 	};
 	
 })(logger, tt.taskFactory);

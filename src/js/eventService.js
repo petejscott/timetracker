@@ -42,9 +42,9 @@ tt.eventService = (function(logger, config) {
 	}
 	
 	return {
-		events,
-		dispatch,
-		subscribe
+        "events" : events,
+		"dispatch" : dispatch,
+		"subscribe" : subscribe
 	};
 	
 })(logger, tt.config);

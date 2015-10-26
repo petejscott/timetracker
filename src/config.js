@@ -16,10 +16,12 @@ tt.config = (function(win) {
     }
 
 	return {
-        mainContainerQuery,
-        eventElementQuery,
-        getMainContainer,
-        getEventElement,
-		remoteSyncWebUrl, 
-		remoteSyncApiKey };
+        "mainContainerQuery" : mainContainerQuery,
+        "eventElementQuery" : eventElementQuery,
+        "getMainContainer" : getMainContainer,
+        "getEventElement" : getEventElement,
+		"remoteSyncWebUrl" : remoteSyncWebUrl,
+		"remoteSyncApiKey" : remoteSyncApiKey
+    };
+    
 })(this);

@@ -28,12 +28,12 @@ tt.viewFactory = (function(logger, eventService, timeService) {
 	}
 	
 	return { 
-		makeNavigationView,
-		makeGroupNavigationView,
-		makeTaskListView,
-		makeTaskView,
-		makeSyncStatusView,
-		makeGroupSummaryView
+		"makeNavigationView" : makeNavigationView,
+		"makeGroupNavigationView" : makeGroupNavigationView,
+		"makeTaskListView" : makeTaskListView,
+		"makeTaskView" : makeTaskView,
+		"makeSyncStatusView" : makeSyncStatusView,
+		"makeGroupSummaryView" : makeGroupSummaryView
 	};
 	
 })(logger, tt.eventService, tt.timeService);
