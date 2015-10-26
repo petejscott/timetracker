@@ -35,13 +35,6 @@ groupNavigationView.prototype.getElement = function() {
 	return this.element;
 }
 
-groupNavigationView.prototype.removeElement = function() {
-	this.element.remove();
-}
-groupNavigationView.prototype.updateGroupTotal = function(view) {
-	var groupTotalElement = view.getElement().querySelector(".group-total");
-	groupTotalElement.textContent = view.group.getTotal();
-}
 groupNavigationView.prototype.updateGroupTitle = function() {
 	var groupNameElement = this.element.querySelector(".group-title");
 	groupNameElement.textContent = this.group.title;

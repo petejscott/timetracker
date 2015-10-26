@@ -3,7 +3,6 @@
 function taskListView(group, eventService, taskFactory, viewFactory) {
 	
 	var group = group;
-	var eventService = eventService;
 	var taskFactory = taskFactory;
 	var viewFactory = viewFactory;
 	
@@ -39,7 +38,7 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 		
 		var view = viewFactory.makeTaskView(task);
 		var taskElement = view.getElement();
-        
+
 		return taskElement;
 	}
 	
