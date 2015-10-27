@@ -1,5 +1,3 @@
 BUGS
-1. group summary total update not binding on new group creation until reload
-2. delete group does not select a different group or clear the tasklist view
-3. groupNavigationView uses a lot of prototyped functions that don't need to be public
-4. viewing a group when a task is running in a different group updates the group summary UI total incorrectly
+1. delete group does not select a different group or clear the tasklist view
+2. viewing a group when a task is running in a different group updates the group summary UI total incorrectly
