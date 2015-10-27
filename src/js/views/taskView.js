@@ -77,7 +77,7 @@ function TaskView(task, eventService, timeService) {
         }, false);
 		
 		if (task.isRunning) {
-			startTask(task);
+			stopTask(task);
 		}
 		
 		return listItem;
