@@ -1,6 +1,6 @@
 'use strict';
 
-function task() {
+function Task() {
 
     this.id = "";
     this.groupId = "";
@@ -11,19 +11,19 @@ function task() {
     this.isRunning = false;
     this.intervalId = null;
 
-    observableObject.call(this);
+    ObservableObject.call(this);
 }
 
-task.prototype = Object.create(observableObject.prototype);
-task.prototype.constructor = task;
+Task.prototype = Object.create(ObservableObject.prototype);
+Task.prototype.constructor = Task;
 
-task.prototype.getRuntime = function() {
+Task.prototype.getRuntime = function() {
     return this.runtime;
 }
-task.prototype.setRuntime = function(val) {
+Task.prototype.setRuntime = function(val) {
     this.runtime = val;
     this.publish('total-modified');
 }
-task.prototype.getTotal = function() {
+Task.prototype.getTotal = function() {
     return tt.timeService.formatSecondsAsHourMinuteSecond(this.runtime);
 }

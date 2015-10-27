@@ -1,6 +1,6 @@
 'use strict';
 
-function navigationView(logger, appDataInstance, eventService, groupFactory, taskFactory, viewFactory) {
+function navigationView(logger, appData, eventService, groupFactory, taskFactory, viewFactory) {
 
 	var groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	var optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
@@ -13,19 +13,19 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
 
     makeOptions();
 
-    for (var i = 0, len = appDataInstance.groups.length; i < len; i++)
+    for (var i = 0, len = appData.groups.length; i < len; i++)
     {
-        var g = appDataInstance.groups[i];
+        var g = appData.groups[i];
         groupSelectedEventHandling({ 'detail' : { 'group' : g }});
         createGroupNavigationView({ 'detail' : { 'group' : g}});
 
-        if (i == (appDataInstance.groups.length - 1)) {
+        if (i == (appData.groups.length - 1)) {
             g.publish('group-selected');
         }
     }
 
-    appDataInstance.subscribe('group-added', groupSelectedEventHandling);
-    appDataInstance.subscribe('group-added', createGroupNavigationView);
+    appData.subscribe('group-added', groupSelectedEventHandling);
+    appData.subscribe('group-added', createGroupNavigationView);
 
     function groupSelectedEventHandling(e) {
         var g = e.detail.group;
@@ -37,7 +37,7 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
     }
 
     function removeGroupFromCollection(e) {
-        appDataInstance.removeGroup(e.target);
+        appData.removeGroup(e.target);
     }
 
     function createTaskListView(e) {
@@ -57,7 +57,7 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
         var groupNavigationView = viewFactory.makeGroupNavigationView(g);
         var el = groupNavigationView.getElement();
         el.querySelector(".action-delete-group").addEventListener('click', function(e) {
-            appDataInstance.removeGroup(g);
+            appData.removeGroup(g);
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
             e.preventDefault();
         }, false);
@@ -67,7 +67,7 @@ function navigationView(logger, appDataInstance, eventService, groupFactory, tas
 
 	function createGroupForCurrentWeek() {
 		var group = groupFactory.createNewGroup();
-        appDataInstance.addGroup(group);
+        appData.addGroup(group);
 	}
 	
 	function makeOptions() {

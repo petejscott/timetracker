@@ -49,7 +49,7 @@ tt.groupFactory = (function(logger, taskFactory) {
 	}
 	
 	function makeObject() {
-		var groupObj = new group();
+		var groupObj = new Group();
 		Object.seal(groupObj);
 		return groupObj;
 	}

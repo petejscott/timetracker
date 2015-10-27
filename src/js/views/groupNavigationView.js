@@ -12,7 +12,7 @@ function groupNavigationView(group, eventService) {
     group.subscribe('total-modified', updateTotal);
     group.subscribe('group-removed', removeGroup);
 
-    function removeGroup(e) {
+    function removeGroup() {
         element.remove();
     }
 
@@ -28,7 +28,7 @@ function groupNavigationView(group, eventService) {
 }
 
 groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
-	this.group.subscribe('change-group-title', function(e) { view.updateGroupTitle(view.group.title); });
+	this.group.subscribe('change-group-title', function() { view.updateGroupTitle(view.group.title); });
 }
 
 groupNavigationView.prototype.getElement = function() {

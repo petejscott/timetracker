@@ -1,19 +1,19 @@
 'use strict';
 
-function appData() {
+function AppData() {
     this.groups = [];
     this.configuration = {};
-    observableObject.call(this);
+    ObservableObject.call(this);
 }
 
-appData.prototype = Object.create(observableObject.prototype);
-appData.prototype.constructor = appData;
+AppData.prototype = Object.create(ObservableObject.prototype);
+AppData.prototype.constructor = AppData;
 
-appData.prototype.addGroup = function(group) {
+AppData.prototype.addGroup = function(group) {
     this.groups.push(group);
     this.publish('group-added', { 'group' : group });
 }
-appData.prototype.removeGroup = function(group) {
+AppData.prototype.removeGroup = function(group) {
     var index = this.groups.indexOf(group);
     if (index > -1) {
         this.groups.splice(index, 1);
@@ -21,9 +21,9 @@ appData.prototype.removeGroup = function(group) {
     group.publish('group-removed');
     this.publish('group-removed', { 'group' : group });
 }
-appData.prototype.setConfig = function(config) {
+AppData.prototype.setConfig = function(config) {
     this.configuration = config;
 }
-appData.prototype.getConfig = function() {
+AppData.prototype.getConfig = function() {
     return this.configuration;
 }

@@ -1,16 +1,16 @@
 'use strict';
 
-function group() {
+function Group() {
     this.id = "";
     this.title = "";
     this.tasks = [];
-    observableObject.call(this);
+    ObservableObject.call(this);
 }
 
-group.prototype = Object.create(observableObject.prototype);
-group.prototype.constructor = group;
+Group.prototype = Object.create(ObservableObject.prototype);
+Group.prototype.constructor = Group;
 
-group.prototype.addTask = function(task) {
+Group.prototype.addTask = function(task) {
     var thisGroup = this;
     task.subscribe('total-modified', function(e) {
         thisGroup.publish('total-modified');
@@ -18,7 +18,7 @@ group.prototype.addTask = function(task) {
     this.tasks.push(task);
     this.publish('task-added', { 'task' : task });
 }
-group.prototype.removeTask = function(task) {
+Group.prototype.removeTask = function(task) {
     var index = this.tasks.indexOf(task);
     if (index > -1) {
         this.tasks.splice(index, 1);
@@ -26,7 +26,7 @@ group.prototype.removeTask = function(task) {
     task.publish('task-removed');
     this.publish('task-removed', { 'task' : task });
 }
-group.prototype.getTotal = function() {
+Group.prototype.getTotal = function() {
     var total = 0.00;
     for (var i = 0, len = this.tasks.length; i < len; i++) {
         total += this.tasks[i].runtime;

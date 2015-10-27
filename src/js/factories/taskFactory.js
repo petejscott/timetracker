@@ -38,7 +38,7 @@ tt.taskFactory = (function(logger) {
 	}
 	
 	function makeObject() {
-		var taskObj = new task();
+		var taskObj = new Task();
         Object.seal(taskObj);
 		return taskObj;
 	}
