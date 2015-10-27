@@ -20,7 +20,7 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
         createGroupNavigationView({ 'detail' : { 'group' : g}});
 
         if (i == (appData.groups.length - 1)) {
-            g.publish('group-selected');
+            g.publish('on-group-select');
         }
     }
 
@@ -31,13 +31,14 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
         var g = e.detail.group;
         if (g == null) return;
 
-        g.subscribe('group-selected', createTaskListView);
-        g.subscribe('group-selected', createGroupSummaryView);
-        g.subscribe('delete-group', removeGroupFromCollection);
+        g.subscribe('on-group-select', createTaskListView);
+        g.subscribe('on-group-select', createGroupSummaryView);
+        g.subscribe('on-group-remove', removeGroupFromCollection);
     }
 
     function removeGroupFromCollection(e) {
         appData.removeGroup(e.target);
+        eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
     }
 
     function createTaskListView(e) {
@@ -56,12 +57,6 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
 
         var groupNavigationView = viewFactory.makeGroupNavigationView(g);
         var el = groupNavigationView.getElement();
-        el.querySelector(".action-delete-group").addEventListener('click', function(e) {
-            appData.removeGroup(g);
-            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            e.preventDefault();
-        }, false);
-
         groupNavigationContainer.appendChild(el);
     }
 

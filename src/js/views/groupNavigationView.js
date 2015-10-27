@@ -37,11 +37,12 @@ function GroupNavigationView(group, eventService) {
         groupListItem.querySelector('.action-delete-group').setAttribute('title', 'View group (' + group.title + ')');
 
         groupListItem.querySelector('.action-delete-group').addEventListener('click', function(e) {
-            eventService.dispatch('on-group-remove', { 'group' : group });
+            group.publish('on-group-remove');
+            e.preventDefault();
         });
 
         groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {
-            group.publish('group-selected');
+            group.publish('on-group-select');
             e.preventDefault();
         }, false);
 
