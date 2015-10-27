@@ -1,13 +1,10 @@
 'use strict';
 
 function TaskView(task, eventService, timeService) {
-	
-	this.task = task;
-	this.eventService = eventService;
-	this.timeService = timeService;
-	var element = makeTaskElement(getViewTemplate(), this);
+
+    var editableTimeoutId = 0;
+	var element = makeTaskElement(getViewTemplate());
     this.element = element;
-	this.editableTimeoutId = 0;
 
     task.subscribe('task-removed', removeTask);
 
@@ -22,7 +19,7 @@ function TaskView(task, eventService, timeService) {
 				'<span class="delete"><a title="Delete Task" href="#delete"><i class="icon-cancel-circled"></i></a></span>';
 	}
 
-	function makeTaskElement(template, view) {
+	function makeTaskElement(template) {
 		var listItem = document.createElement("li");
 		listItem.setAttribute("id", task.id);
 		listItem.setAttribute("data-taskid", task.id);
@@ -39,15 +36,15 @@ function TaskView(task, eventService, timeService) {
 		listItem.querySelector('.total').textContent = task.getTotal();
 		
 		listItem.querySelector('.play-pause').addEventListener('click', function(e) {
-            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            playPauseTask(view.task, view.element);
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            playPauseTask(task, element);
             e.preventDefault();
         }, false);
 		
-		listItem.querySelector('.title').textContent = task.title;	
+		listItem.querySelector('.title').textContent = task.title;
 		listItem.querySelector('.title').addEventListener('input', function(e) {
-            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            view.task.title = e.currentTarget.textContent;
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            task.title = e.currentTarget.textContent;
             e.preventDefault();
         }, false);
 		
@@ -61,12 +58,12 @@ function TaskView(task, eventService, timeService) {
 
             var tempRuntime;
             tempRuntime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
-            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
             e.preventDefault();
 
-            window.clearTimeout(view.editableTimeoutId);
-            view.editableTimeoutId = window.setTimeout(function() {
-            	view.task.setRuntime(tempRuntime);
+            window.clearTimeout(editableTimeoutId);
+            editableTimeoutId = window.setTimeout(function() {
+            	task.setRuntime(tempRuntime);
             }, 1500);
         }, false);
 
