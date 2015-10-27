@@ -1,13 +1,12 @@
 'use strict';
 
 function GroupNavigationView(group, eventService) {
-	this.group = group;
-	this.eventService = eventService;
-    var element = this.makeGroupNavElement(getViewTemplate());
+
+    var element = makeGroupNavElement(getViewTemplate());
     var groupTotalContainer = element.querySelector(".group-total");
     this.element = element;
 	
-	this.onGroupTitleChangedEvent(this);
+	onGroupTitleChangedEvent();
 
     group.subscribe('total-modified', updateTotal);
     group.subscribe('group-removed', removeGroup);
@@ -25,39 +24,41 @@ function GroupNavigationView(group, eventService) {
 		return 	'<a class="action-select-group" href="" title=""><span class="group-title"></span><span class="group-total paren-data"></span></a>' + 
 				'<a class="action-delete-group" href="" title=""><i class="icon-cancel-circled"></i></a>';
 	}
-}
 
-GroupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
-	this.group.subscribe('change-group-title', function() { view.updateGroupTitle(view.group.title); });
-};
+    function makeGroupNavElement(template) {
+        var groupListItem = document.createElement("li");
+        groupListItem.innerHTML = template;
+
+        groupListItem.querySelector('.group-title').textContent = group.title;
+        groupListItem.querySelector('.group-total').textContent = group.getTotal();
+        groupListItem.querySelector('.action-select-group').setAttribute('href', '#select-' + group.id);
+        groupListItem.querySelector('.action-select-group').setAttribute('title', 'View group (' + group.title + ')');
+        groupListItem.querySelector('.action-delete-group').setAttribute('href', '#delete-' + group.id);
+        groupListItem.querySelector('.action-delete-group').setAttribute('title', 'View group (' + group.title + ')');
+
+        groupListItem.querySelector('.action-delete-group').addEventListener('click', function(e) {
+            eventService.dispatch('on-group-remove', { 'group' : group });
+        });
+
+        groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {
+            group.publish('group-selected');
+            e.preventDefault();
+        }, false);
+
+        return groupListItem;
+    }
+
+    function onGroupTitleChangedEvent() {
+        group.subscribe('change-group-title', updateGroupTitle);
+    }
+
+    function updateGroupTitle() {
+        var groupNameElement = element.querySelector(".group-title");
+        groupNameElement.textContent = group.title;
+        groupNameElement.setAttribute("title", "View group (" + group.title + ")");
+    }
+}
 
 GroupNavigationView.prototype.getElement = function() {
 	return this.element;
-};
-
-GroupNavigationView.prototype.updateGroupTitle = function() {
-	var groupNameElement = this.element.querySelector(".group-title");
-	groupNameElement.textContent = this.group.title;
-	groupNameElement.setAttribute("title", "View group (" + this.group.title + ")");
-};
-
-GroupNavigationView.prototype.makeGroupNavElement = function(template) {
-	
-	var groupListItem = document.createElement("li");
-	groupListItem.innerHTML = template;
-	
-	groupListItem.querySelector('.group-title').textContent = this.group.title;
-	groupListItem.querySelector('.group-total').textContent = this.group.getTotal();
-	groupListItem.querySelector('.action-select-group').setAttribute('href', '#select-' + this.group.id);
-	groupListItem.querySelector('.action-select-group').setAttribute('title', 'View group (' + this.group.title + ')');
-	groupListItem.querySelector('.action-delete-group').setAttribute('href', '#delete-' + this.group.id);
-	groupListItem.querySelector('.action-delete-group').setAttribute('title', 'View group (' + this.group.title + ')');
-	
-	var thisView = this;
-	groupListItem.querySelector(".action-select-group").addEventListener('click', function(e) {
-		thisView.group.publish('group-selected');
-		e.preventDefault();
-	}, false);
-	
-	return groupListItem;
 };
