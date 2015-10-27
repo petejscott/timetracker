@@ -24,6 +24,8 @@ function TaskView(task, eventService, timeService) {
 		listItem.setAttribute("id", task.id);
 		listItem.setAttribute("data-taskid", task.id);
 		listItem.setAttribute("data-groupid", task.groupId);
+
+        //TODO seriously this start/stop business is inane.
 		listItem.addEventListener('start-task', function(e) {
 			startTask(e.detail);
 		});
@@ -34,7 +36,7 @@ function TaskView(task, eventService, timeService) {
 		listItem.innerHTML = template;
 		
 		listItem.querySelector('.total').textContent = task.getTotal();
-		
+
 		listItem.querySelector('.play-pause').addEventListener('click', function(e) {
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
             playPauseTask(task, element);
@@ -80,7 +82,8 @@ function TaskView(task, eventService, timeService) {
 		
 		return listItem;
 	}
-	
+
+    // TODO INANE!
 	function startTask(task) {
 		task.isRunning = true;
 		if (task.intervalId == null)

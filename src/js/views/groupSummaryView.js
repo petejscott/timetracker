@@ -2,59 +2,43 @@
 
 function GroupSummaryView(group, eventService) {
 	
-	this.group = group;
-	this.eventService = eventService;
-	this.groupSummaryContainer = document.querySelector(".group-summary");
-	this.groupSummaryContainer.innerHTML = getViewTemplate();
+	var groupSummaryContainer = document.querySelector(".group-summary");
+	groupSummaryContainer.innerHTML = getViewTemplate();
+
+	var editableTimeoutId = null;
 	
-	this.groupTitleContainer = this.groupSummaryContainer.querySelector(".group-title");
-
-    var groupTotalContainer = this.groupSummaryContainer.querySelector(".group-total");
-    this.groupTotalContainer = groupTotalContainer;
-
-	this.editableTimeoutId = null;
+	setTitle();
+	setTotal();
+    group.subscribe('total-modified', setTotal);
+    group.subscribe('group-title-modified', setTitle);
 	
-	this.setTitle();
-	this.setTotal();
-	
-	this.onGroupTitleChanged(this);
-	this.onGroupTitleChanging(this);
+	listenForGroupTitleChanges();
 
-    group.subscribe('total-modified', updateTotal);
 
-    function updateTotal(e) {
-        var g = e.target;
-        groupTotalContainer.textContent = g.getTotal();
+    function setTotal() {
+        groupSummaryContainer.querySelector(".group-total").textContent = group.getTotal();
+    }
+
+    function setTitle() {
+        groupSummaryContainer.querySelector(".group-title").textContent = group.title;
+    }
+
+    function listenForGroupTitleChanges() {
+        groupSummaryContainer.querySelector(".group-title").addEventListener('input', function(e) {
+
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            group.title = groupSummaryContainer.querySelector(".group-title").textContent;
+            e.preventDefault();
+
+            window.clearTimeout(editableTimeoutId);
+            editableTimeoutId = window.setTimeout(function() {
+                group.publish('group-title-modified');
+            }, 1500);
+        }, false);
     }
 
 	function getViewTemplate() {
-		return 	'<span class="group-title" contenteditable="true"></span>' + 
+		return 	'<span class="group-title" contenteditable="true"></span>' +
 				'<span class="group-total paren-data"></span>';
 	}
 }
-
-GroupSummaryView.prototype.setTitle = function() {
-	this.groupTitleContainer.textContent = this.group.title;
-};
-
-GroupSummaryView.prototype.setTotal = function() {
-	this.groupTotalContainer.textContent = this.group.getTotal();
-};
-
-GroupSummaryView.prototype.onGroupTitleChanging = function(view) {
-	view.groupTitleContainer.addEventListener('input', function(e) {
-		
-		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-		view.group.title = view.groupTitleContainer.textContent;
-		e.preventDefault();
-		
-		window.clearTimeout(view.editableTimeoutId);
-		view.editableTimeoutId = window.setTimeout(function() {
-			view.onGroupTitleChanged(view);
-		}, 1500);
-	}, false);
-};
-
-GroupSummaryView.prototype.onGroupTitleChanged = function(view) {
-	view.group.publish('change-group-title', { 'groupId' : view.group.id });
-};

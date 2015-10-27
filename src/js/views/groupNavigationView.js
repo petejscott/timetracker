@@ -3,21 +3,24 @@
 function GroupNavigationView(group, eventService) {
 
     var element = makeGroupNavElement(getViewTemplate());
-    var groupTotalContainer = element.querySelector(".group-total");
     this.element = element;
-	
-	onGroupTitleChangedEvent();
 
     group.subscribe('total-modified', updateTotal);
     group.subscribe('group-removed', removeGroup);
+    group.subscribe('group-title-modified', setTitle);
 
     function removeGroup() {
         element.remove();
     }
 
-    function updateTotal(e) {
-        var g = e.target;
-        groupTotalContainer.textContent = g.getTotal();
+    function updateTotal() {
+        element.querySelector(".group-total").textContent = group.getTotal();
+    }
+
+    function setTitle() {
+        var groupNameElement = element.querySelector(".group-title");
+        groupNameElement.textContent = group.title;
+        groupNameElement.setAttribute("title", "View group (" + group.title + ")");
     }
 
 	function getViewTemplate() {
@@ -49,15 +52,7 @@ function GroupNavigationView(group, eventService) {
         return groupListItem;
     }
 
-    function onGroupTitleChangedEvent() {
-        group.subscribe('change-group-title', updateGroupTitle);
-    }
 
-    function updateGroupTitle() {
-        var groupNameElement = element.querySelector(".group-title");
-        groupNameElement.textContent = group.title;
-        groupNameElement.setAttribute("title", "View group (" + group.title + ")");
-    }
 }
 
 GroupNavigationView.prototype.getElement = function() {
