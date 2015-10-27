@@ -13,8 +13,8 @@ ObservableObject.prototype.publish = function(type, detail) {
 				'target' : this});
 		}
 	}
-}
+};
 ObservableObject.prototype.subscribe = function(type, fn) {
 	logger.logDebug('got subscribe for ' + type);
 	this.subscribers.push({ 'type' : type, 'fn' : fn});
-}
+};

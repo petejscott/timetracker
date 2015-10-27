@@ -19,11 +19,11 @@ Task.prototype.constructor = Task;
 
 Task.prototype.getRuntime = function() {
     return this.runtime;
-}
+};
 Task.prototype.setRuntime = function(val) {
     this.runtime = val;
     this.publish('total-modified');
-}
+};
 Task.prototype.getTotal = function() {
     return tt.timeService.formatSecondsAsHourMinuteSecond(this.runtime);
-}
+};

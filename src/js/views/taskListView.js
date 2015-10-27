@@ -1,11 +1,7 @@
 'use strict';
 
 function TaskListView(group, eventService, taskFactory, viewFactory) {
-	
-	var group = group;
-	var taskFactory = taskFactory;
-	var viewFactory = viewFactory;
-	
+
 	var taskListContainer = document.querySelector(".tasks");
 	this.element = makeTaskListElement(getViewTemplate());
 	var tasksContainer = taskListContainer.querySelector(".tasklist");	
@@ -63,4 +59,4 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 
 TaskListView.prototype.getElement = function() {
 	return this.element;
-}
+};

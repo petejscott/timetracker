@@ -5,13 +5,13 @@ function TaskView(task, eventService, timeService) {
 	this.task = task;
 	this.eventService = eventService;
 	this.timeService = timeService;
-	var element = makeTaskElement(getViewTemplate(), makeCallbackConfig(this));
+	var element = makeTaskElement(getViewTemplate(), this);
     this.element = element;
 	this.editableTimeoutId = 0;
 
     task.subscribe('task-removed', removeTask);
 
-    function removeTask(e) {
+    function removeTask() {
         element.remove();
     }
 	
@@ -21,34 +21,8 @@ function TaskView(task, eventService, timeService) {
 				'<span class="total" contenteditable="true"></span>' + 
 				'<span class="delete"><a title="Delete Task" href="#delete"><i class="icon-cancel-circled"></i></a></span>';
 	}
-	
-	function makeCallbackConfig(view) {
-		var callbackConfig = {
-			'playCallback' : function(e) {
-				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				playPauseTask(view.task, view.element);
-				e.preventDefault();
-			},
-			'titleEditCallback' : function(e) {
-				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				view.task.title = e.currentTarget.textContent;
-				e.preventDefault();
-			},
-			'totalEditCallback' : function(e) {
-				view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-				view.task.setRuntime(timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent));
-				e.preventDefault();
-				
-				//window.clearTimeout(view.editableTimeoutId);
-				//view.editableTimeoutId = window.setTimeout(function() {
-				//	view.task.publish('task-time-tick');
-				//}, 1500);
-			}
-		};
-		return callbackConfig;
-	}
-	
-	function makeTaskElement(template, callbackConfig) {
+
+	function makeTaskElement(template, view) {
 		var listItem = document.createElement("li");
 		listItem.setAttribute("id", task.id);
 		listItem.setAttribute("data-taskid", task.id);
@@ -64,18 +38,35 @@ function TaskView(task, eventService, timeService) {
 		
 		listItem.querySelector('.total').textContent = task.getTotal();
 		
-		listItem.querySelector('.play-pause').addEventListener('click', callbackConfig.playCallback, false);		
+		listItem.querySelector('.play-pause').addEventListener('click', function(e) {
+            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            playPauseTask(view.task, view.element);
+            e.preventDefault();
+        }, false);
 		
 		listItem.querySelector('.title').textContent = task.title;	
-		listItem.querySelector('.title').addEventListener('input', callbackConfig.titleEditCallback, false);
+		listItem.querySelector('.title').addEventListener('input', function(e) {
+            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            view.task.title = e.currentTarget.textContent;
+            e.preventDefault();
+        }, false);
 		
 		listItem.querySelector('.total').textContent = task.getTotal();
 		
-		task.subscribe('total-modified', function(e) {
+		task.subscribe('total-modified', function() {
 			listItem.querySelector('.total').textContent = task.getTotal();
 		});
 		
-		listItem.querySelector('.total').addEventListener('input', callbackConfig.totalEditCallback, false);
+		listItem.querySelector('.total').addEventListener('input', function(e) {
+            view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            view.task.setRuntime(timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent));
+            e.preventDefault();
+
+            //window.clearTimeout(view.editableTimeoutId);
+            //view.editableTimeoutId = window.setTimeout(function() {
+            //	view.task.publish('task-time-tick');
+            //}, 1500);
+        }, false);
 		
 		if (task.isRunning) {
 			startTask(task);
@@ -118,4 +109,4 @@ function TaskView(task, eventService, timeService) {
 
 TaskView.prototype.getElement = function() {
 	return this.element;
-}
+};

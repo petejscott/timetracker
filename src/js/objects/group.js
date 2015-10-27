@@ -12,7 +12,7 @@ Group.prototype.constructor = Group;
 
 Group.prototype.addTask = function(task) {
     var thisGroup = this;
-    task.subscribe('total-modified', function(e) {
+    task.subscribe('total-modified', function() {
         thisGroup.publish('total-modified');
     });
     this.tasks.push(task);

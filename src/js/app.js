@@ -19,8 +19,8 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 	}
 	
 	function createViews() {
-		var navigationView = viewFactory.makeNavigationView(appData, groupFactory, taskFactory);
-		var syncStatusView = viewFactory.makeSyncStatusView(groupSync);
+		viewFactory.makeNavigationView(appData, groupFactory, taskFactory);
+		viewFactory.makeSyncStatusView(groupSync);
 	}
 	
 	function groupSync() {

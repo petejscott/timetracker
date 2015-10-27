@@ -14,8 +14,8 @@ function GroupSummaryView(group, eventService) {
 
 	this.editableTimeoutId = null;
 	
-	this.setTitle(this.group.title);
-	this.setTotal(this.group.getTotal());
+	this.setTitle();
+	this.setTotal();
 	
 	this.onGroupTitleChanged(this);
 	this.onGroupTitleChanging(this);
@@ -33,13 +33,13 @@ function GroupSummaryView(group, eventService) {
 	}
 }
 
-GroupSummaryView.prototype.setTitle = function(title) {
+GroupSummaryView.prototype.setTitle = function() {
 	this.groupTitleContainer.textContent = this.group.title;
-}
+};
 
-GroupSummaryView.prototype.setTotal = function(total) {
+GroupSummaryView.prototype.setTotal = function() {
 	this.groupTotalContainer.textContent = this.group.getTotal();
-}
+};
 
 GroupSummaryView.prototype.onGroupTitleChanging = function(view) {
 	view.groupTitleContainer.addEventListener('input', function(e) {
@@ -53,8 +53,8 @@ GroupSummaryView.prototype.onGroupTitleChanging = function(view) {
 			view.onGroupTitleChanged(view);
 		}, 1500);
 	}, false);
-}
+};
 
 GroupSummaryView.prototype.onGroupTitleChanged = function(view) {
 	view.group.publish('change-group-title', { 'groupId' : view.group.id });
-}
+};

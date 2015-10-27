@@ -27,10 +27,10 @@ function SyncStatusView(logger, eventService, clickEventHandler) {
 SyncStatusView.prototype.setMessage = function(message) {
     if (this.syncMessageContainer == null) return;
 	this.syncMessageContainer.textContent = message;
-}
+};
 
 SyncStatusView.prototype.onSyncStatusChangedEvent = function(view) {
 	view.eventService.subscribe(view.eventService.events.sync.statusUpdated, function(e) {
 		view.syncMessageContainer.textContent = e.detail;
 	});
-}
+};

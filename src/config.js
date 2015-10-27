@@ -1,18 +1,18 @@
 'use strict';
 
 var tt = tt || {};
-tt.config = (function(win) {
+tt.config = (function() {
 	var mainContainerQuery = "#main";
 	var eventElementQuery = mainContainerQuery;
 	var remoteSyncWebUrl = "";
 	var remoteSyncApiKey = "";
 
     function getMainContainer() {
-        return win.document.querySelector(mainContainerQuery);
+        return window.document.querySelector(mainContainerQuery);
     }
 
     function getEventElement() {
-        return win.document.querySelector(eventElementQuery);
+        return window.document.querySelector(eventElementQuery);
     }
 
 	return {
@@ -24,4 +24,4 @@ tt.config = (function(win) {
 		"remoteSyncApiKey" : remoteSyncApiKey
     };
 
-})(this);
+})();

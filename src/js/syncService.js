@@ -1,7 +1,7 @@
 'use strict';
 
 var tt = tt || {};
-tt.syncService = (function(logger, config, eventService, storage, win) {
+tt.syncService = (function(logger, config, eventService, storage) {
 	
 	var GROUP_STORAGE_KEY = 'tt-groups';
 	var HIGH_PRIORITY_SYNC_SECONDS = 1;
@@ -20,8 +20,8 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 	}
 	
 	function setSyncRequest() {
-		if (syncTimeout !== null) win.clearTimeout(syncTimeout);
-		syncTimeout = win.setTimeout(function(e) {
+		if (syncTimeout !== null) window.clearTimeout(syncTimeout);
+		syncTimeout = window.setTimeout(function() {
 			syncGroups(getDataToSync());
 			secondsUntilSync = null;
 			setUpToDateSyncUI();
@@ -37,15 +37,15 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 			secondsUntilSync = seconds;
 			
 			updatePendingSyncUI();
-			if (syncUiInterval !== null) win.clearInterval(syncUiInterval);
-			syncUiInterval = win.setInterval(updatePendingSyncUI, 1000);
+			if (syncUiInterval !== null) window.clearInterval(syncUiInterval);
+			syncUiInterval = window.setInterval(updatePendingSyncUI, 1000);
 			
 			setSyncRequest();
 		}
 	}
 	
 	function setUpToDateSyncUI() {
-		if (syncUiInterval !== null) win.clearInterval(syncUiInterval);
+		if (syncUiInterval !== null) window.clearInterval(syncUiInterval);
 		eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'up-to-date' });
 	}
 	
@@ -78,7 +78,7 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 
 		http.setRequestHeader("Content-type", "application/json");
 		http.setRequestHeader("X-Auth-Token", config.remoteSyncApiKey);
-		http.setRequestHeader("Content-length", params.length);
+		http.setRequestHeader("Content-length", params.length.toString());
 		http.setRequestHeader("Connection", "close");
 
 		http.onreadystatechange = function() {
@@ -89,7 +89,8 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 					logger.logError(http.status + " from remote: " + http.responseText);
 				}
 			}
-		}
+		};
+
 		http.send(params);
 	}
 	
@@ -129,4 +130,4 @@ tt.syncService = (function(logger, config, eventService, storage, win) {
 	
 	init();
 	
-})(logger, tt.config, tt.eventService, tt.storage, this);
+})(logger, tt.config, tt.eventService, tt.storage);
