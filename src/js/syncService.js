@@ -43,8 +43,8 @@ tt.syncService = (function(logger, config, eventService, storage) {
 			setSyncRequest();
 		}
 	}
-	
-	function setUpToDateSyncUI() {
+
+    function setUpToDateSyncUI() {
 		if (syncUiInterval !== null) window.clearInterval(syncUiInterval);
 		eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'up-to-date' });
 	}

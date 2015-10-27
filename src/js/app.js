@@ -16,25 +16,48 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
 			}
 		}
 		createViews();
+        scheduleSync();
 	}
 	
 	function createViews() {
 		viewFactory.makeNavigationView(appData, groupFactory, taskFactory);
-		viewFactory.makeSyncStatusView(groupSync);
+		viewFactory.makeSyncStatusView(requestHighPrioritySync);
 	}
-	
-	function groupSync() {
-		eventService.dispatch(eventService.events.sync.requested,  { 
-			'detail' : 
-			{ 
-				'type' : 'groups',
-				'data' : appData.groups,
-				'priority' : 'high' 
-			}
-		});
-	}
-	
-	eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
+
+    function scheduleSync() {
+        appData.subscribe('group-added', requestHighPrioritySync);
+        appData.subscribe('group-removed', requestHighPrioritySync);
+
+        for (var i = 0, gLen = appData.groups.length; i < gLen; i++) {
+            var group = appData.groups[i];
+            group.subscribe('group-title-modified', requestHighPrioritySync);
+            group.subscribe('total-modified', requestLowPrioritySync);
+            group.subscribe('task-added', requestHighPrioritySync);
+            group.subscribe('task-removed', requestHighPrioritySync);
+            for (var j = 0, tLen = group.tasks.length; j < tLen; j++) {
+                var task = group.tasks[j];
+                task.subscribe('task-title-modified', requestHighPrioritySync);
+            }
+        }
+    }
+
+    function requestHighPrioritySync() {
+        requestSync('high');
+    }
+    function requestLowPrioritySync() {
+        requestSync('low');
+    }
+    function requestSync(priority) {
+        eventService.dispatch(eventService.events.sync.requested, {
+            'detail' : {
+                'type': 'groups',
+                'data': appData.groups,
+                'priority': priority
+            }
+        });
+    }
+
+    eventService.subscribe(eventService.events.sync.groupsRetrieved, groupsRetrievedEventHandler);
 	eventService.dispatch(eventService.events.sync.getGroups);
 	
 })(logger, tt.groupFactory, tt.taskFactory, tt.viewFactory, tt.eventService);
