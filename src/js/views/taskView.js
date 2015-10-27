@@ -67,6 +67,13 @@ function TaskView(task, eventService, timeService) {
             //	view.task.publish('task-time-tick');
             //}, 1500);
         }, false);
+
+        listItem.querySelector('.delete').addEventListener('click', function(e) {
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+            task.setRuntime(0);
+            task.publish('on-task-remove');
+            e.preventDefault();
+        }, false);
 		
 		if (task.isRunning) {
 			startTask(task);

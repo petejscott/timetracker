@@ -9,7 +9,7 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 
     for (var i = 0, len = group.tasks.length; i < len; i++) {
         var t = group.tasks[i];
-        t.subscribe('delete-task', removeTaskFromCollection);
+        t.subscribe('on-task-remove', removeTaskFromCollection);
     }
 
     function removeTaskFromCollection(e) {
@@ -35,12 +35,7 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 		var view = viewFactory.makeTaskView(task);
 		var taskElement = view.getElement();
 
-        taskElement.querySelector('.delete').addEventListener('click', function(e) {
-            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            task.setRuntime(0);
-            group.removeTask(task);
-            e.preventDefault();
-        }, false);
+
 
 		return taskElement;
 	}
