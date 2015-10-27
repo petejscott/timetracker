@@ -12,6 +12,11 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
         var t = group.tasks[i];
         t.subscribe('on-task-remove', removeTaskFromCollection);
     }
+    group.subscribe('task-added', function(e) {
+        var t = e.detail.task;
+        console.log(e);
+        t.subscribe('on-task-remove', removeTaskFromCollection);
+    });
 
     function removeTaskFromCollection(e) {
         group.removeTask(e.target);
@@ -25,10 +30,11 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 				'<ul id="taskContainer" class="tasklist"></ul>';
 	}
 	
-	function addNewTaskToActiveGroup() {
+	function addNewTaskToActiveGroup(e) {
 		var task = taskFactory.createNewTask(group);
 		group.addTask(task);
 		tasksContainer.appendChild(makeTask(task));
+        e.preventDefault();
 	}
 	
 	function makeTask(task) {
