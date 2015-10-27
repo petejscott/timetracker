@@ -37,6 +37,7 @@ tt.app = (function(logger, groupFactory, taskFactory, viewFactory, eventService)
             for (var j = 0, tLen = group.tasks.length; j < tLen; j++) {
                 var task = group.tasks[j];
                 task.subscribe('task-title-modified', requestHighPrioritySync);
+                task.subscribe('task-state-toggled', requestHighPrioritySync);
             }
         }
     }
