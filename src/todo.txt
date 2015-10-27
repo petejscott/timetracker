@@ -1,7 +1,7 @@
 BUGS
 1. delete group does not select a different group or clear the tasklist view
 2. viewing a group when a task is running in a different group updates the group summary UI total incorrectly
+3. sync-binding set up in app.js won't be applied to anything created after load
 
 FEATURES
 1. when modifying task time manually, don't publish update (or call setRuntime()) if value cannot be parsed
-2. need to send high-priority sync when starting/stopping tasks

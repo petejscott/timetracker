@@ -47,6 +47,7 @@ function TaskView(task, eventService, timeService) {
 		listItem.querySelector('.total').textContent = task.getTotal();
 
 		listItem.querySelector('.play-pause').addEventListener('click', function(e) {
+            eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
             task.publish('on-task-state-toggle');
             e.preventDefault();
         }, false);
