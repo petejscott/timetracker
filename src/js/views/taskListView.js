@@ -4,7 +4,8 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 
 	var taskListContainer = document.querySelector(".tasks");
 	this.element = makeTaskListElement(getViewTemplate());
-	var tasksContainer = taskListContainer.querySelector(".tasklist");	
+    var tasksContainer = taskListContainer.querySelector(".tasklist");
+
 	makeTasks();
 
     for (var i = 0, len = group.tasks.length; i < len; i++) {

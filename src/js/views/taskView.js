@@ -58,14 +58,16 @@ function TaskView(task, eventService, timeService) {
 		});
 		
 		listItem.querySelector('.total').addEventListener('input', function(e) {
+
+            var tempRuntime;
+            tempRuntime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
             view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            view.task.setRuntime(timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent));
             e.preventDefault();
 
-            //window.clearTimeout(view.editableTimeoutId);
-            //view.editableTimeoutId = window.setTimeout(function() {
-            //	view.task.publish('task-time-tick');
-            //}, 1500);
+            window.clearTimeout(view.editableTimeoutId);
+            view.editableTimeoutId = window.setTimeout(function() {
+            	view.task.setRuntime(tempRuntime);
+            }, 1500);
         }, false);
 
         listItem.querySelector('.delete').addEventListener('click', function(e) {
