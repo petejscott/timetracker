@@ -33,12 +33,11 @@ tt.groupFactory = (function(logger, taskFactory) {
 	}
 	
 	function makeDefaultGroupData() {
-		var data = {
-			id: makeId(),
-			title: getCurrentWeekName(),
-			tasks: []
-		};
-		return data;
+		return {
+            id: makeId(),
+            title: getCurrentWeekName(),
+            tasks: []
+        };
 	}
 	
 	function setData(group, data) {
@@ -63,7 +62,8 @@ tt.groupFactory = (function(logger, taskFactory) {
 		return group;
 	}
 	
-	function createNewGroup() {		
+	function createNewGroup() {
+        logger.logDebug('created new group object');
 		var group = makeObject();
 		var data = makeDefaultGroupData();
 		group = setData(group, data);
@@ -72,6 +72,7 @@ tt.groupFactory = (function(logger, taskFactory) {
 	}
 	
 	function createGroup(data) {
+        logger.logDebug('created group object from data');
 		var group = makeObject();
 		group = setData(group, data);
         group = createTasks(group, data.tasks);

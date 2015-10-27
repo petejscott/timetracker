@@ -1,6 +1,6 @@
 'use strict';
 
-function taskView(task, eventService, timeService) {
+function TaskView(task, eventService, timeService) {
 	
 	this.task = task;
 	this.eventService = eventService;
@@ -116,6 +116,6 @@ function taskView(task, eventService, timeService) {
 	}
 }
 
-taskView.prototype.getElement = function() {
+TaskView.prototype.getElement = function() {
 	return this.element;
 }

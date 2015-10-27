@@ -1,6 +1,6 @@
 'use strict';
 
-function groupNavigationView(group, eventService) {
+function GroupNavigationView(group, eventService) {
 	this.group = group;
 	this.eventService = eventService;
     var element = this.makeGroupNavElement(getViewTemplate());
@@ -27,21 +27,21 @@ function groupNavigationView(group, eventService) {
 	}
 }
 
-groupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
+GroupNavigationView.prototype.onGroupTitleChangedEvent = function(view) {
 	this.group.subscribe('change-group-title', function() { view.updateGroupTitle(view.group.title); });
 }
 
-groupNavigationView.prototype.getElement = function() {
+GroupNavigationView.prototype.getElement = function() {
 	return this.element;
 }
 
-groupNavigationView.prototype.updateGroupTitle = function() {
+GroupNavigationView.prototype.updateGroupTitle = function() {
 	var groupNameElement = this.element.querySelector(".group-title");
 	groupNameElement.textContent = this.group.title;
 	groupNameElement.setAttribute("title", "View group (" + this.group.title + ")");
 }
 
-groupNavigationView.prototype.makeGroupNavElement = function(template) {
+GroupNavigationView.prototype.makeGroupNavElement = function(template) {
 	
 	var groupListItem = document.createElement("li");
 	groupListItem.innerHTML = template;

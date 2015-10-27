@@ -17,7 +17,7 @@ Group.prototype.addTask = function(task) {
     });
     this.tasks.push(task);
     this.publish('task-added', { 'task' : task });
-}
+};
 Group.prototype.removeTask = function(task) {
     var index = this.tasks.indexOf(task);
     if (index > -1) {
@@ -25,11 +25,11 @@ Group.prototype.removeTask = function(task) {
     }
     task.publish('task-removed');
     this.publish('task-removed', { 'task' : task });
-}
+};
 Group.prototype.getTotal = function() {
     var total = 0.00;
     for (var i = 0, len = this.tasks.length; i < len; i++) {
         total += this.tasks[i].runtime;
     }
     return tt.timeService.formatSecondsAsHourMinuteSecond(total);
-}
+};

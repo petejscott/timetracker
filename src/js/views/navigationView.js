@@ -1,6 +1,6 @@
 'use strict';
 
-function navigationView(logger, appData, eventService, groupFactory, taskFactory, viewFactory) {
+function NavigationView(logger, appData, eventService, groupFactory, taskFactory, viewFactory) {
 
 	var groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	var optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");

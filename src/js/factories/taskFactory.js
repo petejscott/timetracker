@@ -11,7 +11,7 @@ tt.taskFactory = (function(logger) {
 	}
 	
 	function makeDefaultTaskData(group) {
-		var data = {
+		return {
 			id : makeId(),
 			groupId : group.id,
 			title : 'new task',
@@ -20,7 +20,6 @@ tt.taskFactory = (function(logger) {
 			isRunning : false,
 			intervalId : null
 		};
-		return data;
 	}
 	
 	function setData(task, data) {
@@ -43,7 +42,8 @@ tt.taskFactory = (function(logger) {
 		return taskObj;
 	}
 	
-	function createNewTask(group) {		
+	function createNewTask(group) {
+        logger.logDebug('created new task object');
 		var task = makeObject();
 		var data = makeDefaultTaskData(group);
 		task = setData(task, data);
@@ -51,6 +51,7 @@ tt.taskFactory = (function(logger) {
 	}
 	
 	function createTask(data) {
+        logger.logDebug('created task object from data');
 		var task = makeObject();
 		task = setData(task, data);
 		return task;

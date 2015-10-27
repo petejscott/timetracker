@@ -1,13 +1,13 @@
 'use strict';
 
-function syncStatusView(logger, eventService, clickEventHandler) {
+function SyncStatusView(logger, eventService, clickEventHandler) {
 	
 	this.eventService = eventService;
 	this.syncStatusContainer = document.querySelector(".sync-status");
 
     if (this.syncStatusContainer == null)
     {
-        logger.logError("Missing syncStatusView.syncStatusContainer");
+        logger.logError("Missing SyncStatusView.syncStatusContainer");
         return;
     }
 
@@ -24,12 +24,12 @@ function syncStatusView(logger, eventService, clickEventHandler) {
 	}
 }
 
-syncStatusView.prototype.setMessage = function(message) {
+SyncStatusView.prototype.setMessage = function(message) {
     if (this.syncMessageContainer == null) return;
 	this.syncMessageContainer.textContent = message;
 }
 
-syncStatusView.prototype.onSyncStatusChangedEvent = function(view) {
+SyncStatusView.prototype.onSyncStatusChangedEvent = function(view) {
 	view.eventService.subscribe(view.eventService.events.sync.statusUpdated, function(e) {
 		view.syncMessageContainer.textContent = e.detail;
 	});

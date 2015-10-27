@@ -1,6 +1,6 @@
 'use strict';
 
-function taskListView(group, eventService, taskFactory, viewFactory) {
+function TaskListView(group, eventService, taskFactory, viewFactory) {
 	
 	var group = group;
 	var taskFactory = taskFactory;
@@ -61,6 +61,6 @@ function taskListView(group, eventService, taskFactory, viewFactory) {
 	}
 }
 
-taskListView.prototype.getElement = function() {
+TaskListView.prototype.getElement = function() {
 	return this.element;
 }

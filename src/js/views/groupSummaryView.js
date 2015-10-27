@@ -1,6 +1,6 @@
 'use strict';
 
-function groupSummaryView(group, eventService) {
+function GroupSummaryView(group, eventService) {
 	
 	this.group = group;
 	this.eventService = eventService;
@@ -33,15 +33,15 @@ function groupSummaryView(group, eventService) {
 	}
 }
 
-groupSummaryView.prototype.setTitle = function(title) {
+GroupSummaryView.prototype.setTitle = function(title) {
 	this.groupTitleContainer.textContent = this.group.title;
 }
 
-groupSummaryView.prototype.setTotal = function(total) {	
+GroupSummaryView.prototype.setTotal = function(total) {
 	this.groupTotalContainer.textContent = this.group.getTotal();
 }
 
-groupSummaryView.prototype.onGroupTitleChanging = function(view) {
+GroupSummaryView.prototype.onGroupTitleChanging = function(view) {
 	view.groupTitleContainer.addEventListener('input', function(e) {
 		
 		view.eventService.dispatch(view.eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
@@ -55,6 +55,6 @@ groupSummaryView.prototype.onGroupTitleChanging = function(view) {
 	}, false);
 }
 
-groupSummaryView.prototype.onGroupTitleChanged = function(view) {
+GroupSummaryView.prototype.onGroupTitleChanged = function(view) {
 	view.group.publish('change-group-title', { 'groupId' : view.group.id });
 }
