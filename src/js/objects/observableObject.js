@@ -1,26 +1,33 @@
 'use strict';
 
 function ObservableObject() {
-	this.subscribers = [];
-    this.isPublishing = 0;
+	var subscribers = [];
+    var isPublishing = 0;
+
+    this.pub = function(type, detail) {
+        isPublishing++;
+        for (var i = 0, len = subscribers.length; i < len; i++) {
+            if (subscribers[i] == null) continue;
+            if (subscribers[i].type == type) {
+                subscribers[i].fn({
+                    'detail' : detail,
+                    'target' : this});
+            }
+        }
+        isPublishing--;
+    };
+
+    this.sub = function(type, fn) {
+        return subscribers.push({ 'type' : type, 'fn' : fn});
+    };
 }
 
 ObservableObject.prototype.publish = function(type, detail) {
     if (typeof detail === 'undefined') detail = {};
 	logger.logDebug('publishing ' + type + ' with ' + JSON.stringify(detail));
-
-    this.isPublishing++;
-	for (var i = 0, len = this.subscribers.length; i < len; i++) {
-        if (this.subscribers[i] == null) continue;
-		if (this.subscribers[i].type == type) {
-			this.subscribers[i].fn({
-				'detail' : detail, 
-				'target' : this});
-		}
-	}
-    this.isPublishing--;
+    return this.pub(type, detail);
 };
 ObservableObject.prototype.subscribe = function(type, fn) {
 	logger.logDebug('got subscribe for ' + type);
-	this.subscribers.push({ 'type' : type, 'fn' : fn});
+	return this.sub(type, fn);
 };
