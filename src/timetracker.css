@@ -91,6 +91,16 @@ a:hover {
 	background: rgba(249,253,169,0.5);
 }
 
+.invalid-input,
+.invalid-input:focus,
+.invalid-input:hover {
+    background-color:rgba(224,142,121, 0.75);
+    color:#fff;
+}
+.invalid-input:hover {
+    background-color:rgba(224,142,121, 0.5);
+}
+
 /* Some special classes */
 
 .paren-data::before { content: '('; color:#d4ccb5; }
@@ -275,6 +285,9 @@ ul.tasklist li span.total {
 }
 ul.tasklist li span.delete {
 	text-align: right;
+}
+ul.tasklist li span.delete i::before {
+    color:#E08E79;
 }
 ul.tasklist li:last-child {
 	border-bottom: none;

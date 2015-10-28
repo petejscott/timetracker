@@ -67,15 +67,22 @@ function TaskView(task, eventService, timeService) {
 		
 		listItem.querySelector('.total').addEventListener('input', function(e) {
 
-            var tempRuntime;
-            tempRuntime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
+            var inputFormat = /^\d{2}:\d{2}:\d{2}$/;
+            if (inputFormat.test(e.currentTarget.textContent)) {
+                e.currentTarget.classList.remove('invalid-input');
+            } else {
+                e.currentTarget.classList.add('invalid-input');
+                return;
+            }
+
+            var tempRuntime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            e.preventDefault();
 
             window.clearTimeout(editableTimeoutId);
             editableTimeoutId = window.setTimeout(function() {
-            	task.setRuntime(tempRuntime);
+               task.setRuntime(tempRuntime);
             }, 1500);
+
         }, false);
 
         listItem.querySelector('.delete').addEventListener('click', function(e) {
