@@ -90,6 +90,10 @@ function TaskView(task, eventService, timeService) {
             }
 
             var tempRuntime = timeService.getSecondsFromHourMinuteSecond(e.currentTarget.textContent);
+            if (tempRuntime === task.getRuntime()) {
+                return;
+            }
+
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 
             window.clearTimeout(editableTimeoutId);
