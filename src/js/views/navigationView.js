@@ -5,7 +5,6 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
 	var groupNavigationContainer = document.querySelector("#mainNavigation ul.group-nav");
 	var optionsNavigationContainer = document.querySelector("#mainNavigation ul.options-nav");
 
-
     if (groupNavigationContainer == null) {
         logger.logWarning("Missing navigationView.groupNavigationContainer");
         return;
@@ -31,26 +30,29 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
         var g = e.detail.group;
         if (g == null) return;
 
-        g.subscribe('on-group-select', createTaskListView);
-        g.subscribe('on-group-select', createGroupSummaryView);
+        g.subscribe('on-group-select', selectGroup);
         g.subscribe('on-group-remove', removeGroupFromCollection);
     }
 
-    function removeGroupFromCollection(e) {
-        appData.removeGroup(e.target);
-        eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
+    function selectGroup(e) {
+        var selectedGroup = e.target;
+        if (selectedGroup == null) return;
+
+        createTaskListView(selectedGroup);
+        createGroupSummaryView(selectedGroup);
     }
 
-    function createTaskListView(e) {
-        var g = e.target;
-        if (g == null) return;
+    function createTaskListView(g) {
         viewFactory.makeTaskListView(g, taskFactory);
     }
-    function createGroupSummaryView(e) {
-        var g = e.target;
-        if (g == null) return;
-        viewFactory.makeGroupSummaryView(g);
+
+    function createGroupSummaryView(g) {
+        var groupSummaryContainer = document.querySelector(".group-summary");
+        groupSummaryContainer.textContent = "";
+        var sumView = viewFactory.makeGroupSummaryView(g);
+        groupSummaryContainer.appendChild(sumView.getElement());
     }
+
     function createGroupNavigationView(e) {
         var g = e.detail.group;
         if (g == null) return;
@@ -58,6 +60,11 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
         var groupNavigationView = viewFactory.makeGroupNavigationView(g);
         var el = groupNavigationView.getElement();
         groupNavigationContainer.appendChild(el);
+    }
+
+    function removeGroupFromCollection(e) {
+        appData.removeGroup(e.target);
+        eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
     }
 
 	function createGroupForCurrentWeek() {

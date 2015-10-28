@@ -2,8 +2,9 @@
 
 function GroupSummaryView(group, eventService) {
 	
-	var groupSummaryContainer = document.querySelector(".group-summary");
-	groupSummaryContainer.innerHTML = getViewTemplate();
+	var element = document.createElement("span");
+    element.innerHTML = getViewTemplate();
+    this.element = element;
 
 	var editableTimeoutId = null;
 	
@@ -14,20 +15,19 @@ function GroupSummaryView(group, eventService) {
 	
 	listenForGroupTitleChanges();
 
-
     function setTotal() {
-        groupSummaryContainer.querySelector(".group-total").textContent = group.getTotal();
+        element.querySelector(".group-total").textContent = group.getTotal();
     }
 
     function setTitle() {
-        groupSummaryContainer.querySelector(".group-title").textContent = group.title;
+        element.querySelector(".group-title").textContent = group.title;
     }
 
     function listenForGroupTitleChanges() {
-        groupSummaryContainer.querySelector(".group-title").addEventListener('input', function(e) {
+        element.querySelector(".group-title").addEventListener('input', function(e) {
 
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
-            group.title = groupSummaryContainer.querySelector(".group-title").textContent;
+            group.title = element.querySelector(".group-title").textContent;
             e.preventDefault();
 
             window.clearTimeout(editableTimeoutId);
@@ -41,4 +41,8 @@ function GroupSummaryView(group, eventService) {
 		return 	'<span class="group-title" contenteditable="true"></span>' +
 				'<span class="group-total paren-data"></span>';
 	}
+}
+
+GroupSummaryView.prototype.getElement = function() {
+    return this.element;
 }

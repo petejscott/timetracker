@@ -14,7 +14,6 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
     }
     group.subscribe('task-added', function(e) {
         var t = e.detail.task;
-        console.log(e);
         t.subscribe('on-task-remove', removeTaskFromCollection);
     });
 
@@ -38,12 +37,8 @@ function TaskListView(group, eventService, taskFactory, viewFactory) {
 	}
 	
 	function makeTask(task) {
-		
 		var view = viewFactory.makeTaskView(task);
 		var taskElement = view.getElement();
-
-
-
 		return taskElement;
 	}
 	

@@ -8,21 +8,35 @@ function TaskView(task, eventService, timeService) {
 
     task.subscribe('task-removed', removeTask);
     task.subscribe('on-task-state-toggle', taskStateToggled);
+    task.subscribe('on-task-state-toggle', setTaskStateIcon);
+
+    if (task.isRunning)
+    {
+        stopTask();
+        startTask();
+        setTaskStateIcon();
+    }
 
     function taskStateToggled() {
+        if (task.isRunning) {
+            stopTask();
+        } else {
+            startTask();
+        }
+
+        task.publish('task-state-toggled');
+    }
+
+    function setTaskStateIcon() {
         var playIcon = element.querySelector(".task-play-pause-icon");
         playIcon.classList.remove("icon-play");
         playIcon.classList.remove("icon-pause");
 
         if (task.isRunning) {
-            stopTask();
-            playIcon.classList.add("icon-play");
-        } else {
-            startTask();
             playIcon.classList.add("icon-pause");
+        } else {
+            playIcon.classList.add("icon-play");
         }
-
-        task.publish('task-state-toggled');
     }
 
     function removeTask() {
@@ -91,12 +105,8 @@ function TaskView(task, eventService, timeService) {
             task.publish('on-task-remove');
             e.preventDefault();
         }, false);
-		
-		if (task.isRunning) {
-			stopTask();
-		}
-		
-		return listItem;
+
+        return listItem;
 	}
 
 	function startTask() {

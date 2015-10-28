@@ -84,9 +84,9 @@ tt.syncService = (function(logger, config, eventService, storage) {
 		http.onreadystatechange = function() {
 			if (http.readyState === 4) {
 				if (http.status >= 200 && http.status < 400) {                
-					logger.logDebug(http.status + " from remote: " + http.responseText);
+					logger.logDebug(http.status + " from remote sync: " + http.responseText);
 				} else {
-					logger.logError(http.status + " from remote: " + http.responseText);
+					logger.logError(http.status + " from remote sync: " + http.responseText);
 				}
 			}
 		};
@@ -115,7 +115,6 @@ tt.syncService = (function(logger, config, eventService, storage) {
 		storage.set(GROUP_STORAGE_KEY, jsonGroupData);
 		if (useRemoteSyncWebhook) {
 			remoteGroupsPost(jsonGroupData);
-			console.log('remote post');
 		}
 	}
 	
