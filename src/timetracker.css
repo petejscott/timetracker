@@ -98,7 +98,7 @@ a:hover {
     color:#fff;
 }
 .invalid-input:hover {
-    background-color:rgba(224,142,121, 0.5);
+    background-color:rgba(224,142,121, 1);
 }
 
 /* Some special classes */
