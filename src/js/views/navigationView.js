@@ -18,13 +18,18 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
         groupSelectedEventHandling({ 'detail' : { 'group' : g }});
         createGroupNavigationView({ 'detail' : { 'group' : g}});
 
-        if (i == (appData.groups.length - 1)) {
-            g.publish('on-group-select');
-        }
+
+        selectLastGroup();
     }
 
     appData.subscribe('group-added', groupSelectedEventHandling);
     appData.subscribe('group-added', createGroupNavigationView);
+
+    function selectLastGroup() {
+        var lastGroup = appData.groups[(appData.groups.length - 1)];
+        if (typeof lastGroup === 'undefined') return;
+        lastGroup.publish('on-group-select');
+    }
 
     function groupSelectedEventHandling(e) {
         var g = e.detail.group;
@@ -64,6 +69,7 @@ function NavigationView(logger, appData, eventService, groupFactory, taskFactory
 
     function removeGroupFromCollection(e) {
         appData.removeGroup(e.target);
+        selectLastGroup();
         eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
     }
 

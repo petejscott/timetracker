@@ -1,2 +1,2 @@
 BUGS
-1. delete group does not select a different group or clear the tasklist view
+1. deleting the last group does not clear the tasklist view or group summary
