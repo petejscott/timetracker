@@ -79,8 +79,9 @@ function TaskView(task, eventService, timeService) {
 			listItem.querySelector('.total').textContent = task.getTotal();
 		});
 		
-		listItem.querySelector('.total').addEventListener('input', function(e) {
-
+		var totalEditor = listItem.querySelector('.total');
+		totalEditor.addEventListener('input', function(e) {
+			
             var inputFormat = /^\d{2}:\d{2}:\d{2}$/;
             if (inputFormat.test(e.currentTarget.textContent)) {
                 e.currentTarget.classList.remove('invalid-input');
@@ -96,9 +97,12 @@ function TaskView(task, eventService, timeService) {
 
             eventService.dispatch(eventService.events.sync.statusUpdated, { 'detail' : 'not synced' });
 
-            window.clearTimeout(editableTimeoutId);
-            editableTimeoutId = window.setTimeout(function() {
-               task.setRuntime(tempRuntime);
+            window.clearInterval(editableTimeoutId);
+            editableTimeoutId = window.setInterval(function() {
+				if (!document.activeElement.classList.contains('total')) {
+					window.clearInterval(editableTimeoutId);
+					task.setRuntime(tempRuntime);
+				}
             }, 1500);
 
         }, false);
